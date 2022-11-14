@@ -1,4 +1,6 @@
-  <aside class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside
+  style="display: flex; flex-direction: column;"
+  class="main-sidebar sidebar-dark-primary elevation-4">
     <div class="dropdown">
    	<a href="./" class="brand-link">
         <!-- <?php if($_SESSION['login_type'] == 1): ?>
@@ -8,7 +10,6 @@
         <?php endif; ?> -->
         <img style="width: 40px; height: 40px; border-radius:10px; position: sticky; left:10px;" src="assets/uploads/logo.jpg" alt="">
     </a>
-      
     </div>
     <div class="sidebar pb-4 mb-4">
       <nav class="mt-2">
@@ -104,7 +105,6 @@
         if($('.nav-link.nav-'+page).hasClass('nav-is-tree') == true){
           $('.nav-link.nav-'+page).parent().addClass('menu-open')
         }
-
   		}
      
   	})

@@ -51,7 +51,7 @@
 						$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
 						$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['pid']}")->num_rows;
 		                $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['pid']} and status = 3")->num_rows;
-						$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+										$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
 		                $prog = $prog > 0 ?  number_format($prog,2) : $prog;
 		                $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['pid']}")->num_rows;
 		                if($row['pstatus'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
@@ -102,6 +102,9 @@
                         	}elseif($row['status'] == 3){
 						  		echo "<span class='badge badge-success'>Done</span>";
                         	}
+							elseif($row['status'] == 4){
+								echo "<span class='badge badge-warning'>Under-Confirmation</span>";
+						  }
                         	?>
                         </td>
 						<td class="text-center">
@@ -109,7 +112,10 @@
 		                      Action
 		                    </button>
 			                    <div class="dropdown-menu" >
-			                      <a class="dropdown-item new_productivity" data-pid = '<?php echo $row['pid'] ?>' data-tid = '<?php echo $row['id'] ?>'  data-task = '<?php echo ucwords($row['task']) ?>'  href="javascript:void(0)">Add Productivity</a>
+														<?php if($_SESSION['login_type'] != 3):?>
+			                      <a class="dropdown-item view_history" data-pid = '<?php echo $row['pid'] ?>' data-tid = '<?php echo $row['id'] ?>'  data-task = '<?php echo ucwords($row['task']) ?>'  href="javascript:void(0)">View History</a>
+														<?php endif; ?>
+														<a class="dropdown-item new_productivity" data-pid = '<?php echo $row['pid'] ?>' data-tid = '<?php echo $row['id'] ?>'  data-task = '<?php echo ucwords($row['task']) ?>'  href="javascript:void(0)">Add Productivity</a>
 								</div>
 						</td>
 					</tr>	
@@ -130,6 +136,9 @@
 <script>
 	$(document).ready(function(){
 		$('#list').dataTable()
+	$('.view_history').click(function(){
+		uni_modal("<i class='fa fa-plus'></i> History for: "+$(this).attr('data-task'),"manage_progress.php?pid="+$(this).attr('data-pid')+"&tid="+$(this).attr('data-tid')+"&history=1",'large')
+	})
 	$('.new_productivity').click(function(){
 		uni_modal("<i class='fa fa-plus'></i> New Progress for: "+$(this).attr('data-task'),"manage_progress.php?pid="+$(this).attr('data-pid')+"&tid="+$(this).attr('data-tid'),'large')
 	})

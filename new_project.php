@@ -76,9 +76,7 @@
 			<div class="col-md-10">
 				<div class="form-group">
 					<label for="" class="control-label">Description</label>
-					<textarea name="description" id="" cols="30" rows="10" class="summernote form-control">
-						<?php echo isset($description) ? $description : '' ?>
-					</textarea>
+					<textarea name="description" id="" cols="30" rows="10" class="form-control summernote" required><?php echo isset($description) ? $description : '' ?></textarea>
 				</div>
 			</div>
 		</div>

@@ -21,23 +21,13 @@ style="display: fl;"
 		<?php if($_SESSION['login_type'] != 3): ?>
 		<div class="form-group">
 			<label for="">Description</label>
-			<textarea name="description" id="summernote" cols="30" rows="10" class="form-control">
-				<?php echo isset($description) ? $description : '' ?>
-			</textarea>
-		</div>
-		<div class="col-md-12">
-   		 <div class="form-group" wire:ignore>
-      	  <label for="desciption">Description</label>
-        	<textarea type="text" input="description" id="summernote" class="form-control">{{ $description }}</textarea>
-   		 </div>
-		</div>
+			<textarea name="description" cols="30" rows="10" class="form-control summernote" required><?php echo isset($description) ? $description : '' ?></textarea>
+		</div>	
 		<?php endif; ?>
 		<?php if($_SESSION['login_type'] == 3): ?>
 		<div class="form-group">
 			<label for="">Description</label>
-			<textarea name="description" id="" cols="30" rows="10" class="form-control" disabled>
-				<?php echo isset($description) ? $description : '' ?>
-			</textarea>
+			<textarea  name="description" cols="30" class="form-control summernote summernote" disabled wrap=physical required><?php echo isset($description) ? $description : '' ?></textarea>
 		</div>
 		<?php endif; ?>
 		<div class="form-group">
@@ -50,6 +40,7 @@ style="display: fl;"
 						<!-- <input type="time" class="form-control form-control-sm" name="end_time" value="<?php echo isset($end_date) ?  : '' ?>" required <?php echo $_SESSION['login_type'] == 3 ? 'readonly' : '' ?>> -->
 						<input type="datetime-local" class="form-control form-control-sm" id="end_date"      name="end_date" value="<?php echo isset($end_date) ? $end_date : '' ?>"  >
 					</div>
+					
 		<div class="form-group"	>
 			<label for="">Status</label>
 			<select name="status" id="status" class="custom-select custom-select-sm">
@@ -102,40 +93,23 @@ style="display: fl;"
 </div>
 
 <script>
-	// $(document).ready(function(){
-	// $('#summernote').summernote({
-    //     height: 200,
-    //     toolbar: [
-    //         [ 'style', [ 'style' ] ],
-    //         [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
-    //         [ 'fontname', [ 'fontname' ] ],
-    //         [ 'fontsize', [ 'fontsize' ] ],
-    //         [ 'color', [ 'color' ] ],
-    //         [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
-    //         [ 'table', [ 'table' ] ],
-    //         [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
-    //     ]
-    // })
-    //  })
+	$(document).ready(function(){
 	$('.summernote').summernote({
-      tabsize: 2,
-      height: 200,
-      toolbar: [
-          ['style', ['style']],
-          ['font', ['bold', 'underline', 'clear']],
-          ['color', ['color']],
-          ['para', ['ul', 'ol', 'paragraph']],
-          ['table', ['table']],
-          ['insert', ['link', 'picture', 'video']],
-          ['view', ['fullscreen', 'codeview', 'help']]
-      ],
-//       callbacks: {
-//           onChange: function(contents, $editable) {
-//           @this.set('description', contents);
-//       }
-//   }
-  });
-    
+        height: 200,
+        toolbar: [
+            [ 'style', [ 'style' ] ],
+            [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+            [ 'fontname', [ 'fontname' ] ],
+            [ 'fontsize', [ 'fontsize' ] ],
+            [ 'color', [ 'color' ] ],
+            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+            [ 'table', [ 'table' ] ],
+            [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+        ]
+    }).on('summernote.change', function(we, contents, $editable) {
+    $(this).html(contents);
+		});
+     })
     $('#manage-task').submit(function(e){
     	e.preventDefault()
     	start_load()

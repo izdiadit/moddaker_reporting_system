@@ -99,8 +99,7 @@ if(isset($_GET['id'])){
 		<div class="form-outline mb-4">
 		<input type="hidden" name="task_id" value="<?php echo isset($id) ? $id : '' ?>">
 		<input type="hidden" name="employee_id" value="<?php echo isset($_SESSION['login_id']) ? $_SESSION['login_id'] : '' ?>">
-		<textarea class="form-control shadow-lg" name="comment" id="comment" cols="50" rows="5" placeholder="Type a Comment" >
-			</textarea>
+		<textarea class="form-control shadow-lg" name="comment" id="comment" cols="50" rows="5" placeholder="Type a Comment"  wrap=physical required></textarea>
 	  </div>
 	  <!-- <button type="button" class="btn btn-primary btn-sm">Post comment</button> -->
 	  </form>

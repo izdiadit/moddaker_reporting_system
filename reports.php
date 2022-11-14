@@ -115,8 +115,7 @@
   <div class="card-body p-0">
 
   <div class="container">
-			<!-- <h2 class="text-center mt-4 mb-3">How to Create Dynamic Chart in PHP using Chart.js</a></h2> -->
-                  
+			<!-- <h2 class="text-center mt-4 mb-3">How to Create Dynamic Chart in PHP using Chart.js</a></h2> -->    
 			<div class="card" >
 				<div class="card-header">Sample Survey</div>
         <div style="display: flex; justify-content: center; gap:10px; margin: 5px;">
@@ -131,11 +130,10 @@
             <input type="date" id="to_date" name="trip-start" value="2022-12-01"  min="2022-01-01"  style="width: fit-content; margin: .4rem 0;">
           </div>
         </div>
-
         <div class="form-group" style="padding: 30px;">
         <label for="">Project</label>
         <select name="project_id" id="project_id" class="custom-select custom-select-sm" >
-        <option value="0" selected>Select a Project</option>
+        <option value="" disabled selected hidden>Select Project</option>
           <?php
           $projects = $conn->query("SELECT *  FROM project_list ");
           while ($row = $projects->fetch_assoc()) :
@@ -146,9 +144,17 @@
         </select>
       </div>
       <div class="form-group" style="padding: 30px;">
+        <label for="">Report Type</label>
+        <select name="report_by" id="report_by" class="custom-select custom-select-sm">
+        <option value="0" selected>All Employees</option>
+        <option value="1" >No. of tasks / Employee</option>
+        <option value="2" >No. of tasks / Status</option>
+        </select>
+      </div>
+      <div id="employee_list" class="form-group" style="padding: 30px; display:none">
         <label for="">Employees</label>
         <select name="employee_id" id="employee_id" class="custom-select custom-select-sm" >
-        <option value="0" selected>Select an employee</option>
+        <option value="0" selected>All Employees</option>
           <?php
           $employees = $conn->query("SELECT * , concat(users.firstname,' ',users.lastname) as name FROM users ");
           while ($row = $employees->fetch_assoc()) :
@@ -199,14 +205,11 @@
 				</div>
 			</div>
 		</div>
-
-
-
   </div>
-  
 </div>
 <script>
   $('#print').click(function() {
+    showHide()
     start_load()
     var _h = $('head').clone()
     var _p = $('#printable').clone()
@@ -250,9 +253,33 @@
   }
 </script>
 <script>
+  // const showHide=()=>{
+  //   var report_item = document.getElementById('report_by').value;
+  //   console.log(report_item);
+  //   var item = document.getElementById('emploee_list')
+  //   console.log(item);
+  //   if(report_item == 1 ){
+  //     report_item.style.display = 'block'
+  //   } else {
+  //     report_item.style.display = 'none'
+  //   }
+  // }
+</script>
+<script>
   $(document).ready(function() {
-  
+    $('#report_by').click(function() {
+    var report_item = document.getElementById('report_by').value;
+    var item1 = document.getElementById('employee_list')
+    if(report_item == 2 ){
+      item1.style.display = 'block'
+      
+    } else {
+      item1.style.display = 'none'
+      
 
+    }
+      
+    })
     $('#submit_data').click(function() {
       // const  rm_pie_chart=()=>{
       //  let rm_canva = document.getElementById("pie_chart")
@@ -264,13 +291,7 @@
       // }
       var language = $('#project_id option:selected').val();
       makechart();
-
-
-
     });
-
-   
-    
     function makechart() {
       // ظبطتتتتتتتتتتتتتتتتتتتتتتتتت
       $('#pie_chart').replaceWith($('<canvas id="pie_chart"></canvas>'));
@@ -280,10 +301,8 @@
       var employee = $('#employee_id option:selected').val();
       var from_date = new Date($('#from_date').val());
       var to_date = new Date($('#to_date').val());
-      // console.log(to_date.toLocaleDateString() )
-      // console.log(dateFormater(to_date, '-'));
-      // console.log(""+from_date,"\n",""+to_date)
-      // ظبطتتتتتتتتتتتتتتتتتتتتتتتتت
+      var report_by = $('#report_by option:selected').val();
+      console.log(report_by);
       $.ajax({
         url: "data.php",
         method: "POST",
@@ -292,24 +311,25 @@
           project: project,
           employee: employee,
           from_date: from_date.toISOString().slice(0, 10),
-          to_date: to_date.toISOString().slice(0, 10)
+          to_date: to_date.toISOString().slice(0, 10),
+          report_by: report_by
         },
         dataType: "JSON",
         success: function(data) {
           
-          var language = [];
+          var report_by = [];
           var total = [];
           var color = [];
 
           for (var count = 0; count < data.length; count++) {
-            language.push(data[count].language);
+            report_by.push(data[count].report_by);
             total.push(data[count].total);
             color.push(data[count].color);
             console.log(data[count].project_id)
           }
 
           var chart_data = {
-            labels: language,
+            labels: report_by,
             datasets: [{
               label: 'Vote',
               backgroundColor: color,

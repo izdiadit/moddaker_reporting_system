@@ -8,7 +8,7 @@
         <?php else: ?>
         <h3 class="text-center p-0 m-0"><b>USER</b></h3>
         <?php endif; ?> -->
-        <img style="width: 40px; height: 40px; border-radius:10px; position: sticky; left:10px;" src="assets/uploads/logo.jpg" alt="">
+        <img style="width: 40px; height: 40px; border-radius:10px; position: sticky; left:10px;" src="assets/uploads/profile.jpg" alt="">
     </a>
     </div>
     <div class="sidebar pb-4 mb-4">

@@ -25,6 +25,7 @@
 						<th class="text-center">#</th>
 						<th>Project</th>
 						<th>Task</th>
+						<th>Assigned To</th>
 						<th>Project Started</th>
 						<th>Project Due Date</th>
 						<th>Project Status</th>
@@ -43,7 +44,7 @@
 					}
 					
 					$stat = array("Pending","Started","On-Progress","On-Hold","Over Due","Done");
-					$qry = $conn->query("SELECT t.*,p.name as pname,p.start_date,p.status as pstatus, p.end_date,p.id as pid FROM task_list t inner join project_list p on p.id = t.project_id $where order by p.name asc");
+					$qry = $conn->query("SELECT t.*,p.name as pname,p.start_date,p.status as pstatus, p.end_date,p.id as pid, concat(users.firstname,' ' ,users.lastname) as name FROM task_list t inner join project_list p on p.id = t.project_id join users on users.id=t.employee_id $where order by p.name asc");
 					while($row= $qry->fetch_assoc()):
 						$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
 						unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
@@ -73,6 +74,9 @@
 						<td>
 							<p><b><?php echo ucwords($row['task']) ?></b></p>
 							<p class="truncate"><?php echo strip_tags($desc) ?></p>
+						</td>
+						<td>
+							<?php echo ($row['name'])?>
 						</td>
 						<td><b><?php echo date("M d, Y",strtotime($row['start_date'])) ?></b></td>
 						<td><b><?php echo date("M d, Y",strtotime($row['end_date'])) ?></b></td>

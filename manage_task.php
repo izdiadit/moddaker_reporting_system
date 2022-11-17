@@ -21,26 +21,27 @@ style="display: fl;"
 		<?php if($_SESSION['login_type'] != 3): ?>
 		<div class="form-group">
 			<label for="">Description</label>
-			<textarea name="description" cols="30" rows="10" class="form-control summernote" required><?php echo isset($description) ? $description : '' ?></textarea>
+			<textarea name="description" cols="30" rows="10" class="form-control" required><?php echo isset($description) ? $description : '' ?></textarea>
 		</div>	
 		<?php endif; ?>
 		<?php if($_SESSION['login_type'] == 3): ?>
 		<div class="form-group">
 			<label for="">Description</label>
-			<textarea  name="description" cols="30" class="form-control summernote summernote" disabled wrap=physical required><?php echo isset($description) ? $description : '' ?></textarea>
+			<textarea  name="description" cols="30" class="form-control" disabled wrap=physical required><?php echo isset($description) ? $description : '' ?></textarea>
 		</div>
 		<?php endif; ?>
+		<?php if($_SESSION['login_type'] != 3): ?>
 		<div class="form-group">
-						<label for="">Start Time</label>
+						<label for="">Start Date</label>
 						<!-- <input type="time" class="form-control form-control-sm" name="start_time" value="<?php echo isset($start_date) ? date("H:i",strtotime("2020-01-01 ".$start_date)) : '' ?>" required <?php echo $_SESSION['login_type'] == 3 ? 'readonly' : '' ?>> -->
 						<input type="datetime-local" id="start_date"    class="form-control form-control-sm"  name="start_date" value="<?php echo isset($start_date) ? $start_date : '' ?>" >
 					</div>
 					<div class="form-group">
-						<label for="">End Time</label>
+						<label for="">End Date</label>
 						<!-- <input type="time" class="form-control form-control-sm" name="end_time" value="<?php echo isset($end_date) ?  : '' ?>" required <?php echo $_SESSION['login_type'] == 3 ? 'readonly' : '' ?>> -->
 						<input type="datetime-local" class="form-control form-control-sm" id="end_date"      name="end_date" value="<?php echo isset($end_date) ? $end_date : '' ?>"  >
 					</div>
-					
+					<?php endif; ?>
 		<div class="form-group"	>
 			<label for="">Status</label>
 			<select name="status" id="status" class="custom-select custom-select-sm">

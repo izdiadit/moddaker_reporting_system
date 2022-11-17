@@ -134,6 +134,7 @@
         <label for="">Project</label>
         <select name="project_id" id="project_id" class="custom-select custom-select-sm" >
         <option value="" disabled selected hidden>Select Project</option>
+        <option value="0" >All Projects</option>
           <?php
           $projects = $conn->query("SELECT *  FROM project_list ");
           while ($row = $projects->fetch_assoc()) :
@@ -146,9 +147,10 @@
       <div class="form-group" style="padding: 30px;">
         <label for="">Report Type</label>
         <select name="report_by" id="report_by" class="custom-select custom-select-sm">
-        <option value="0" selected>All Employees</option>
-        <option value="1" >No. of tasks / Employee</option>
-        <option value="2" >No. of tasks / Status</option>
+        <option value="0" selected>Select Report Type</option>
+        <option value="1" >No. of tasks / Employee In one Project</option>
+        <option value="2" >No. of tasks / Status In one Project</option>
+        <option value="3" >No. of Hours / Employee In one Project</option>
         </select>
       </div>
       <div id="employee_list" class="form-group" style="padding: 30px; display:none">
@@ -302,7 +304,15 @@
       var from_date = new Date($('#from_date').val());
       var to_date = new Date($('#to_date').val());
       var report_by = $('#report_by option:selected').val();
-      console.log(report_by);
+      if(project==""){
+        alert("Please Choose project");
+        return;
+      }
+      if(report_by==0){
+        alert("Please Choose Report Type");
+        return;
+      }
+      
       $.ajax({
         url: "data.php",
         method: "POST",
@@ -316,7 +326,6 @@
         },
         dataType: "JSON",
         success: function(data) {
-          
           var report_by = [];
           var total = [];
           var color = [];
@@ -325,7 +334,7 @@
             report_by.push(data[count].report_by);
             total.push(data[count].total);
             color.push(data[count].color);
-            console.log(data[count].project_id)
+            // console.log(data[count].project_id)
           }
 
           var chart_data = {

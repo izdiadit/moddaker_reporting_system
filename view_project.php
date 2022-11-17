@@ -220,7 +220,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="post">
 
 		                      <div class="user-block">
-		                      	<?php if($_SESSION['login_id'] == $row['user_id']): ?>
+		                      	<?php if($_SESSION['login_id'] == $row['user_id'] || $_SESSION['login_id'] != 3): ?>
 		                      	<span class="btn-group dropleft float-right">
 								  <span class="btndropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
 								    <i class="fa fa-ellipsis-v"></i>

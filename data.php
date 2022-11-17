@@ -18,6 +18,71 @@ if(isset($_POST["action"]))
         $total=0;
 		$date="and (task_list.date_created BETWEEN '$from_date' AND '$to_date')";
 		$group_by='';
+		if($report_by_value==3){
+			if($project_id!=0){
+			$query_project_hours_total = "
+			SELECT SUM(prod.time_rendered) AS Total 
+			FROM user_productivity prod JOIN users on users.id = prod.user_id where project_id=$project_id  and (prod.date_created  BETWEEN '$from_date' AND '$to_date')
+			";
+
+
+			$result_project_hours = $conn->query($query_project_hours_total);
+			foreach($result_project_hours as $row_count)
+			{
+				$total=$row_count["Total"];
+			}
+
+			$query_emp_hours_total = "
+			SELECT concat(users.firstname, users.lastname) as name, SUM(prod.time_rendered) AS Total 
+			FROM user_productivity prod JOIN users on users.id = prod.user_id where project_id=$project_id  and (prod.date_created  BETWEEN '$from_date' AND '$to_date') GROUP BY prod.user_id
+			";
+
+			$result_emp_hours = $conn->query($query_emp_hours_total);
+
+			foreach ($result_emp_hours as $row) {
+				$data[] = array(
+					'report_by'		=>	$row["name"],
+					'total'			=>	round(($row["Total"]/$total)*100,2),
+					'color'			=>	'#' . rand(100000, 999999) . '',
+					'project_id'		=>	$from_date,
+				);
+			}
+		}else
+		{
+			$query_project_hours_total = "
+			SELECT SUM(prod.time_rendered) AS Total 
+			FROM user_productivity prod JOIN users on users.id = prod.user_id where    (prod.date_created  BETWEEN '$from_date' AND '$to_date')
+			";
+
+
+			$result_project_hours = $conn->query($query_project_hours_total);
+			foreach($result_project_hours as $row_count)
+			{
+				$total=$row_count["Total"];
+			}
+
+			$query_emp_hours_total = "
+			SELECT concat(users.firstname, users.lastname) as name, SUM(prod.time_rendered) AS Total 
+			FROM user_productivity prod JOIN users on users.id = prod.user_id where    (prod.date_created  BETWEEN '$from_date' AND '$to_date') GROUP BY prod.user_id
+			";
+
+			$result_emp_hours = $conn->query($query_emp_hours_total);
+
+			foreach ($result_emp_hours as $row) {
+				$data[] = array(
+					'report_by'		=>	$row["name"],
+					'total'			=>	round(($row["Total"]/$total)*100,2),
+					'color'			=>	'#' . rand(100000, 999999) . '',
+					'project_id'		=>	$from_date,
+				);
+			}
+		}
+		
+			echo json_encode($data);
+			return;
+		
+		}
+
 		if($report_by_value==1){
 			$group_by="employee_id";
 		}

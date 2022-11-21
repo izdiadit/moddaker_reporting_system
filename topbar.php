@@ -18,6 +18,23 @@
 
     <ul class="navbar-nav ml-auto">
      
+    <li class="nav-item">
+    <?php 
+    $count = 0;
+    $qry = $conn->query("SELECT COUNT(*) as c FROM notifications WHERE recipient = {$_SESSION['login_id']}");
+    while($row= $qry->fetch_assoc()):
+      $count = $row['c'];
+
+    endwhile;
+    ?>
+    <span class="fa-stack fa-1x" data-count="<?php echo $count;?>">
+        <a class="nav-link"  href="#" role="button"  id="notification">
+        <i class="fa  fa-stack-2x"></i>
+        <i class="fas fa-bell"></i>
+        </a>
+      </span>
+  
+      </li>
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
@@ -45,4 +62,25 @@
      $('#manage_account').click(function(){
         uni_modal('Manage Account','manage_user.php?id=<?php echo $_SESSION['login_id'] ?>')
       })
+      $('#notification').click(function(){
+        uni_modal('Notifications','notifications.php?id=<?php echo $_SESSION['login_id'] ?>')
+      })
+      
   </script>
+  <style>
+    .fa-stack[data-count]:after{
+  position:absolute;
+  right:0%;
+  top:1%;
+  content: attr(data-count);
+  font-size:70%;
+  padding:.6em;
+  border-radius:999px;
+  line-height:.75em;
+  color: white;
+  background:rgba(255,0,0,.85);
+  text-align:center;
+  min-width:2em;
+  font-weight:bold;
+}
+  </style>

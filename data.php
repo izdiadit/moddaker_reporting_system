@@ -2,7 +2,7 @@
 
 //data.php
 include('db_connect.php');
-$connect = new PDO("mysql:host=localhost;dbname=testing", "root", "");
+//$connect = new PDO("mysql:host=localhost;dbname=testing", "root", "");
 
 if(isset($_POST["action"]))
 {
@@ -16,7 +16,7 @@ if(isset($_POST["action"]))
 		$to_date=$_POST["to_date"];
 		$report_by_value=$_POST["report_by"];
         $total=0;
-		$date="and (task_list.date_created BETWEEN '$from_date' AND '$to_date')";
+		$date=" (task_list.date_created BETWEEN '$from_date' AND '$to_date')";
 		$group_by='';
 		if($report_by_value==3){
 			if($project_id!=0){
@@ -86,14 +86,14 @@ if(isset($_POST["action"]))
 		if($report_by_value==1){
 			$group_by="employee_id";
 		}
-		else{
+		if($report_by_value==2){
 			$group_by="status";
 		}
 		if($project_id!=0){
 			if($employee_id!=0){
 				$query_count = "
 			SELECT COUNT(id) AS Total 
-			FROM task_list where project_id=$project_id and employee_id=$employee_id $date
+			FROM task_list where project_id=$project_id and employee_id=$employee_id and $date
 			";
 			$result_count = $conn->query($query_count);
 			foreach($result_count as $row_count)
@@ -104,13 +104,13 @@ if(isset($_POST["action"]))
 		   
 			$query = "
 			SELECT status.name as st_name,concat(users.firstname,users.lastname) as name ,COUNT(task_list.id) AS Total 
-			FROM task_list join users join status where status.id=task_list.status and users.id=task_list.employee_id and project_id=$project_id and employee_id=$employee_id $date
+			FROM task_list join users join status where status.id=task_list.status and users.id=task_list.employee_id and project_id=$project_id and employee_id=$employee_id and $date
 			GROUP BY $group_by
 			";
 			}else {
 			$query_count = "
 			SELECT COUNT(id) AS Total 
-			FROM task_list where project_id=$project_id $date
+			FROM task_list where project_id=$project_id and $date
 			";
 			$result_count = $conn->query($query_count);
 			foreach($result_count as $row_count)
@@ -121,12 +121,48 @@ if(isset($_POST["action"]))
 		   
 			$query = "
 			SELECT status.name as st_name,concat(users.firstname,users.lastname) as name ,COUNT(task_list.id) AS Total 
-			FROM task_list join users join status where status.id=task_list.status and  users.id=task_list.employee_id and project_id=$project_id $date
+			FROM task_list join users join status where status.id=task_list.status and  users.id=task_list.employee_id and project_id=$project_id and $date
 			GROUP BY $group_by
 			";}
 
 		}
-       
+		if($project_id==0){
+			if($employee_id!=0){
+			$query_count = "
+			SELECT COUNT(id) AS Total 
+			FROM task_list where  employee_id=$employee_id and $date
+			";
+			$result_count = $conn->query($query_count);
+			foreach($result_count as $row_count)
+			{
+				$total=$row_count["Total"];
+			}
+	
+		   
+			$query = "
+			SELECT status.name as st_name,concat(users.firstname,users.lastname) as name ,COUNT(task_list.id) AS Total 
+			FROM task_list join users join status where status.id=task_list.status and users.id=task_list.employee_id and  employee_id=$employee_id and $date
+			GROUP BY $group_by
+			";
+			}else {
+			$query_count = "
+			SELECT COUNT(id) AS Total 
+			FROM task_list where  $date
+			";
+			$result_count = $conn->query($query_count);
+			foreach($result_count as $row_count)
+			{
+				$total=$row_count["Total"];
+			}
+	
+		   
+			$query = "
+			SELECT status.name as st_name,concat(users.firstname,users.lastname) as name ,COUNT(task_list.id) AS Total 
+			FROM task_list join users join status where status.id=task_list.status and  users.id=task_list.employee_id and $date
+			GROUP BY $group_by
+			";}
+
+		}
     
 		$result = $conn->query($query);
 

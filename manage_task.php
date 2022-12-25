@@ -21,13 +21,13 @@ style="display: fl;"
 		<?php if($_SESSION['login_type'] != 3): ?>
 		<div class="form-group">
 			<label for="">Description</label>
-			<textarea name="description" cols="30" rows="10" class="form-control" required><?php echo isset($description) ? $description : '' ?></textarea>
+			<textarea name="description" cols="30" rows="10" class="form-control summernote" required><?php echo isset($description) ? $description : '' ?></textarea>
 		</div>	
 		<?php endif; ?>
 		<?php if($_SESSION['login_type'] == 3): ?>
 		<div class="form-group">
 			<label for="">Description</label>
-			<textarea  name="description" cols="30" class="form-control" disabled wrap=physical required><?php echo isset($description) ? $description : '' ?></textarea>
+			<textarea  name="description" cols="30" class="form-control summernote" disabled wrap=physical required><?php echo isset($description) ? $description : '' ?></textarea>
 		</div>
 		<?php endif; ?>
 		<?php if($_SESSION['login_type'] != 3): ?>
@@ -94,23 +94,26 @@ style="display: fl;"
 </div>
 
 <script>
+	// $(document).ready(function(){
+	// $('.summernote').summernote({
+  //       height: 200,
+  //       toolbar: [
+  //           [ 'style', [ 'style' ] ],
+  //           [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+  //           [ 'fontname', [ 'fontname' ] ],
+  //           [ 'fontsize', [ 'fontsize' ] ],
+  //           [ 'color', [ 'color' ] ],
+  //           [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+  //           [ 'table', [ 'table' ] ],
+  //           [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+  //       ]
+  //   }).on('summernote.change', function(we, contents, $editable) {
+  //   $(this).html(contents);
+	// 	});
+  //    })
 	$(document).ready(function(){
-	$('.summernote').summernote({
-        height: 200,
-        toolbar: [
-            [ 'style', [ 'style' ] ],
-            [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
-            [ 'fontname', [ 'fontname' ] ],
-            [ 'fontsize', [ 'fontsize' ] ],
-            [ 'color', [ 'color' ] ],
-            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
-            [ 'table', [ 'table' ] ],
-            [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
-        ]
-    }).on('summernote.change', function(we, contents, $editable) {
-    $(this).html(contents);
-		});
-     })
+		$('.summernote').summernote()
+	})
     $('#manage-task').submit(function(e){
     	e.preventDefault()
     	start_load()

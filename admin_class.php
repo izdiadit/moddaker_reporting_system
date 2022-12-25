@@ -85,6 +85,18 @@ Class Action {
 			return 1;
 		}
 	}
+	function notification(){
+		if (isset($_POST['notif_id'])) {
+			$status_qry = $this->db->query("UPDATE notifications SET unread = false WHERE id = {$_POST['notif_id']}");
+			// $_SESSION['projectid']=$_POST['id'];
+			// $_SESSION['notif_id']=$_POST['notif_id'];
+			// $_SESSION['tid']=$_POST['tid'];
+			return 1;
+			// $qry_notification = $this->db->query("SELECT COUNT(*) as c FROM notifications WHERE recipient = {$_SESSION['login_id']} and unread = true");
+			// $_SESSION["notif_state"] = $qry_notification;
+		}
+		return 'test';
+	}
 	function signup(){
 		extract($_POST);
 		$data = "";

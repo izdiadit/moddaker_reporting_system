@@ -10,7 +10,7 @@
 			<div class="col-md-6">
 				<div class="form-group">
 					<label for="" class="control-label">Name</label>
-					<input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>">
+					<input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>" required>
 				</div>
 			</div>
           	<div class="col-md-6">
@@ -28,13 +28,13 @@
 			<div class="col-md-6">
             <div class="form-group">
               <label for="" class="control-label">Start Date</label>
-              <input type="date" class="form-control form-control-sm" autocomplete="off" name="start_date" value="<?php echo isset($start_date) ? date("Y-m-d",strtotime($start_date)) : '' ?>">
+              <input type="date" class="form-control form-control-sm" autocomplete="off" name="start_date" value="<?php echo isset($start_date) ? date("Y-m-d",strtotime($start_date)) : '' ?>" required>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="" class="control-label">End Date</label>
-              <input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>">
+              <input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>" required>
             </div>
           </div>
 		</div>
@@ -76,7 +76,9 @@
 			<div class="col-md-10">
 				<div class="form-group">
 					<label for="" class="control-label">Description</label>
-					<textarea name="description" id="" cols="30" rows="10" class="form-control summernote" required><?php echo isset($description) ? $description : '' ?></textarea>
+					<textarea name="description" id="" cols="30" rows="10" class="form-control summernote" required  
+					oninvalid="this.setCustomValidity('Please Enter The Description')"
+					><?php echo isset($description) ? $description : '' ?></textarea>
 				</div>
 			</div>
 		</div>

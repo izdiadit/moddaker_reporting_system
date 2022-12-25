@@ -26,6 +26,11 @@ if($action == 'logout'){
 // 		echo $logout;
 // }
 
+if($action == 'notification'){
+	$save = $crud->notification();
+	if($save)
+		echo $save;
+}
 if($action == 'signup'){
 	$save = $crud->signup();
 	if($save)

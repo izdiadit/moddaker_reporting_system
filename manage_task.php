@@ -1,12 +1,30 @@
 <?php 
 session_start();
 include 'db_connect.php';
+$employees = $conn->query("SELECT count(*) as cnt FROM  project_list  where FIND_IN_SET(".$_SESSION['login_id'].", project_list.user_ids) <> 0 ");
+while($row= $employees->fetch_assoc()){
+	if (!($row["cnt"] != 0  || $_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
+  echo'
+  <div class="error-content">
+  <h3><i class="fas fa-exclamation-triangle text-danger"></i> Denied! </h3>
+
+  <p>
+  You do not have permission to view this page.
+    Meanwhile, you may <a href="./">return to dashboard</a>.
+  </p>
+
+</div>
+  ';
+  exit;
+}
+}
 if(isset($_GET['id'])){
 	$qry = $conn->query("SELECT * FROM task_list where id = ".$_GET['id'])->fetch_array();
 	foreach($qry as $k => $v){
 		$$k = $v;
 	}
 }
+
 ?>
 <div class="container-fluid d-flex flex-column"
 style="display: fl;"

@@ -1,4 +1,21 @@
-<?php include 'db_connect.php' ?>
+<?php 
+
+include 'db_connect.php';
+if ($_SESSION['login_type'] == 3) {
+  echo'
+  <div class="error-content">
+  <h3><i class="fas fa-exclamation-triangle text-danger"></i> Denied! </h3>
+
+  <p>
+  You do not have permission to view this page.
+    Meanwhile, you may <a href="./">return to dashboard</a>.
+  </p>
+
+</div>
+  ';
+  exit;
+}
+?>
 <div class="col-md-12">
   <div class="card card-outline card-success">
     <div class="card-header">

@@ -43,13 +43,13 @@ if ($_SESSION['login_type'] == 3) {
 			<div class="col-md-6">
             <div class="form-group">
               <label for="" class="control-label">Start Date</label>
-              <input type="date" class="form-control form-control-sm" autocomplete="off" name="start_date" value="<?php echo isset($start_date) ? date("Y-m-d",strtotime($start_date)) : '' ?>" required>
+              <input type="date" class="form-control form-control-sm" autocomplete="off"  name="start_date" id="start_date" value="<?php echo isset($start_date) ? date("Y-m-d",strtotime($start_date)) : '' ?>" required>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
               <label for="" class="control-label">End Date</label>
-              <input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>" required>
+              <input type="date" class="form-control form-control-sm" autocomplete="off" onchange="onTimeSelect()" name="end_date" id="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>" required>
             </div>
           </div>
 		</div>
@@ -129,4 +129,39 @@ if ($_SESSION['login_type'] == 3) {
 			}
 		})
 	})
+	function onTimeSelect() {
+		var start_time_val = $('#start_date').val();
+		var end_time_val = $('#end_date').val();
+		
+		if (end_time_val  <= start_time_val ) {
+			alert("End Date must be after Start Date.");
+console.log("hhhhhhhhh "+start_time_val+" "+end_time_val);
+			document.getElementById("end_date").value=adder(start_time_val);
+
+			//dateInput=start_time_val;
+		}
+	}
+	/////////////
+	function adder(tstring){
+		ystring = tstring.split('-')[0];
+		mstring = tstring.split('-')[1];
+		dstring = tstring.split('-')[2];
+
+
+		m = Number(mstring);
+		y = Number(ystring);
+		if (m == 12) {
+			y += 1;
+			return  y.toString(10) + '-01-' + dstring;
+		}
+		new_mstring = zeroPad(m + 1, 2);
+		
+		return ystring + '-' + new_mstring + '-' + dstring;
+		// console.log(new_time);
+	}
+
+	function zeroPad(num, places) {
+		var zero = places - num.toString().length + 1;
+		return Array(+(zero > 0 && zero)).join("0") + num;
+	}
 </script>

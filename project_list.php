@@ -58,8 +58,9 @@
 						elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
 						$row['status'] = 4;
 						endif;
+						
 					?>
-					<tr>
+							<tr >
 						<th class="text-center"><?php echo $i++ ?></th>
 						<td>
 							<p><b><?php echo ucwords($row['name']) ?></b></p>

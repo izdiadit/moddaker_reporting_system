@@ -13,7 +13,7 @@ foreach($qry as $k => $v){
 <div class="container-fluid">
 <?php 
     $count = 0;
-    $qry = $conn->query("SELECT *, notifications.id as notif_id, notifications.task_id as tid FROM notifications JOIN project_list on notifications.project_id = project_list.id  WHERE recipient = {$_SESSION['login_id']} and unread = true order by notifications.date_created desc");
+    $qry = $conn->query("SELECT *, notifications.id as notif_id, notifications.task_id as tid FROM notifications JOIN project_list on notifications.project_id = project_list.id  WHERE FIND_IN_SET({$_SESSION['login_id']}, recipient)  and unread = true order by notifications.date_created desc");
     while($row= $qry->fetch_assoc()):
 			
 			if ($row['type'] == 'insert'){
@@ -36,6 +36,9 @@ foreach($qry as $k => $v){
 			elseif($row['type'] == 'reassign2'){
 				echo ("  <a href='#' id='{$row['notif_id']}p{$row['project_id']}t{$row['tid']}' class='pagerlink' > <p> Some task in {$row['name']} project has been reassigned to you.</p></a>  ");
 			}
+		/*	elseif($row['type'] == 'insert_project'){
+				echo ("  <a href='#' id='{$row['notif_id']}p{$row['project_id']}t{$row['tid']}' class='pagerlink' > <p> you  were add in {$row['name']} project .</p></a>  ");
+			}*/
 			
     endwhile;
     ?>
@@ -81,13 +84,17 @@ foreach($qry as $k => $v){
 			method: 'POST',
 			type: 'POST',
 			success: function(resp) {
-				console.log("notif_id"+resp);
+				//console.log("notif_id"+resp);
 				if (resp == 1) {
 					//alert_toast('Data successfully saved', "success");
 					setTimeout(function() {
 						location.reload()
 					}, 1500)
 					//window.location = 'index.php?page=view_project&p=&tid&notif_id=';
+					if(tid<=0){
+						window.location.href = "index.php?page=project_list&notif_id="+notif_id+"&id="+id+"&tid="+tid;
+					}
+					else
 					window.location.href = "index.php?page=view_project&notif_id="+notif_id+"&id="+id+"&tid="+tid;
 				}
 			}

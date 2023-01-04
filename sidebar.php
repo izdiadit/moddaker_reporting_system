@@ -31,14 +31,14 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-            <?php if($_SESSION['login_type'] != 3): ?>
-              <li class="nav-item">
+            <?php //if($_SESSION['login_type'] != 3): ?> 
+              <!-- <li class="nav-item">
                 <a href="./index.php?page=new_project" class="nav-link nav-new_project tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Add New</p>
                 </a>
-              </li>
-            <?php endif; ?>
+              </li> -->
+            <?php //endif; ?>
               <li class="nav-item">
                 <a href="./index.php?page=project_list" class="nav-link nav-project_list tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
@@ -58,6 +58,12 @@
                 <a href="./index.php?page=reports" class="nav-link nav-reports">
                   <i class="fas fa-th-list nav-icon"></i>
                   <p>Report</p>
+                </a>
+          </li>
+          <li class="nav-item">
+                <a href="./index.php?page=students" class="nav-link nav-students">
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>الطلاب</p>
                 </a>
           </li>
           <?php endif; ?>

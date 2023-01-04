@@ -49,7 +49,7 @@ if ($_SESSION['login_type'] == 3) {
           <div class="col-md-6">
             <div class="form-group">
               <label for="" class="control-label">End Date</label>
-              <input type="date" class="form-control form-control-sm" autocomplete="off" onchange="onTimeSelect()" name="end_date" id="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>" required>
+              <input type="date" class="form-control form-control-sm" autocomplete="off" onchange="onDateSelect()" name="end_date" id="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>" required>
             </div>
           </div>
 		</div>
@@ -129,7 +129,7 @@ if ($_SESSION['login_type'] == 3) {
 			}
 		})
 	})
-	function onTimeSelect() {
+	function onDateSelect() {
 		var start_time_val = $('#start_date').val();
 		var end_time_val = $('#end_date').val();
 		

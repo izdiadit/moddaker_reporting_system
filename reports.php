@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 include 'db_connect.php';
 if ($_SESSION['login_type'] == 3) {
-  echo'
+  echo '
   <div class="error-content">
   <h3><i class="fas fa-exclamation-triangle text-danger"></i> Denied! </h3>
 
@@ -14,217 +14,87 @@ if ($_SESSION['login_type'] == 3) {
 </div>
   ';
   exit;
+
+  $url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_user_get_users&moodlewsrestformat=json&criteria[0][key]=lastname&criteria[0][value]=%25';
+
+  $curl = curl_init($url);
+  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+  $response = curl_exec($curl);
+
+  curl_close($curl);
+  $result = json_decode($response, true);
+
+
+  for ($i = 0; $i < count($result); $i++) {
+    $row = $result[$i];
+    $result[$i]['country'] = $string["$row[country]"];
+  }
 }
 ?>
 <div class="col-md-12">
   <div class="card card-outline card-success">
     <div class="card-header">
-      <b>Project Progress</b>
-      <div class="card-tools">
-        <button class="btn btn-flat btn-sm bg-gradient-success btn-success" id="print"><i class="fa fa-print"></i> Print</button>
-      </div>
+      <b>شاشة التقارير</b>
     </div>
-    <div class="card-body p-0">
-      <div class="table-responsive" id="printable">
-        <table class="table m-0 table-bordered">
-          <!--  <colgroup>
-                  <col width="5%">
-                  <col width="30%">
-                  <col width="35%">
-                  <col width="15%">
-                  <col width="15%">
-                </colgroup> -->
-          <thead>
-            <th>#</th>
-            <th>Project</th>
-            <th>Task</th>
-            <th>Completed Task</th>
-            <th>Work Duration</th>
-            <th>Progress</th>
-            <th>Status</th>
-          </thead>
-          <tbody>
-            <?php
-            $i = 1;
-            $stat = array("Pending", "Started", "On-Progress", "On-Hold", "Over Due", "Done");
-            $where = "";
-            if ($_SESSION['login_type'] == 2) {
-              $where = " where manager_id = '{$_SESSION['login_id']}' ";
-            } elseif ($_SESSION['login_type'] == 3) {
-              $where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
-            }
-            $qry = $conn->query("SELECT * FROM project_list $where order by name asc");
-            while ($row = $qry->fetch_assoc()) :
-              $tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
-              $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 3")->num_rows;
-              $prog = $tprog > 0 ? ($cprog / $tprog) * 100 : 0;
-              $prog = $prog > 0 ?  number_format($prog, 2) : $prog;
-              $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
-              $dur = $conn->query("SELECT sum(time_rendered) as duration FROM user_productivity where project_id = {$row['id']}");
-              $dur = $dur->num_rows > 0 ? $dur->fetch_assoc()['duration'] : 0;
-              if ($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])) :
-                if ($prod  > 0  || $cprog > 0)
-                  $row['status'] = 2;
-                else
-                  $row['status'] = 1;
-              elseif ($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])) :
-                $row['status'] = 4;
-              endif;
-            ?>
-              <tr>
-                <td>
-                  <?php echo $i++ ?>
-                </td>
-                <td>
-                  <a>
-                    <?php echo ucwords($row['name']) ?>
-                  </a>
-                  <br>
-                  <small>
-                    Due: <?php echo date("Y-m-d", strtotime($row['end_date'])) ?>
-                  </small>
-                </td>
-                <td class="text-center">
-                  <?php echo number_format($tprog) ?>
-                </td>
-                <td class="text-center">
-                  <?php echo number_format($cprog) ?>
-                </td>
-                <td class="text-center">
-                  <?php echo number_format($dur) . ' Hr/s.' ?>
-                </td>
-                <td class="project_progress">
-                  <div class="progress progress-sm">
-                    <div class="progress-bar bg-green" role="progressbar" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $prog ?>%">
-                    </div>
-                  </div>
-                  <small>
-                    <?php echo $prog ?>% Complete
-                  </small>
-                </td>
-                <td class="project-state">
-                  <?php
-                  if ($stat[$row['status']] == 'Pending') {
-                    echo "<span class='badge badge-secondary'>{$stat[$row['status']]}</span>";
-                  } elseif ($stat[$row['status']] == 'Started') {
-                    echo "<span class='badge badge-primary'>{$stat[$row['status']]}</span>";
-                  } elseif ($stat[$row['status']] == 'On-Progress') {
-                    echo "<span class='badge badge-info'>{$stat[$row['status']]}</span>";
-                  } elseif ($stat[$row['status']] == 'On-Hold') {
-                    echo "<span class='badge badge-warning'>{$stat[$row['status']]}</span>";
-                  } elseif ($stat[$row['status']] == 'Over Due') {
-                    echo "<span class='badge badge-danger'>{$stat[$row['status']]}</span>";
-                  } elseif ($stat[$row['status']] == 'Done') {
-                    echo "<span class='badge badge-success'>{$stat[$row['status']]}</span>";
-                  }
-                  ?>
-                </td>
-              </tr>
-            <?php endwhile; ?>
-          </tbody>
-        </table>
-      </div>
+    <div class="chartsPanel">
+        <div class="chartCard" id="chartdiv" style="width: 50%;"></div>
 
+        <?php if ($current_user->type == 'مدير نظام') : ?>
+            <div class="chartCard" id="chartdiv2" style="width: 50%;"></div>
+        <?php endif; ?>
     </div>
 
-  </div>
-
-  <div class="card-body p-0">
-
-  <div class="container">
-			<!-- <h2 class="text-center mt-4 mb-3">How to Create Dynamic Chart in PHP using Chart.js</a></h2> -->    
-			<div class="card" >
-				<div class="card-header">Sample Survey</div>
-        <div style="display: flex; justify-content: center; gap:10px; margin: 5px;">
-          <div style="display: flex; flex-direction: column;">
-
-            <label for="start" style="display: block;  font: 1rem 'Fira Sans', sans-serif;margin: .4rem 0; ">From date</label>
-            <input type="date" id="from_date" name="trip-start" value="2022-01-01"  min="2022-01-01"  style="width: fit-content; margin: .4rem 0;">
-          </div>
-          <div style="display: flex; flex-direction: column;">
-
-            <label for="start" style="display: block;  font: 1rem 'Fira Sans', sans-serif;margin: .4rem 0; ">To date</label>
-            <input type="date" id="to_date" name="trip-start" value="2022-12-01"  min="2022-01-01"  style="width: fit-content; margin: .4rem 0;">
-          </div>
+    <div class="chartsPanel">
+        <div class="chartCard" id="chartCard3" style="width: 50%;">
+            <div id="chartdiv3"></div>
         </div>
-        <div class="form-group" style="padding: 30px;">
-        <label for="">Project</label>
-        <select name="project_id" id="project_id" class="custom-select custom-select-sm" >
-        <option value="" disabled selected hidden>Select Project</option>
-        <option value="0" >All Projects</option>
-          <?php
-          $projects = $conn->query("SELECT *  FROM project_list ");
-          while ($row = $projects->fetch_assoc()) :
-          ?>
-            <option value="<?php echo $row['id'] ?>" >
-              <?php echo ucwords($row['name']) ?></option>
-          <?php endwhile; ?>
-        </select>
-      </div>
-      <div class="form-group" style="padding: 30px;">
-        <label for="">Report Type</label>
-        <select name="report_by" id="report_by" class="custom-select custom-select-sm">
-        <option value="0" selected>Select Report Type</option>
-        <option value="1" >No. of tasks / Employee In one Project</option>
-        <option value="2" >No. of tasks / Status In one Project</option>
-        <option value="3" >No. of Hours / Employee In one Project</option>
-        </select>
-      </div>
-      <div id="employee_list" class="form-group" style="padding: 30px; display:none">
-        <label for="">Employees</label>
-        <select name="employee_id" id="employee_id" class="custom-select custom-select-sm" >
-        <option value="0" selected>All Employees</option>
-          <?php
-          $employees = $conn->query("SELECT * , concat(users.firstname,' ',users.lastname) as name FROM users ");
-          while ($row = $employees->fetch_assoc()) :
-          ?>
-            <option value="<?php echo $row['id'] ?>" >
-              <?php echo ucwords($row['name']) ?></option>
-          <?php endwhile; ?>
-        </select>
-      </div>
-				<div class="card-body">
-					<div class="form-group" style="padding: 11px;">
-						<button type="button" name="submit_data" class="btn btn-primary" id="submit_data">Submit</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-4">
-					<div class="card mt-4">
-						<div class="card-header">Pie Chart</div>
-						<div class="card-body">
-							<div class="chart-container pie-chart">
-								<canvas id="pie_chart"></canvas>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card mt-4">
-						<div class="card-header">Doughnut Chart</div>
-						<div class="card-body">
-							<div class="chart-container pie-chart">
-								<canvas id="doughnut_chart"></canvas>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card mt-4 mb-4">
-						<div class="card-header">Bar Chart</div>
-						<div class="card-body">
-							<div class="chart-container pie-chart">
-								<canvas id="bar_chart"></canvas>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-  </div>
+
+        <?php if ($current_user->type == 'مدير نظام') : ?>
+            <div class="chartCard" id="chartdiv4" style="width: 50%;"></div>
+        <?php endif; ?>
+    </div>
+
+    <script type="text/javascript" src="/moddaker_report_screen/amcharts5/index.js"></script>
+    <script type="text/javascript" src="/moddaker_report_screen/amcharts5/percent.js"></script>
+    <script type="text/javascript" src="/moddaker_report_screen/amcharts5/xy.js"></script>
+    <script type="text/javascript" src="/moddaker_report_screen/amcharts5/themes/Animated.js"></script>
+
+    <script>
+        // Reading country_data from php:
+        var result = <?php echo json_encode($result);?>;
+        // // var country_data = JSON.parse(result);
+        var country_data = [];
+        for (const key in result) {
+            if (result.hasOwnProperty.call(result, key)) {
+                country_data.push(result[key]);
+            }
+        }
+        console.log(result)
+        console.log(country_data)
+        
+        
+        
+        
+        // محاولة غير ناجحة
+        // var country_data = [];
+        // async function getcountry_data(url) {
+            //     let response = await fetch(url);
+            //     console.log(response.json())
+            //     return response.json();  // 
+            // }
+            
+            
+            // getcountry_data('http://localhost/moodle/mapi/api.php').then(
+                //     (response) => {
+                    //         country_data = response;
+                    //     }
+                    // );
+                    // console.log(country_data)
+                    </script>
+    
+    <script src="report_charts.js"></script>
+</div>
+</div>
 </div>
 <script>
   $('#print').click(function() {
@@ -287,17 +157,17 @@ if ($_SESSION['login_type'] == 3) {
 <script>
   $(document).ready(function() {
     $('#report_by').click(function() {
-    var report_item = document.getElementById('report_by').value;
-    var item1 = document.getElementById('employee_list')
-    if(report_item == 2 ){
-      item1.style.display = 'block'
-      
-    } else {
-      item1.style.display = 'none'
-      
+      var report_item = document.getElementById('report_by').value;
+      var item1 = document.getElementById('employee_list')
+      if (report_item == 2) {
+        item1.style.display = 'block'
 
-    }
-      
+      } else {
+        item1.style.display = 'none'
+
+
+      }
+
     })
     $('#submit_data').click(function() {
       // const  rm_pie_chart=()=>{
@@ -311,6 +181,7 @@ if ($_SESSION['login_type'] == 3) {
       var language = $('#project_id option:selected').val();
       makechart();
     });
+
     function makechart() {
       // ظبطتتتتتتتتتتتتتتتتتتتتتتتتت
       $('#pie_chart').replaceWith($('<canvas id="pie_chart"></canvas>'));
@@ -321,15 +192,15 @@ if ($_SESSION['login_type'] == 3) {
       var from_date = new Date($('#from_date').val());
       var to_date = new Date($('#to_date').val());
       var report_by = $('#report_by option:selected').val();
-      if(project==""){
+      if (project == "") {
         alert("Please Choose project");
         return;
       }
-      if(report_by==0){
+      if (report_by == 0) {
         alert("Please Choose Report Type");
         return;
       }
-      
+
       $.ajax({
         url: "data.php",
         method: "POST",
@@ -396,29 +267,30 @@ if ($_SESSION['login_type'] == 3) {
             data: chart_data,
             options: options
           });
-          
+
         }
       })
     }
+
     function dateFormater(date, separator) {
-  var day = date.getDate();
-  // add +1 to month because getMonth() returns month from 0 to 11
-  var month = date.getMonth() + 1;
-  var year = date.getFullYear();
+      var day = date.getDate();
+      // add +1 to month because getMonth() returns month from 0 to 11
+      var month = date.getMonth() + 1;
+      var year = date.getFullYear();
 
-  // show date and month in two digits
-  // if month is less than 10, add a 0 before it
-  if (day < 10) {
-    day = '0' + day;
-  }
-  if (month < 10) {
-    month = '0' + month;
-  }
+      // show date and month in two digits
+      // if month is less than 10, add a 0 before it
+      if (day < 10) {
+        day = '0' + day;
+      }
+      if (month < 10) {
+        month = '0' + month;
+      }
 
-  // now we have day, month and year
-  // use the separator to join them
-  return day + separator + month + separator + year;
-}
+      // now we have day, month and year
+      // use the separator to join them
+      return day + separator + month + separator + year;
+    }
 
   });
 </script>

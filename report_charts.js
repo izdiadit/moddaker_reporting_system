@@ -55,33 +55,7 @@ The most easiest way is to simply set its colors setting to an array of Color ob
 */
 // myseries.set("fill", am5.color('#ff0000'));
 
-// myseries.slices.template.adapters.add("fill", function(fill, target) {
-//     var factor = Math.ceil(Math.max(country_data.length,10) / (myseries.slices.indexOf(target)+1));
-//     var gdegree = factor % 16;
-//     var half_degree = Math.ceil(gdegree/2);
-//     var gdegree = gdegree.toString(16);
-//     var half_degree = half_degree.toString(16);
-//     // console.log(`#5${gdegree}5`);
-//     return `#a${gdegree}${half_degree}`;//chart.get("colors").getIndex(myseries.slices.indexOf(target));
-//     // when g > r colors tends to blue and its derivatives and vice versa.
-//     // blue, seablue, violete ... / red, brown, orange ...
-//   });
 myseries.slices.template.adapters.add("stroke", () => 'aliceblue');
-
-// The data is set directly on series via its data property:
-dummydata = [{
-        country: "السودان",
-        students: 3000
-    }, {
-        country: "السعودية",
-        students: 2000
-    }, {
-        country: "مصر",
-        students: 3000
-    }, {
-        country: "إِندونيسيا",
-        students: 1000
-    }]
 
 
 myseries.data.setAll(country_data);
@@ -97,7 +71,7 @@ myseries.data.setAll(country_data);
 
 // legend.data.setAll(myseries.dataItems);
 
-// Admin dedicated charts: //////////////////////////////////////////////////////////////////////
+
 if (document.body.contains(document.getElementById("chartdiv2"))) {
     // check if admin div exists, to avoid errors for nonadmin sessions
 	var root2 = am5.Root.new("chartdiv2");
@@ -208,13 +182,18 @@ var myseries3 = chart3.series.push(am5xy.ColumnSeries.new(root3,{
 myseries3.columns.template.setAll({
     cornerRadiusTR: 30,
     cornerRadiusTL: 30,
-    width: 50
+    width: 35
 })
 
 //coloring:
-myseries3.columns.template.adapters.add("fill", () => 'darkgoldenrod');
-myseries3.columns.template.adapters.add("stroke", () => 'green');
-myseries3.columns.template.adapters.add("strokeWidth", () => 7);
+// myseries3.columns.template.adapters.add("fill", () => 'darkgoldenrod');
+// myseries3.columns.template.adapters.add("stroke", () => 'green');
+
+myseries3.columns.template.adapters.add("fill", function(fill, target) {
+  return chart3.get("colors").getIndex(myseries3.columns.indexOf(target));
+});
+
+myseries3.columns.template.adapters.add("strokeWidth", () => 3);
 
 country_data_for_xy = [];
 for (const e in country_data) {

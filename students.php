@@ -71,9 +71,9 @@ if($_SESSION['login_type'] == 3) {
 						<td><b><?php echo $moodle_users[$i]['auth'] ?></b></td>
 						<td><b><?php echo $moodle_users[$i]['fullname'] ?></b></td>
 						<td><b><?php echo $moodle_users[$i]['lang'] ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['city']?? 'غير مدخل' ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['country']?? 'غير مدخل' ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['customfields']['value']?? 'غير مدخل' ?></b></td>
+						<td><b><?php echo $moodle_users[$i]['city']?? '-' ?></b></td>
+						<td><b><?php echo $moodle_users[$i]['country']?? '-' ?></b></td>
+						<td><b><?php echo $moodle_users[$i]['customfields']['value']?? '-' ?></b></td>
 						
 						
 						<!-- <td class="text-center">

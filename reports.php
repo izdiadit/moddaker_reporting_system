@@ -14,107 +14,166 @@ if ($_SESSION['login_type'] == 3) {
 </div>
   ';
   exit;
+}
+$service_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_user_get_users&moodlewsrestformat=json&criteria[0][key]=lastname&criteria[0][value]=%';
+$curl = curl_init();
+curl_setopt_array($curl, [
+  CURLOPT_URL => $service_url,
+  CURLOPT_FOLLOWLOCATION => true,
+  CURLOPT_RETURNTRANSFER => true
+]);
 
-  $url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_user_get_users&moodlewsrestformat=json&criteria[0][key]=lastname&criteria[0][value]=%25';
 
-  $curl = curl_init($url);
-  curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-  $response = curl_exec($curl);
+$result = curl_exec($curl);
+$decoded = json_decode($result, true);
 
-  curl_close($curl);
-  $result = json_decode($response, true);
+$moodle_users = $decoded['users'];
+//	print_r( $moodle_users );
 
+$countries = [];
 
-  for ($i = 0; $i < count($result); $i++) {
-    $row = $result[$i];
-    $result[$i]['country'] = $string["$row[country]"];
+include 'countries.php';
+for ($i = 0; $i < count($moodle_users); $i++) {
+  $moodle_users[$i]['country'] = $moodle_users[$i]['country'] ?? '-';
+  if (array_key_exists($string[$moodle_users[$i]['country']], $countries)) {
+    $countries[$string[$moodle_users[$i]['country']]] += 1;
+  } else {
+    $countries[$string[$moodle_users[$i]['country']]] = 1;
   }
 }
+
 ?>
 <div class="col-md-12">
-  <div class="card card-outline card-success">
+  <div class="card card-outline card-success" dir="rtl">
     <div class="card-header">
       <b>شاشة التقارير</b>
     </div>
     <div class="chartsPanel">
-        <div class="chartCard" id="chartdiv" style="width: 50%;"></div>
+      <div class="chartCard" id="chartdiv" style="width: 50%;"></div>
+      <div class="chartCard" id="chartdiv2" style="width: 50%;"></div>
 
-        <?php if ($current_user->type == 'مدير نظام') : ?>
-            <div class="chartCard" id="chartdiv2" style="width: 50%;"></div>
-        <?php endif; ?>
     </div>
 
     <div class="chartsPanel">
-        <div class="chartCard" id="chartCard3" style="width: 50%;">
-            <div id="chartdiv3"></div>
-        </div>
+      <div class="chartCard" id="chartCard3" style="width: 50%;">
+        <div id="chartdiv3"></div>
+      </div>
+      <div class="chartCard" id="chartdiv4" style="width: 50%;"></div>
 
-        <?php if ($current_user->type == 'مدير نظام') : ?>
-            <div class="chartCard" id="chartdiv4" style="width: 50%;"></div>
-        <?php endif; ?>
     </div>
 
-    <script type="text/javascript" src="/moddaker_report_screen/amcharts5/index.js"></script>
-    <script type="text/javascript" src="/moddaker_report_screen/amcharts5/percent.js"></script>
-    <script type="text/javascript" src="/moddaker_report_screen/amcharts5/xy.js"></script>
-    <script type="text/javascript" src="/moddaker_report_screen/amcharts5/themes/Animated.js"></script>
+    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/index.js"></script>
+    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/percent.js"></script>
+    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/xy.js"></script>
+    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Animated.js"></script>
 
     <script>
-        // Reading country_data from php:
-        var result = <?php echo json_encode($result);?>;
-        // // var country_data = JSON.parse(result);
-        var country_data = [];
-        for (const key in result) {
-            if (result.hasOwnProperty.call(result, key)) {
-                country_data.push(result[key]);
-            }
+      // Reading country_data from php:
+      var result = <?php echo json_encode($countries); ?>;
+      // // var country_data = JSON.parse(result);
+      var country_data = [];
+      for (const key in result) {
+        if (result.hasOwnProperty.call(result, key)) {
+          country_data.push({
+            country: key,
+            count: result[key]
+          });
         }
-        console.log(result)
-        console.log(country_data)
-        
-        
-        
-        
-        // محاولة غير ناجحة
-        // var country_data = [];
-        // async function getcountry_data(url) {
-            //     let response = await fetch(url);
-            //     console.log(response.json())
-            //     return response.json();  // 
-            // }
-            
-            
-            // getcountry_data('http://localhost/moodle/mapi/api.php').then(
-                //     (response) => {
-                    //         country_data = response;
-                    //     }
-                    // );
-                    // console.log(country_data)
-                    </script>
-    
-    <script src="report_charts.js"></script>
-</div>
-</div>
-</div>
-<script>
-  $('#print').click(function() {
-    showHide()
-    start_load()
-    var _h = $('head').clone()
-    var _p = $('#printable').clone()
-    var _d = "<p class='text-center'><b>Project Progress Report as of (<?php echo date("F d, Y") ?>)</b></p>"
-    _p.prepend(_d)
-    _p.prepend(_h)
-    var nw = window.open("", "", "width=900,height=600")
-    nw.document.write(_p.html())
-    nw.document.close()
-    nw.print()
-    setTimeout(function() {
-      nw.close()
-      end_load()
-    }, 750)
-  })
+      }
+      console.log(result)
+      console.log(country_data)
 
+
+
+
+      // محاولة غير ناجحة
+      // var country_data = [];
+      // async function getcountry_data(url) {
+      //     let response = await fetch(url);
+      //     console.log(response.json())
+      //     return response.json();  // 
+      // }
+
+
+      // getcountry_data('http://localhost/moodle/mapi/api.php').then(
+      //     (response) => {
+      //         country_data = response;
+      //     }
+      // );
+      // console.log(country_data)
+    </script>
+
+    <script src="report_charts.js"></script>
+  </div>
+</div>
+
+<!-- Academic Status Report -->
+<div class="col-md-12">
+  <div class="card card-outline card-success" dir="rtl" style="padding: 5px;">
+    <div class="card-header">
+      <b>الحالة الأكاديمية</b>
+    </div>
+      <?php 
+      // Get all courses:
+        $courses_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_course_get_courses&moodlewsrestformat=json';
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+          CURLOPT_URL => $courses_url,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_RETURNTRANSFER => true
+        ]);
+        
+        $decoded_courses = json_decode(curl_exec($curl), true);
+
+      // print_r($decoded_courses);
+
+      // Prepare the ids parameter that will be passed in the url:
+      $cat_ids = '';
+
+      foreach ($decoded_courses as $course) {
+          $cat_ids = $cat_ids . ',' .$course['categoryid'];
+      }
+      $cat_ids = ltrim($cat_ids, ',');
+      echo $cat_ids.'<br>';
+
+      // Get all categories:
+      $categories_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_course_get_categories&moodlewsrestformat=json&criteria[0][key]=ids&criteria[0][value]='.$cat_ids;
+      $curl = curl_init();
+      curl_setopt_array($curl, [
+        CURLOPT_URL => $categories_url,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_RETURNTRANSFER => true
+      ]);
+
+      $decoded_categories = json_decode(curl_exec($curl), true);
+      
+      
+
+      ?>
+  </div>
+</div>
+
+<!-- report -->
+<div class="col-md-12">
+  <div class="card card-outline card-success" dir="rtl">
+    <div class="card-header">
+      <b>شاشة التقارير</b>
+    </div>
+    
+  </div>
+</div>
+
+<!-- report -->
+<div class="col-md-12">
+  <div class="card card-outline card-success" dir="rtl">
+    <div class="card-header">
+      <b>شاشة التقارير</b>
+    </div>
+    
+  </div>
+</div>
+
+<script>
   window.onload = function() {
 
 
@@ -294,3 +353,44 @@ if ($_SESSION['login_type'] == 3) {
 
   });
 </script>
+
+<style>
+  /* Chart canvas and div styles */
+  .chartCard {
+    background-color: whitesmoke;
+    box-shadow: -8px 8px 16px 0 rgba(0, 0, 0, 0.2);
+    /* h-offset v-offset blur spread color */
+    transition: 0.3s;
+    border-radius: 15px;
+    margin: 2%;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .chartCard:hover {
+    box-shadow: -16px 16px 16px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .chartsPanel {
+    display: flex;
+    flex-direction: row;
+  }
+
+  div[id^="chartdiv"] {
+    /* The Operator ^ - Match elements that starts with given value
+    The Operator * - Match elements that have an attribute containing a given value: div[id*="chartdiv"] 
+    */
+
+    width: 100%;
+    height: 300px;
+    font-family: 'arabic typesetting';
+    font-size: large;
+  }
+
+  #chartCard3 {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+  }
+</style>

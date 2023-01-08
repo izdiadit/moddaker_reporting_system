@@ -83,24 +83,6 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       console.log(result)
       console.log(country_data)
 
-
-
-
-      // محاولة غير ناجحة
-      // var country_data = [];
-      // async function getcountry_data(url) {
-      //     let response = await fetch(url);
-      //     console.log(response.json())
-      //     return response.json();  // 
-      // }
-
-
-      // getcountry_data('http://localhost/moodle/mapi/api.php').then(
-      //     (response) => {
-      //         country_data = response;
-      //     }
-      // );
-      // console.log(country_data)
     </script>
 
     <script src="report_charts.js"></script>
@@ -130,8 +112,8 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     // echo '</div>';
 
     // Prepare the ids parameter that will be passed in the url:
-    $cat_ids = '';
-
+    $cat_ids = '';    
+    
     foreach ($decoded_courses as $course) {
       $cat_ids = $cat_ids . ',' . $course['categoryid'];
     }
@@ -157,7 +139,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     // 2. Get the no. of graduates in every category by getting the no. of students ended the 4th course (المستوى الرابع)
     $cats_with_enrolled_studs = []; // An associative array with the structure: categoryid => No. of enrolled studs
     $cats_with_graduates = []; // An associative array with the structure: categoryid => No. of graduates
-    
+    $cats_with_statuses = []; // An associative array with the structure: categoryid => [preliminary_startdate , fourth_enddate] dates as timestamp integers
     foreach ($decoded_courses as $course) {
       $graduates_count = 0;
 
@@ -175,7 +157,10 @@ for ($i = 0; $i < count($moodle_users); $i++) {
 
 
         $cats_with_enrolled_studs[$course['categoryid']] = count($enrolled_studs);
+        $cats_with_statuses[$course['categoryid']] = [$course['startdate'], 0];
       }
+
+
       if (strpos($course['fullname'], 'المستوى الرابع') !== false) {
         $course_url =
           'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=gradereport_user_get_grade_items&moodlewsrestformat=json&courseid=' . $course['id'];
@@ -197,6 +182,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         }
         
         $cats_with_graduates[$course['categoryid']] = $graduates_count;
+        $cats_with_statuses[$course['categoryid']][1] = $course['enddate'];
 
       }
     }
@@ -208,6 +194,10 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     // echo  '<div dir="ltr">';
     // print_r($cats_with_graduates);
     // echo '</div>';
+
+    echo  '<div dir="ltr">';
+    print_r($cats_with_statuses); echo ' '.time();
+    echo '</div>';
     ?>
     <table class="table tabe-hover table-bordered" dir="rtl">
       <thead>
@@ -225,7 +215,19 @@ for ($i = 0; $i < count($moodle_users); $i++) {
             <td><?php echo $cat['name'] ?? '-'; ?></td>
             <td><?php echo $cats_with_enrolled_studs[$cat['id']] ?? '-'; ?></td>
             <td><?php echo $cats_with_graduates[$cat["id"]] ?? '-'; ?></td>
-            <td><?php echo '-'; ?></td>
+            <td><?php 
+                  if (!isset($cats_with_statuses[$cat["id"]])) {
+                    echo '-';
+                  } elseif ($cats_with_statuses[$cat["id"]][0] > time()) {
+                    echo 'تسجيلها مرتقب'.'<br>';
+                    echo date('Y-m-d',$cats_with_statuses[$cat["id"]][0]);
+                  } elseif ($cats_with_statuses[$cat["id"]][1] < time()) {
+                    echo 'منتهية'.'<br>';
+                    echo date('Y-m-d',$cats_with_statuses[$cat["id"]][1]);
+                  } elseif ($cats_with_statuses[$cat["id"]][0] < time() && $cats_with_statuses[$cat["id"]][1] > time()) {
+                    echo 'قيد الدراسة';
+                  }
+            ?></td>
           </tr>
         <?php endforeach; ?>
       </tbody>
@@ -478,6 +480,9 @@ for ($i = 0; $i < count($moodle_users); $i++) {
   td{
     direction: rtl;
     text-align: right;
+  }
+  th{
+    text-align: center;
   }
 
   .card-header{

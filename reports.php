@@ -113,43 +113,123 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <div class="card-header">
       <b>الحالة الأكاديمية</b>
     </div>
-      <?php 
-      // Get all courses:
-        $courses_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_course_get_courses&moodlewsrestformat=json';
+    <?php
+    // Get all courses:
+    $courses_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_course_get_courses&moodlewsrestformat=json';
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+      CURLOPT_URL => $courses_url,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_RETURNTRANSFER => true
+    ]);
+
+    $decoded_courses = json_decode(curl_exec($curl), true);
+
+    // echo '<div dir="ltr">';
+    // print_r($decoded_courses);
+    // echo '</div>';
+
+    // Prepare the ids parameter that will be passed in the url:
+    $cat_ids = '';
+
+    foreach ($decoded_courses as $course) {
+      $cat_ids = $cat_ids . ',' . $course['categoryid'];
+    }
+    $cat_ids = ltrim($cat_ids, ',');
+    // echo $cat_ids . '<br>';
+
+    // Get all categories:
+    $categories_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_course_get_categories&moodlewsrestformat=json&criteria[0][key]=ids&criteria[0][value]=' . $cat_ids;
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+      CURLOPT_URL => $categories_url,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_RETURNTRANSFER => true
+    ]);
+
+    $decoded_categories = json_decode(curl_exec($curl), true);
+
+    // echo '<div dir="ltr">';
+    // print_r($decoded_categories);
+    // echo '</div>';
+
+    // 1. Get the no. of students enrolled in every category by getting the no. of students enrolled in the 1st course (المستوى التمهيدي)
+    // 2. Get the no. of graduates in every category by getting the no. of students ended the 4th course (المستوى الرابع)
+    $cats_with_enrolled_studs = []; // An associative array with the structure: categoryid => No. of enrolled studs
+    $cats_with_graduates = []; // An associative array with the structure: categoryid => No. of graduates
+    
+    foreach ($decoded_courses as $course) {
+      $graduates_count = 0;
+
+      if (strpos($course['fullname'], 'المستوى التمهيدي') !== false) {
+        $course_url =
+          'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_enrol_get_enrolled_users&moodlewsrestformat=json&courseid=' . $course['id'];
         $curl = curl_init();
         curl_setopt_array($curl, [
-          CURLOPT_URL => $courses_url,
+          CURLOPT_URL => $course_url,
           CURLOPT_FOLLOWLOCATION => true,
           CURLOPT_RETURNTRANSFER => true
         ]);
-        
-        $decoded_courses = json_decode(curl_exec($curl), true);
 
-      // print_r($decoded_courses);
+        $enrolled_studs = json_decode(curl_exec($curl), true);
 
-      // Prepare the ids parameter that will be passed in the url:
-      $cat_ids = '';
 
-      foreach ($decoded_courses as $course) {
-          $cat_ids = $cat_ids . ',' .$course['categoryid'];
+        $cats_with_enrolled_studs[$course['categoryid']] = count($enrolled_studs);
       }
-      $cat_ids = ltrim($cat_ids, ',');
-      echo $cat_ids.'<br>';
+      if (strpos($course['fullname'], 'المستوى الرابع') !== false) {
+        $course_url =
+          'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=gradereport_user_get_grade_items&moodlewsrestformat=json&courseid=' . $course['id'];
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+          CURLOPT_URL => $course_url,
+          CURLOPT_FOLLOWLOCATION => true,
+          CURLOPT_RETURNTRANSFER => true
+        ]);
 
-      // Get all categories:
-      $categories_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_course_get_categories&moodlewsrestformat=json&criteria[0][key]=ids&criteria[0][value]='.$cat_ids;
-      $curl = curl_init();
-      curl_setopt_array($curl, [
-        CURLOPT_URL => $categories_url,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_RETURNTRANSFER => true
-      ]);
+        $decoded_grades = json_decode(curl_exec($curl), true);
 
-      $decoded_categories = json_decode(curl_exec($curl), true);
-      
-      
+        foreach ($decoded_grades['usergrades'] as $user_grade) {
+          foreach ($user_grade['gradeitems'] as $item) {
+            if ($item['itemtype'] == 'course' && $item['graderaw'] >= 0.6*$item['grademax']) {
+              $graduates_count++;
+            }
+          }
+        }
+        
+        $cats_with_graduates[$course['categoryid']] = $graduates_count;
 
-      ?>
+      }
+    }
+
+    // echo '<div dir="ltr">';
+    // print_r($cats_with_enrolled_studs);
+    // echo '</div>';
+
+    // echo  '<div dir="ltr">';
+    // print_r($cats_with_graduates);
+    // echo '</div>';
+    ?>
+    <table class="table tabe-hover table-bordered" dir="rtl">
+      <thead>
+        <th class="center">#</th>
+        <th>الدفعة</th>
+        <th>عدد الدارسين</th>
+        <th>عدد الخريجين</th>
+        <th>حالة الدفعة</th>
+      </thead>
+      <tbody>
+        <?php $i = 0; ?>
+        <?php foreach ($decoded_categories as $cat) : ?>
+          <tr>
+            <th><?php echo ++$i; ?></th>
+            <td><?php echo $cat['name'] ?? '-'; ?></td>
+            <td><?php echo $cats_with_enrolled_studs[$cat['id']] ?? '-'; ?></td>
+            <td><?php echo $cats_with_graduates[$cat["id"]] ?? '-'; ?></td>
+            <td><?php echo '-'; ?></td>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
   </div>
 </div>
 
@@ -159,7 +239,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <div class="card-header">
       <b>شاشة التقارير</b>
     </div>
-    
+
   </div>
 </div>
 
@@ -169,7 +249,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <div class="card-header">
       <b>شاشة التقارير</b>
     </div>
-    
+
   </div>
 </div>
 
@@ -392,5 +472,16 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     padding-right: 10px;
     padding-bottom: 10px;
     padding-left: 10px;
+  }
+
+  /********************* TABLES ******************* */
+  td{
+    direction: rtl;
+    text-align: right;
+  }
+
+  .card-header{
+    text-align: right;
+    color: #28a745;
   }
 </style>

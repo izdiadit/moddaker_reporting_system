@@ -59,13 +59,13 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         <div id="chartdiv3"></div>
       </div>
       <div class="chartCard" id="chartdiv4" style="width: 50%;"></div>
-
     </div>
 
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/index.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/percent.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/xy.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Animated.js"></script>
+    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Dataviz.js"></script>
 
     <script>
       // Reading country_data from php:
@@ -215,7 +215,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       <tbody>
         <?php $i = 0; ?>
         <?php foreach ($decoded_categories as $cat) :
-              
+
         ?>
           <tr>
             <th><?php echo ++$i; ?></th>
@@ -241,17 +241,173 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     </table>
   </div>
 </div>
+
 <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <!-- //////////////////////////////////////////////////      Academic Status Interactive Report      ///////////////////////////////////////////////////////////// -->
+<?php
+function swap_data_from_dictionary($dict, $data, $old, $new)
+{
+  $map = [];
+  foreach ($dict as $item) {
+    $map[$item[$old]] = $item[$new];
+  }
+
+  $result = [];
+  foreach ($data as $key => $value) {
+    $result[$map[$key]] = $value;
+  }
+
+  return $result;
+}
+
+$cats_studs_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_enrolled_studs, 'id', 'name');
+$cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_graduates, 'id', 'name');
+?>
 <div class="col-md-12">
   <div class="card card-outline card-success" dir="rtl">
     <div class="card-header">
       <b>العرض التفاعلي للحالة الأكاديمية</b>
     </div>
+    <div class="chartsPanel">
+      <div id="chartdivas1" style="width: 75%; justify-self: center;"></div>
 
-    <div id="chartdivas1"></div>
+    </div>
+
+
   </div>
 </div>
+<script>
+  // Reading category_studs_data from php:
+  var cats_with_enrolled_studs = <?php echo json_encode($cats_studs_for_js); ?>;
+  var cats_with_grads = <?php echo json_encode($cats_grads_for_js); ?>;
+  // Converting to an object that is suitable for the charts data structure
+  var category_studs_data = [];
+  for (const key in cats_with_enrolled_studs) {
+    if (cats_with_enrolled_studs.hasOwnProperty.call(cats_with_enrolled_studs, key)) {
+      category_studs_data.push({
+        batch: key,
+        studs: (cats_with_enrolled_studs[key]),
+        grads: (cats_with_grads[key])
+      });
+    }
+  }
+
+
+  console.log(category_studs_data)
+  var rootas = am5.Root.new("chartdivas1");
+
+  rootas.setThemes([
+    am5themes_Animated.new(rootas)
+  ]);
+
+  var chartas = rootas.container.children.push(am5xy.XYChart.new(rootas, {
+    // panX: true,
+    // panY: true,
+    // wheelX: "panX",
+    // wheelY: "zoomX",
+    // pinchZoomX: true
+  }));
+
+
+  // Add cursor
+  // var cursor = chartas.set("cursor", am5xy.XYCursor.new(rootas, {}));
+  // cursor.lineY.set("visible", false);
+
+
+  // Create axes
+  var xRenderer = am5xy.AxisRendererX.new(rootas, {
+    minGridDistance: 30
+  });
+  xRenderer.labels.template.setAll({
+    rotation: 0,
+    centerY: am5.p50,
+    centerX: am5.p50,
+  });
+
+  var yRenderer = am5xy.AxisRendererY.new(rootas, {
+    minGridDistance: 30
+  });
+  yRenderer.labels.template.setAll({
+    paddingLeft: 30,
+  });
+
+  var xAxis = chartas.xAxes.push(am5xy.CategoryAxis.new(rootas, {
+    maxDeviation: 0.3,
+    categoryField: "batch",
+    renderer: xRenderer,
+    tooltip: am5.Tooltip.new(rootas, {})
+  }));
+  xAxis.get("renderer").labels.template.setAll({
+    oversizedBehavior: "wrap",
+    maxWidth: 100,
+    textAlign: "center",
+  });
+
+  var yAxis = chartas.yAxes.push(am5xy.ValueAxis.new(rootas, {
+    maxDeviation: 0.3,
+    renderer: yRenderer
+  }));
+
+  // Legend:
+  var legend = chartas.children.push(am5.Legend.new(rootas, {
+    centerX: am5.p50,
+    x: am5.p50,
+  }));
+
+  // Create series
+  function makeSeries(name, fieldName, color) {
+    var myseriesas = chartas.series.push(am5xy.ColumnSeries.new(rootas, {
+      name: name,
+      xAxis: xAxis,
+      yAxis: yAxis,
+      valueYField: fieldName,
+      sequencedInterpolation: true,
+      categoryXField: "batch",
+      tooltip: am5.Tooltip.new(rootas, {
+        labelText: "{studsY}"
+      })
+    }));
+
+    myseriesas.columns.template.adapters.add("fill", () => color);
+    myseriesas.columns.template.adapters.add("stroke", () => color);
+    
+    myseriesas.columns.template.setAll({
+      cornerRadiusTL: 40,
+      cornerRadiusTR: 40,
+      width: am5.percent(75)
+    });
+
+    xAxis.data.setAll(category_studs_data);
+    myseriesas.data.setAll(category_studs_data);
+
+    legend.data.push(myseriesas);
+
+    // Animation on load
+    myseriesas.appear(1000);
+
+    myseriesas.bullets.push(function () {
+    return am5.Bullet.new(rootas, {
+      locationY: 0,
+      sprite: am5.Label.new(rootas, {
+        text: "{valueY}",
+        fill: color,
+        centerY: 0,
+        centerX: am5.p50,
+        populateText: true
+      })
+    });
+  });
+  }
+
+  makeSeries('عدد الدارسين', 'studs', '#aa8e55');
+  makeSeries('عدد الخريجين', 'grads', '#637535');
+  // Animation on load
+  chartas.appear(1000, 100);
+
+
+
+  // legend.data.setAll(chartas.series.values);
+</script>
 <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <!-- report -->
 <div class="col-md-12">
@@ -259,7 +415,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <div class="card-header">
       <b>شاشة التقارير</b>
     </div>
-    
+
   </div>
 </div>
 
@@ -463,6 +619,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     height: 300px;
     font-family: 'arabic typesetting';
     font-size: large;
+    
   }
 
   #chartCard3 {

@@ -195,14 +195,14 @@ myseries3.columns.template.adapters.add("fill", function(fill, target) {
 
 myseries3.columns.template.adapters.add("strokeWidth", () => 3);
 
-country_data_for_xy = [];
-for (const e in country_data) {
-        const temp = country_data[e];
-        temp.country = country_data[e].country
-        temp.count = Number(country_data[e].count)
-        country_data_for_xy.push(temp)
-}
-console.log(country_data_for_xy);
+// country_data_for_xy = [];
+// for (const e in country_data) {
+//         const temp = country_data[e];
+//         temp.country = country_data[e].country
+//         temp.count = Number(country_data[e].count)
+//         country_data_for_xy.push(temp)
+// }
+// console.log(country_data_for_xy);
 
 // Styling the labels:
 xaxis.get("renderer").labels.template.setAll({
@@ -212,8 +212,8 @@ xaxis.get("renderer").labels.template.setAll({
   });
 
 
-xaxis.data.setAll(country_data_for_xy);
-myseries3.data.setAll(country_data_for_xy);
+xaxis.data.setAll(country_data);
+myseries3.data.setAll(country_data);
 
 myseries3.appear(1000);
 chart3.appear(1000, 100);
@@ -257,7 +257,7 @@ am5.ready(function() {
       rotation: -90,
       centerY: am5.p50,
       centerX: am5.p100,
-      paddingRight: 15
+      paddingRight: 0
     });
     
     var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
@@ -363,79 +363,3 @@ Trying to create a new root element in a <div> container before disposing the ol
 //////////////////////////////////////////////               Academic Status               //////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 */
-var rootas = am5.Root.new("chartdivas1");
-
-rootas.setThemes([
-  am5themes_Animated.new(rootas)
-]);
-
-var chartas = rootas.container.children.push(am5xy.XYChart.new(rootas, {
-  panX: true,
-  panY: true,
-  wheelX: "panX",
-  wheelY: "zoomX",
-  pinchZoomX: true
-}));
-
-
-// Add cursor
-var cursor = chartas.set("cursor", am5xy.XYCursor.new(rootas, {}));
-cursor.lineY.set("visible", false);
-
-
-// Create axes
-var xRenderer = am5xy.AxisRendererX.new(rootas, { minGridDistance: 30 });
-xRenderer.labels.template.setAll({
-  rotation: -90,
-  centerY: am5.p50,
-  centerX: am5.p100,
-  paddingRight: 15
-});
-
-var xAxis = chartas.xAxes.push(am5xy.CategoryAxis.new(rootas, {
-  maxDeviation: 0.3,
-  categoryField: "batch",
-  renderer: xRenderer,
-  tooltip: am5.Tooltip.new(rootas, {})
-}));
-
-var yAxis = chartas.yAxes.push(am5xy.ValueAxis.new(rootas, {
-  maxDeviation: 0.3,
-  renderer: am5xy.AxisRendererY.new(rootas, {})
-}));
-
-// Create series
-var myseriesas = chartas.series.push(am5xy.ColumnSeries.new(rootas, {
-  name: "Series 1",
-  xAxis: xAxis,
-  yAxis: yAxis,
-  valueYField: "studs",
-  sequencedInterpolation: true,
-  categoryXField: "batch",
-  tooltip: am5.Tooltip.new(rootas, {
-    labelText: "{valueY}"
-  })
-}));
-
-
-// Set data
-var dataas = [
-  {
-    batch: 'الأولى',
-    studs: 12000
-  },
-  {
-    batch: 'الثانية',
-    studs: 10581
-  },
-  {
-    batch: 'الثالثة',
-    studs: 15780
-  },
-];
-xAxis.data.setAll(dataas);
-myseriesas.data.setAll(dataas);
-
-// Animation on load
-// myseriesas.appear(1000);
-// chartas.appear(1000, 100);

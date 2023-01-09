@@ -358,3 +358,84 @@ root.dispose();
 Trying to create a new root element in a <div> container before disposing the old one that is currently residing there, will result in an error.
 */
 
+/* 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////               Academic Status               //////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*/
+var rootas = am5.Root.new("chartdivas1");
+
+rootas.setThemes([
+  am5themes_Animated.new(rootas)
+]);
+
+var chartas = rootas.container.children.push(am5xy.XYChart.new(rootas, {
+  panX: true,
+  panY: true,
+  wheelX: "panX",
+  wheelY: "zoomX",
+  pinchZoomX: true
+}));
+
+
+// Add cursor
+var cursor = chartas.set("cursor", am5xy.XYCursor.new(rootas, {}));
+cursor.lineY.set("visible", false);
+
+
+// Create axes
+var xRenderer = am5xy.AxisRendererX.new(rootas, { minGridDistance: 30 });
+xRenderer.labels.template.setAll({
+  rotation: -90,
+  centerY: am5.p50,
+  centerX: am5.p100,
+  paddingRight: 15
+});
+
+var xAxis = chartas.xAxes.push(am5xy.CategoryAxis.new(rootas, {
+  maxDeviation: 0.3,
+  categoryField: "batch",
+  renderer: xRenderer,
+  tooltip: am5.Tooltip.new(rootas, {})
+}));
+
+var yAxis = chartas.yAxes.push(am5xy.ValueAxis.new(rootas, {
+  maxDeviation: 0.3,
+  renderer: am5xy.AxisRendererY.new(rootas, {})
+}));
+
+// Create series
+var myseriesas = chartas.series.push(am5xy.ColumnSeries.new(rootas, {
+  name: "Series 1",
+  xAxis: xAxis,
+  yAxis: yAxis,
+  valueYField: "studs",
+  sequencedInterpolation: true,
+  categoryXField: "batch",
+  tooltip: am5.Tooltip.new(rootas, {
+    labelText: "{valueY}"
+  })
+}));
+
+
+// Set data
+var dataas = [
+  {
+    batch: 'الأولى',
+    studs: 12000
+  },
+  {
+    batch: 'الثانية',
+    studs: 10581
+  },
+  {
+    batch: 'الثالثة',
+    studs: 15780
+  },
+];
+xAxis.data.setAll(dataas);
+myseriesas.data.setAll(dataas);
+
+// Animation on load
+// myseriesas.appear(1000);
+// chartas.appear(1000, 100);

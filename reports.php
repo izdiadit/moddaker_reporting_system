@@ -82,14 +82,14 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       }
       console.log(result)
       console.log(country_data)
-
     </script>
 
     <script src="report_charts.js"></script>
   </div>
 </div>
 
-<!-- Academic Status Report -->
+
+<!-- /////////////////////////////////////////////////////      Academic Status Report      //////////////////////////////////////////////////////////////// -->
 <div class="col-md-12">
   <div class="card card-outline card-success" dir="rtl" style="padding: 5px;">
     <div class="card-header">
@@ -112,8 +112,8 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     // echo '</div>';
 
     // Prepare the ids parameter that will be passed in the url:
-    $cat_ids = '';    
-    
+    $cat_ids = '';
+
     foreach ($decoded_courses as $course) {
       $cat_ids = $cat_ids . ',' . $course['categoryid'];
     }
@@ -139,10 +139,11 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     // 2. Get the no. of graduates in every category by getting the no. of students ended the 4th course (المستوى الرابع)
     $cats_with_enrolled_studs = []; // An associative array with the structure: categoryid => No. of enrolled studs
     $cats_with_graduates = []; // An associative array with the structure: categoryid => No. of graduates
-    $cats_with_statuses = []; // An associative array with the structure: categoryid => [preliminary_startdate , fourth_enddate] dates as timestamp integers
+    $cats_with_statuses = []; // An associative array with the structure: categoryid => [isset, preliminary_startdate , fourth_enddate] dates as timestamp integers
     foreach ($decoded_courses as $course) {
       $graduates_count = 0;
 
+      $cats_with_statuses[$course['categoryid']] = [0, 0, 0]; // 2550000000 -> 2050-10-21 23:10:00
       if (strpos($course['fullname'], 'المستوى التمهيدي') !== false) {
         $course_url =
           'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_enrol_get_enrolled_users&moodlewsrestformat=json&courseid=' . $course['id'];
@@ -157,7 +158,8 @@ for ($i = 0; $i < count($moodle_users); $i++) {
 
 
         $cats_with_enrolled_studs[$course['categoryid']] = count($enrolled_studs);
-        $cats_with_statuses[$course['categoryid']] = [$course['startdate'], 0];
+        $cats_with_statuses[$course['categoryid']][0] = 1;
+        $cats_with_statuses[$course['categoryid']][1] = $course['startdate'];
       }
 
 
@@ -175,15 +177,17 @@ for ($i = 0; $i < count($moodle_users); $i++) {
 
         foreach ($decoded_grades['usergrades'] as $user_grade) {
           foreach ($user_grade['gradeitems'] as $item) {
-            if ($item['itemtype'] == 'course' && $item['graderaw'] >= 0.6*$item['grademax']) {
+            if ($item['itemtype'] == 'course' && $item['graderaw'] >= 0.6 * $item['grademax']) {
               $graduates_count++;
             }
           }
         }
-        
-        $cats_with_graduates[$course['categoryid']] = $graduates_count;
-        $cats_with_statuses[$course['categoryid']][1] = $course['enddate'];
 
+        $cats_with_graduates[$course['categoryid']] = $graduates_count;
+
+        $cats_with_statuses[$course['categoryid']][0] = 1;
+        $cats_with_statuses[$course['categoryid']][2] = $course['enddate'];
+        // echo $course['enddate'] . ' ||| ' . $cats_with_statuses[$course['categoryid']][2];
       }
     }
 
@@ -195,9 +199,10 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     // print_r($cats_with_graduates);
     // echo '</div>';
 
-    echo  '<div dir="ltr">';
-    print_r($cats_with_statuses); echo ' '.time();
-    echo '</div>';
+    // echo  '<div dir="ltr">';
+    // print_r($cats_with_statuses);
+    // echo ' ' . time();
+    // echo '</div>';
     ?>
     <table class="table tabe-hover table-bordered" dir="rtl">
       <thead>
@@ -209,52 +214,56 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       </thead>
       <tbody>
         <?php $i = 0; ?>
-        <?php foreach ($decoded_categories as $cat) : ?>
+        <?php foreach ($decoded_categories as $cat) :
+              
+        ?>
           <tr>
             <th><?php echo ++$i; ?></th>
             <td><?php echo $cat['name'] ?? '-'; ?></td>
             <td><?php echo $cats_with_enrolled_studs[$cat['id']] ?? '-'; ?></td>
             <td><?php echo $cats_with_graduates[$cat["id"]] ?? '-'; ?></td>
-            <td><?php 
-                  if (!isset($cats_with_statuses[$cat["id"]])) {
-                    echo '-';
-                  } elseif ($cats_with_statuses[$cat["id"]][0] > time()) {
-                    echo 'تسجيلها مرتقب'.'<br>';
-                    echo date('Y-m-d',$cats_with_statuses[$cat["id"]][0]);
-                  } elseif ($cats_with_statuses[$cat["id"]][1] < time()) {
-                    echo 'منتهية'.'<br>';
-                    echo date('Y-m-d',$cats_with_statuses[$cat["id"]][1]);
-                  } elseif ($cats_with_statuses[$cat["id"]][0] < time() && $cats_with_statuses[$cat["id"]][1] > time()) {
-                    echo 'قيد الدراسة';
-                  }
-            ?></td>
+            <td><?php
+                // if ($cats_with_statuses[$cat["id"]][0] == 0) {
+                //   echo '-';
+                // } elseif ($cats_with_statuses[$cat["id"]][1] > time()) {
+                //   echo 'تسجيلها مرتقب' . '<br>';
+                //   echo date('Y-m-d', $cats_with_statuses[$cat["id"]][1]);
+                // } elseif ($cats_with_statuses[$cat["id"]][2] < time()) {
+                //   echo 'منتهية' . '<br>';
+                //   echo date('Y-m-d', $cats_with_statuses[$cat["id"]][2]);
+                // } elseif ($cats_with_statuses[$cat["id"]][1] < time() && $cats_with_statuses[$cat["id"]][2] > time()) {
+                //   echo 'قيد الدراسة';
+                // }
+                ?></td>
           </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
   </div>
 </div>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+<!-- //////////////////////////////////////////////////      Academic Status Interactive Report      ///////////////////////////////////////////////////////////// -->
+<div class="col-md-12">
+  <div class="card card-outline card-success" dir="rtl">
+    <div class="card-header">
+      <b>العرض التفاعلي للحالة الأكاديمية</b>
+    </div>
 
+    <div id="chartdivas1"></div>
+  </div>
+</div>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <!-- report -->
 <div class="col-md-12">
   <div class="card card-outline card-success" dir="rtl">
     <div class="card-header">
       <b>شاشة التقارير</b>
     </div>
-
+    
   </div>
 </div>
 
-<!-- report -->
-<div class="col-md-12">
-  <div class="card card-outline card-success" dir="rtl">
-    <div class="card-header">
-      <b>شاشة التقارير</b>
-    </div>
-
-  </div>
-</div>
-
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <script>
   window.onload = function() {
 
@@ -281,19 +290,6 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     chart.render();
 
   }
-</script>
-<script>
-  // const showHide=()=>{
-  //   var report_item = document.getElementById('report_by').value;
-  //   console.log(report_item);
-  //   var item = document.getElementById('emploee_list')
-  //   console.log(item);
-  //   if(report_item == 1 ){
-  //     report_item.style.display = 'block'
-  //   } else {
-  //     report_item.style.display = 'none'
-  //   }
-  // }
 </script>
 <script>
   $(document).ready(function() {
@@ -477,15 +473,18 @@ for ($i = 0; $i < count($moodle_users); $i++) {
   }
 
   /********************* TABLES ******************* */
-  td{
+  td {
     direction: rtl;
     text-align: right;
   }
-  th{
+
+  th {
     text-align: center;
+    background-color: #aa8e55;
+    color: white;
   }
 
-  .card-header{
+  .card-header {
     text-align: right;
     color: #28a745;
   }

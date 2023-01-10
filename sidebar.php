@@ -55,10 +55,25 @@
           </li>
           <?php if($_SESSION['login_type'] != 3): ?>
            <li class="nav-item">
-                <a href="./index.php?page=reports" class="nav-link nav-reports">
+                <a href="#" class="nav-link nav-edit_user">
                   <i class="fas fa-th-list nav-icon"></i>
-                  <p>Report</p>
+                  <p>Reports</p>
+                  <i class="right fas fa-angle-left"></i>
                 </a>
+                <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="./index.php?page=reports" class="nav-link nav-country tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>تقرير بعدد الدول</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index.php?page=reports" class="nav-link nav-as tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>الحالة الأكاديمية</p>
+                </a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item">
                 <a href="./index.php?page=students" class="nav-link nav-students">

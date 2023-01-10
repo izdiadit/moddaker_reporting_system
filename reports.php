@@ -143,7 +143,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     foreach ($decoded_courses as $course) {
       $graduates_count = 0;
 
-      $cats_with_statuses[$course['categoryid']] = [0, 0, 0]; // 2550000000 -> 2050-10-21 23:10:00
+      if(!isset($cats_with_statuses[$course['categoryid']])) $cats_with_statuses[$course['categoryid']] = [0, 0, 0]; // 2550000000 -> 2050-10-21 23:10:00
       if (strpos($course['fullname'], 'المستوى التمهيدي') !== false) {
         $course_url =
           'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_enrol_get_enrolled_users&moodlewsrestformat=json&courseid=' . $course['id'];
@@ -187,7 +187,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
 
         $cats_with_statuses[$course['categoryid']][0] = 1;
         $cats_with_statuses[$course['categoryid']][2] = $course['enddate'];
-        // echo $course['enddate'] . ' ||| ' . $cats_with_statuses[$course['categoryid']][2];
+        echo $course['enddate'] . ' ||| ' . $cats_with_statuses[$course['categoryid']][2] .'<br>'.time();
       }
     }
 
@@ -213,7 +213,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         <th>حالة الدفعة</th>
       </thead>
       <tbody>
-        <?php $i = 0; ?>
+        <?php $i = 0; print_r($cats_with_statuses)?>
         <?php foreach ($decoded_categories as $cat) :
 
         ?>
@@ -223,6 +223,20 @@ for ($i = 0; $i < count($moodle_users); $i++) {
             <td><?php echo $cats_with_enrolled_studs[$cat['id']] ?? '-'; ?></td>
             <td><?php echo $cats_with_graduates[$cat["id"]] ?? '-'; ?></td>
             <td><?php
+
+                if ($cats_with_statuses[$cat["id"]][0] == 0) {
+                  echo '-';
+                } else {
+                  if ($cats_with_statuses[$cat["id"]][1] > time()) {
+                    echo 'تسجيلها مرتقب' . '<br>';
+                    echo date('Y-m-d', $cats_with_statuses[$cat["id"]][1]);
+                  } elseif (time() > $cats_with_statuses[$cat["id"]][2]) {
+                    echo 'منتهية' . '<br>';
+                    echo date('Y-m-d', $cats_with_statuses[$cat["id"]][2]); // 
+                  } else { // preliminary_startdate > time() > fourth_enddate
+                    echo 'قيد الدراسة';
+                  }
+                }
                 // if ($cats_with_statuses[$cat["id"]][0] == 0) {
                 //   echo '-';
                 // } elseif ($cats_with_statuses[$cat["id"]][1] > time()) {
@@ -269,7 +283,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
       <b>العرض التفاعلي للحالة الأكاديمية</b>
     </div>
     <div class="chartsPanel">
-      <div id="chartdivas1" style="width: 75%; justify-self: center;"></div>
+      <div id="chartdivas1" style="width: 50%; margin: auto;"></div>
 
     </div>
 
@@ -370,11 +384,15 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
 
     myseriesas.columns.template.adapters.add("fill", () => color);
     myseriesas.columns.template.adapters.add("stroke", () => color);
-    
+
     myseriesas.columns.template.setAll({
       cornerRadiusTL: 40,
       cornerRadiusTR: 40,
-      width: am5.percent(75)
+      width: am5.percent(65)
+    });
+
+    myseriesas.columns.template.setAll({
+      tooltipText: "{valueY}*"
     });
 
     xAxis.data.setAll(category_studs_data);
@@ -385,18 +403,18 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
     // Animation on load
     myseriesas.appear(1000);
 
-    myseriesas.bullets.push(function () {
-    return am5.Bullet.new(rootas, {
-      locationY: 0,
-      sprite: am5.Label.new(rootas, {
-        text: "{valueY}",
-        fill: color,
-        centerY: 0,
-        centerX: am5.p50,
-        populateText: true
-      })
-    });
-  });
+    // myseriesas.bullets.push(function() {
+    //   return am5.Bullet.new(rootas, {
+    //     locationY: 0,
+    //     sprite: am5.Label.new(rootas, {
+    //       text: "{valueY}",
+    //       fill: color,
+    //       centerY: 0,
+    //       centerX: am5.p50,
+    //       populateText: true
+    //     })
+    //   });
+    // });
   }
 
   makeSeries('عدد الدارسين', 'studs', '#aa8e55');
@@ -619,7 +637,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
     height: 300px;
     font-family: 'arabic typesetting';
     font-size: large;
-    
+
   }
 
   #chartCard3 {

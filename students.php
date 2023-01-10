@@ -17,9 +17,9 @@ if($_SESSION['login_type'] == 3) {
 <div class="col-lg-12  w-fit">
 	<div class="card card-outline card-success">
 		<div class="card-header">
-			<div class="card-tools">
+			<!-- <div class="card-tools">
 				<a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_user"><i class="fa fa-plus"></i> Add New User</a>
-			</div>
+			</div> -->
 		</div>
 		<div class="card-body">
 			<table class="table tabe-hover table-bordered" id="list">
@@ -30,13 +30,18 @@ if($_SESSION['login_type'] == 3) {
 						<th>الاسم الكامل</th>
 						<th>البريد الإلكتروني</th>
 						<th>وقت أول دخول</th>
-						<th>ةقت آخر دخول</th>
+						<th>وقت آخر دخول</th>
 						<th>طريقة التسجيل</th>
-						<th>حالة الحساب</th>
+						<th>تأكيد الحساب</th>
+						<th>تعليق الحساب</th>
 						<th>اللغة</th>
 						<th>المدينة</th>
 						<th>البلد</th>
 						<th>النوع</th>
+						<th>العمر</th>
+						<th>اللغة الأمّ</th>
+						<th>المؤهل الأكاديمي</th>
+						<th>كم جزءًا يحفظ؟</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -57,23 +62,36 @@ if($_SESSION['login_type'] == 3) {
 				$decoded = json_decode($result,true);
 
 				$moodle_users = $decoded['users'];
+				$custom_fields_data = []; // An associative array with the structure: userid => ['shortname' => 'value']
 				//	print_r( $moodle_users );
 
+
+				require_once 'countries.php';
+
 					for ($i; $i < count($moodle_users); $i++) :
+						$custom_fields_data[$moodle_users[$i]['id']] = [];
+						foreach ($moodle_users[$i]['customfields'] as $cfield) {
+							$custom_fields_data[$moodle_users[$i]['id']][$cfield['shortname']] = $cfield['value'];
+						}
 					?>
 					<tr>
 						<th class="text-center"><?php echo $i+1 ?></th>
 						<td><b><?php echo ucwords($moodle_users[$i]['username']) ?></b></td>
 						<td><b><?php echo $moodle_users[$i]['fullname'] ?></b></td>
 						<td><b><?php echo $moodle_users[$i]['email'] ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['firstaccess'] ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['lastaccess'] ?></b></td>
+						<td><b><?php echo date('Y-m-d h:i a',$moodle_users[$i]['firstaccess']) ?></b></td>
+						<td><b><?php echo date('Y-m-d h:i a',$moodle_users[$i]['lastaccess']) ?></b></td>
 						<td><b><?php echo $moodle_users[$i]['auth'] ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['fullname'] ?></b></td>
+						<td><b><?php echo $moodle_users[$i]['confirmed'] ? 'مؤكّد' : 'غير مؤكّد' ?></b></td>
+						<td><b><?php echo $moodle_users[$i]['suspended'] ? 'معلّق' : 'غير معلّق' ?></b></td>
 						<td><b><?php echo $moodle_users[$i]['lang'] ?></b></td>
 						<td><b><?php echo $moodle_users[$i]['city']?? '-' ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['country']?? '-' ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['customfields']['value']?? '-' ?></b></td>
+						<td><b><?php echo $string[$moodle_users[$i]['country']?? '-'] ?></b></td>
+						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['sex']?? '-' ?></b></td>
+						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['FullNameForCertificate']?? '-' ?></b></td>
+						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['']?? '-' ?></b></td>
+						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['']?? '-' ?></b></td>
+						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['']?? '-' ?></b></td>
 						
 						
 						<!-- <td class="text-center">
@@ -92,6 +110,7 @@ if($_SESSION['login_type'] == 3) {
 				<?php endfor; ?>
 				</tbody>
 			</table>
+			<!-- <?php //print_r( $custom_fields_data);?> -->
 		</div>
 	</div>
 </div>

@@ -64,11 +64,17 @@
               <li class="nav-item">
                 <a href="./index.php?page=reports" class="nav-link nav-country tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
+                  <p>التقارير (يحذف)</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index.php?page=report_countries" class="nav-link nav-country tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
                   <p>تقرير بعدد الدول</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./index.php?page=reports" class="nav-link nav-as tree-item">
+                <a href="./index.php?page=report_academic_status" class="nav-link nav-as tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>الحالة الأكاديمية</p>
                 </a>
@@ -81,7 +87,7 @@
               </li>
               <li class="nav-item">
                     <a href="./index.php?page=report_students" class="nav-link nav-students">
-                      <i class="nav-icon fas fa-users"></i>
+                      <i class="fas fa-angle-right nav-icon"></i>
                       <p>الطلاب</p>
                     </a>
               </li>

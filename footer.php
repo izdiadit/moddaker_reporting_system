@@ -167,9 +167,9 @@
 
 <style>
 	/********************* TABLES ******************* */
-	table, th{
+	table {
 		direction: ltr;
-		margin-left: 1.5rem;
+		margin: auto;
 		border-radius: 30px; 
 	}
 	td {
@@ -183,6 +183,7 @@
 		text-align: center;
 		background-color: #aa8e55;
 		color: white;
+		border-radius: 30px;
 	}
 
 	.card-header {

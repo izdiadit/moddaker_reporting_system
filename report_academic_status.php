@@ -1,3 +1,8 @@
+<script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/index.js"></script>
+<script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/percent.js"></script>
+<script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/xy.js"></script>
+<script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Animated.js"></script>
+<script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Dataviz.js"></script>
 <?php
 
 include 'db_connect.php';
@@ -15,79 +20,8 @@ if ($_SESSION['login_type'] == 3) {
   ';
   exit;
 }
-$service_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_user_get_users&moodlewsrestformat=json&criteria[0][key]=lastname&criteria[0][value]=%';
-$curl = curl_init();
-curl_setopt_array($curl, [
-  CURLOPT_URL => $service_url,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_RETURNTRANSFER => true
-]);
-
-
-$result = curl_exec($curl);
-$decoded = json_decode($result, true);
-
-$moodle_users = $decoded['users'];
-//	print_r( $moodle_users );
-
-$countries = [];
-
-include 'countries.php';
-for ($i = 0; $i < count($moodle_users); $i++) {
-  $moodle_users[$i]['country'] = $moodle_users[$i]['country'] ?? '-';
-  if (array_key_exists($string[$moodle_users[$i]['country']], $countries)) {
-    $countries[$string[$moodle_users[$i]['country']]] += 1;
-  } else {
-    $countries[$string[$moodle_users[$i]['country']]] = 1;
-  }
-}
 
 ?>
-<div class="col-md-12">
-  <div class="card card-outline card-success" dir="rtl">
-    <div class="card-header">
-      <b>شاشة التقارير</b>
-    </div>
-    <div class="chartsPanel">
-      <div class="chartCard" id="chartdiv" style="width: 50%;"></div>
-      <div class="chartCard" id="chartdiv2" style="width: 50%;"></div>
-
-    </div>
-
-    <div class="chartsPanel">
-      <div class="chartCard" id="chartCard3" style="width: 50%;">
-        <div id="chartdiv3"></div>
-      </div>
-      <div class="chartCard" id="chartdiv4" style="width: 50%;"></div>
-    </div>
-
-    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/index.js"></script>
-    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/percent.js"></script>
-    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/xy.js"></script>
-    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Animated.js"></script>
-    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Dataviz.js"></script>
-
-    <script>
-      // Reading country_data from php:
-      var result = <?php echo json_encode($countries); ?>;
-      // // var country_data = JSON.parse(result);
-      var country_data = [];
-      for (const key in result) {
-        if (result.hasOwnProperty.call(result, key)) {
-          country_data.push({
-            country: key,
-            count: result[key]
-          });
-        }
-      }
-      console.log(result)
-      console.log(country_data)
-    </script>
-
-    <script src="report_charts.js"></script>
-  </div>
-</div>
-
 
 <!-- /////////////////////////////////////////////////////      Academic Status Report      //////////////////////////////////////////////////////////////// -->
 <div class="col-md-12">
@@ -143,7 +77,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     foreach ($decoded_courses as $course) {
       $graduates_count = 0;
 
-      if(!isset($cats_with_statuses[$course['categoryid']])) $cats_with_statuses[$course['categoryid']] = [0, 0, 0]; // 2550000000 -> 2050-10-21 23:10:00
+      if (!isset($cats_with_statuses[$course['categoryid']])) $cats_with_statuses[$course['categoryid']] = [0, 0, 0]; // 2550000000 -> 2050-10-21 23:10:00
       if (strpos($course['fullname'], 'المستوى التمهيدي') !== false) {
         $course_url =
           'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_enrol_get_enrolled_users&moodlewsrestformat=json&courseid=' . $course['id'];
@@ -213,7 +147,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         <th>حالة الدفعة</th>
       </thead>
       <tbody>
-        <?php $i = 0;?>
+        <?php $i = 0; ?>
         <?php foreach ($decoded_categories as $cat) :
 
         ?>

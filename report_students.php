@@ -21,7 +21,7 @@ if($_SESSION['login_type'] == 3) {
 				<a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_user"><i class="fa fa-plus"></i> Add New User</a>
 			</div> -->
 		</div>
-		<div class="card-body">
+		<div class="card-body" style="overflow:auto">
 			<table class="table tabe-hover table-bordered" id="list">
 				<thead>
 					<tr>

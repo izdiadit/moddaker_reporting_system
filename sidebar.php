@@ -73,13 +73,19 @@
                   <p>الحالة الأكاديمية</p>
                 </a>
               </li>
-            </ul>
-          </li>
-          <li class="nav-item">
-                <a href="./index.php?page=students" class="nav-link nav-students">
-                  <i class="nav-icon fas fa-users"></i>
-                  <p>الطلاب</p>
+              <li class="nav-item">
+                <a href="./index.php?page=report_moodle_info" class="nav-link nav-as tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>تقرير معلومات المنصة</p>
                 </a>
+              </li>
+              <li class="nav-item">
+                    <a href="./index.php?page=report_students" class="nav-link nav-students">
+                      <i class="nav-icon fas fa-users"></i>
+                      <p>الطلاب</p>
+                    </a>
+              </li>
+            </ul>
           </li>
           <?php endif; ?>
           <?php if($_SESSION['login_type'] == 1): ?>

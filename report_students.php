@@ -81,7 +81,7 @@ if ($_SESSION['login_type'] == 3) {
 							<td><b><?php echo ucwords($moodle_users[$i]['username']) ?></b></td>
 							<td><b><?php echo $moodle_users[$i]['fullname'] ?></b></td>
 							<td><b><?php echo $moodle_users[$i]['email'] ?></b></td>
-							<td><b><?php echo date('Y-m-d h:i a', $moodle_users[$i]['firstaccess']) ?></b></td>
+							<td><b><?php echo date('Y/m/d h:i a', $moodle_users[$i]['firstaccess']) ?></b></td>
 							<td><b><?php echo date('Y-m-d h:i a', $moodle_users[$i]['lastaccess']) ?></b></td>
 							<td><b><?php echo $moodle_users[$i]['auth'] ?></b></td>
 							<td><b><?php echo $moodle_users[$i]['confirmed'] ? 'مؤكّد' : 'غير مؤكّد' ?></b></td>
@@ -147,7 +147,7 @@ if ($_SESSION['login_type'] == 3) {
 						if (title == '#') {
 							$(cell).html('تصفية');
 						} else if (title == 'وقت أول دخول' || title == 'وقت آخر دخول') {
-							$(cell).html('<input style="border-radius: 30px; text-align: center; margin: auto" type="text" placeholder="' + title + '" disabled />');
+							$(cell).html('<input style="border-radius: 30px; text-align: center; margin: auto" type="date" placeholder="YYYY/MM/DD" />');
 						}else{
 							$(cell).html('<input style="border-radius: 30px; text-align: center; margin: auto" type="text" placeholder="' + title + '" />');
 						}

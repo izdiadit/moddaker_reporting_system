@@ -81,8 +81,8 @@ if ($_SESSION['login_type'] == 3) {
 							<td><b><?php echo ucwords($moodle_users[$i]['username']) ?></b></td>
 							<td><b><?php echo $moodle_users[$i]['fullname'] ?></b></td>
 							<td><b><?php echo $moodle_users[$i]['email'] ?></b></td>
-							<td><b><?php echo date('Y/m/d h:i a', $moodle_users[$i]['firstaccess']) ?></b></td>
-							<td><b><?php echo date('Y-m-d h:i a', $moodle_users[$i]['lastaccess']) ?></b></td>
+							<td><b dir="ltr"><?php echo date('Y-m-d h:i a', $moodle_users[$i]['firstaccess']) ?></b></td>
+							<td><b dir="ltr"><?php echo date('Y-m-d h:i a', $moodle_users[$i]['lastaccess']) ?></b></td>
 							<td><b><?php echo $moodle_users[$i]['auth'] ?></b></td>
 							<td><b><?php echo $moodle_users[$i]['confirmed'] ? 'مؤكّد' : 'غير مؤكّد' ?></b></td>
 							<td><b><?php echo $moodle_users[$i]['suspended'] ? 'معلّق' : 'غير معلّق' ?></b></td>
@@ -147,9 +147,9 @@ if ($_SESSION['login_type'] == 3) {
 						if (title == '#') {
 							$(cell).html('تصفية');
 						} else if (title == 'وقت أول دخول' || title == 'وقت آخر دخول') {
-							$(cell).html('<input style="border-radius: 30px; text-align: center; margin: auto" type="date" placeholder="YYYY/MM/DD" />');
-						}else{
-							$(cell).html('<input style="border-radius: 30px; text-align: center; margin: auto" type="text" placeholder="' + title + '" />');
+							$(cell).html('<input style="border-radius: 30px; text-align: center; margin: auto" type="date" placeholder="YYYY/DD/MM" />');
+						} else {
+							$(cell).html('<input style="border-radius: 30px; text-align: center; margin: auto" type="text" placeholder="تصفية ب' + title + '" />');
 						}
 
 						// On every keypress in this input
@@ -161,6 +161,10 @@ if ($_SESSION['login_type'] == 3) {
 							.on('change', function(e) {
 								// Get the search value
 								$(this).attr('title', $(this).val());
+								// if (title == 'وقت أول دخول' || title == 'وقت آخر دخول') {
+								// 	var date = new Date($(this).val());
+								// 	// console.log(pad(date.getDate(), 2) + '-' + pad(date.getMonth() + 1, 2) + '-' + date.getFullYear())
+								// }
 								var regexr = '({search})'; //$(this).parents('th').find('select').val();
 
 								var cursorPosition = this.selectionStart;
@@ -196,6 +200,16 @@ if ($_SESSION['login_type'] == 3) {
 			_conf("Are you sure to delete this user?", "delete_user", [$(this).attr('data-id')])
 		})
 	})
+
+	/** Padding function:
+	 * n : the number to be padded.
+	 * width: the length of the result.
+	 * z: the char to pad with. defult: '0'*/ 
+	function pad(n, width, z) {
+		z = z || '0';
+		n = n + '';
+		return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+	}
 
 	function delete_user($id) {
 		start_load()

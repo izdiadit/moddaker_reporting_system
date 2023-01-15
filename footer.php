@@ -170,7 +170,7 @@
 	table {
 		direction: ltr;
 		margin: auto;
-		border-radius: 30px; 
+		border-radius: 30px!important;
 	}
 	td {
 		direction: rtl;

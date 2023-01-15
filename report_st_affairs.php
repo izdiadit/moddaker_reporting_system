@@ -1,7 +1,7 @@
-<?php 
+<?php
 include 'db_connect.php';
-if($_SESSION['login_type'] == 3) {
-  echo'
+if ($_SESSION['login_type'] == 3) {
+	echo '
   <div class="error-content">
   <h3><i class="fas fa-exclamation-triangle text-danger"></i> Denied! </h3>
 
@@ -12,8 +12,9 @@ if($_SESSION['login_type'] == 3) {
 
 </div>
   ';
-  exit;
-}?>
+	exit;
+} ?>
+
 <div class="col-lg-12  w-fit">
 	<div class="card card-outline card-success">
 		<div class="card-header">
@@ -21,182 +22,105 @@ if($_SESSION['login_type'] == 3) {
 				<a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_user"><i class="fa fa-plus"></i> Add New User</a>
 			</div> -->
 		</div>
-		<div class="card-body" style="overflow:auto">
-			<table class="table tabe-hover table-bordered" id="list">
-				<thead>
-					<tr>
-						<th class="text-center">#</th>
-						<th>اسم المستخدم</th>
-						<th>الاسم الكامل</th>
-						<th>البريد الإلكتروني</th>
-						<th>وقت أول دخول</th>
-						<th>وقت آخر دخول</th>
-						<th>طريقة التسجيل</th>
-						<th>تأكيد الحساب</th>
-						<th>تعليق الحساب</th>
-						<th>اللغة</th>
-						<th>المدينة</th>
-						<th>البلد</th>
-						<th>النوع</th>
-						<th>العمر</th>
-						<th>اللغة الأمّ</th>
-						<th>المؤهل الأكاديمي</th>
-						<th>كم جزءًا يحفظ؟</th>
-					</tr>
-				</thead>
-				<tbody>
-					<?php
-					$i = 0;
-					//$type = array('',"Admin","Project Manager","Employee");
-					//$qry = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users order by concat(firstname,' ',lastname) asc");
+		<div class="card-body" style="overflow:auto; margin: auto;" dir="rtl">
+			<form id="filters" dir="rtl" action="./index.php?page=report_st_affairs" method="POST">
+				<div>
+					<label for="username">
+						<p>اختر اسم المستخدم الذي ترغب في عرض تقرير عن نشاطه: </p>
+					</label>
+					<select class="form-select" name="username" id="username">
+						<!-- <i class="fa fa-caret-down" aria-hidden="true"></i> -->
+						<option value="admin">مدير النظام</option>
+						<option value="guest">ضيف</option>
+					</select>
+				</div>
+				<div>
+					<label for="starttime">منذ وقت: </label>
+					<input type="date" name="starttime" id="starttime" value="<?php echo $_POST['starttime']??date('Y-m-d',time() - 86400*3) // 86400 sec = 1 day?>" required>
+				</div>
+				<div>
+					<label for="endtime">إلى وقت: </label>
+					<input type="date" name="endtime" id="endtime" value="<?php echo $_POST['endtime']??date('Y-m-d',time())?>" required>
+				</div>
+				<input type="submit" value="اعرض التقرير">
+				<br>
+				<br>
+			</form>
+			<?php if (isset($_POST['username']) && isset($_POST['starttime']) && isset($_POST['endtime'])):
+				$username = $_POST['username'];
+				$starttime = strtotime($_POST['starttime']);
+				$endtime = strtotime($_POST['endtime']);
+			?>
+				<table class="table tabe-hover table-bordered">
+					<thead>
+						<tr>
+							<th class="text-center">#</th>
+							<th>اسم المستخدم المنفذ</th>
+							<th>النشاط</th>
+							<th>الوقت والتاريخ</th>
+							<th>رقم المستخدم المتأثّر بالنشاط</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						$i = 0;
+						//$type = array('',"Admin","Project Manager","Employee");
+						//$qry = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users order by concat(firstname,' ',lastname) asc");
 
-					$service_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_user_get_users&moodlewsrestformat=json&criteria[0][key]=lastname&criteria[0][value]=%';
-					$curl = curl_init();
-					curl_setopt_array($curl, [
-					CURLOPT_URL => $service_url,
-					CURLOPT_FOLLOWLOCATION => true,
-					CURLOPT_RETURNTRANSFER => true]);
-				
-				
-				$result = curl_exec($curl);
-				$decoded = json_decode($result,true);
-
-				$moodle_users = $decoded['users'];
-				$custom_fields_data = []; // An associative array with the structure: userid => ['shortname' => 'value']
-				//	print_r( $moodle_users );
+						$service_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&moodlewsrestformat=json&wsfunction=local_reports_service_get_logs_interval_by_username&starttime=' . $starttime . '&endtime=' . $endtime . '&username=' . $username;
+						$curl = curl_init();
+						curl_setopt_array($curl, [
+							CURLOPT_URL => $service_url,
+							CURLOPT_FOLLOWLOCATION => true,
+							CURLOPT_RETURNTRANSFER => true
+						]);
 
 
-				require_once 'countries.php';
+						$result = curl_exec($curl);
+						$log_data = json_decode($result, true);
+						if (count($log_data) == 0) {
+						?>
+							<td colspan="5"><b style="margin: auto; text-justify: center;">لم يقم هذا المستخدم بأي نشاط في الفترة المحددة</b></td>
+							<?php
+						} else {
+							foreach ($log_data as $row) :
+							?>
+								<tr>
+									<th class="text-center"><?php echo ++$i ?></th>
+									<td><b><?php echo $username ?></b></td>
+									<td><b><?php echo $row['eventname'] ?></b></td>
+									<td dir="rtl"><b><?php echo date('Y-m-d', $row['timecreated']) . ' ' . date('H:i:s', $row['timecreated']) . ' ' . date('a', $row['timecreated']) ?></b></td>
+									<td><b><?php echo $row['relateduserid'] ?></b></td>
+								</tr>
+						<?php endforeach;
+						} ?>
+					</tbody>
+				</table>
+			<?php
+			else :
+			?>
+				<div style="margin: auto; font-size: larger; text-justify: center;" dir="rtl">
+					<i class="fa fa-info-circle fa-6" aria-hidden="true"></i>
+					اختر اسم مستخدم لعرض تقرير عن نشاطه في الفترة المحددة
+				</div>
 
-					for ($i; $i < count($moodle_users); $i++) :
-						$custom_fields_data[$moodle_users[$i]['id']] = [];
-						foreach ($moodle_users[$i]['customfields'] as $cfield) {
-							$custom_fields_data[$moodle_users[$i]['id']][$cfield['shortname']] = $cfield['value'];
-						}
-					?>
-					<tr>
-						<th class="text-center"><?php echo $i+1 ?></th>
-						<td><b><?php echo ucwords($moodle_users[$i]['username']) ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['fullname'] ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['email'] ?></b></td>
-						<td><b><?php echo date('Y-m-d h:i a',$moodle_users[$i]['firstaccess']) ?></b></td>
-						<td><b><?php echo date('Y-m-d h:i a',$moodle_users[$i]['lastaccess']) ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['auth'] ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['confirmed'] ? 'مؤكّد' : 'غير مؤكّد' ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['suspended'] ? 'معلّق' : 'غير معلّق' ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['lang'] ?></b></td>
-						<td><b><?php echo $moodle_users[$i]['city']?? '-' ?></b></td>
-						<td><b><?php echo $string[$moodle_users[$i]['country']?? '-'] ?></b></td>
-						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['sex']?? '-' ?></b></td>
-						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['FullNameForCertificate']?? '-' ?></b></td>
-						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['']?? '-' ?></b></td>
-						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['']?? '-' ?></b></td>
-						<td><b><?php echo $custom_fields_data[$moodle_users[$i]['id']]['']?? '-' ?></b></td>
-						
-						
-						<!-- <td class="text-center">
-							<button type="button" class="btn btn-default btn-sm btn-flat border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-		                      Action
-		                    </button>
-		                    <div class="dropdown-menu">
-		                      <a class="dropdown-item view_user" href="javascript:void(0)" data-id="<?php //echo $row['id'] ?>">View</a>
-		                      <div class="dropdown-divider"></div>
-		                      <a class="dropdown-item" href="./index.php?page=edit_user&id=<?php // echo $row['id'] ?>">Edit</a>
-		                      <div class="dropdown-divider"></div>
-		                      <a class="dropdown-item delete_user" href="javascript:void(0)" data-id="<?php //echo $row['id'] ?>">Delete</a>
-		                    </div>
-						</td> -->
-					</tr>	
-				<?php endfor; ?>
-				</tbody>
-			</table>
-			<!-- <?php //print_r( $custom_fields_data);?> -->
+			<?php endif; ?>
+
 		</div>
 	</div>
 </div>
-<script>
-	$(document).ready(function(){
-		//$('#list').dataTable()
-		$('#list thead tr')
-        .clone(true)
-        .addClass('filters')
-        .appendTo('#list thead');
- 
-    var table = $('#list').DataTable({
-        orderCellsTop: true,
-        fixedHeader: true,
-        initComplete: function () {
-            var api = this.api();
- 
-            // For each column
-            api
-                .columns()
-                .eq(0)
-                .each(function (colIdx) {
-                    // Set the header cell to contain the input element
-                    var cell = $('.filters th').eq(
-                        $(api.column(colIdx).header()).index()
-                    );
-                    var title = $(cell).text();
-                    $(cell).html('<input type="text" placeholder="' + title + '" />');
- 
-                    // On every keypress in this input
-                    $(
-                        'input',
-                        $('.filters th').eq($(api.column(colIdx).header()).index())
-                    )
-                        .off('keyup change')
-                        .on('change', function (e) {
-                            // Get the search value
-                            $(this).attr('title', $(this).val());
-                            var regexr = '({search})'; //$(this).parents('th').find('select').val();
- 
-                            var cursorPosition = this.selectionStart;
-                            // Search the column for that value
-                            api
-                                .column(colIdx)
-                                .search(
-                                    this.value != ''
-                                        ? regexr.replace('{search}', '(((' + this.value + ')))')
-                                        : '',
-                                    this.value != '',
-                                    this.value == ''
-                                )
-                                .draw();
-                        })
-                        .on('keyup', function (e) {
-                            e.stopPropagation();
- 
-                            $(this).trigger('change');
-                            $(this)
-                                .focus()[0]
-                                .setSelectionRange(cursorPosition, cursorPosition);
-                        });
-                });
-        },
-    });
-	$('.view_user').click(function(){
-		uni_modal("<i class='fa fa-id-card'></i> User Details","view_user.php?id="+$(this).attr('data-id'))
-	})
-	$('.delete_user').click(function(){
-	_conf("Are you sure to delete this user?","delete_user",[$(this).attr('data-id')])
-	})
-	})
-	function delete_user($id){
-		start_load()
-		$.ajax({
-			url:'ajax.php?action=delete_user',
-			method:'POST',
-			data:{id:$id},
-			success:function(resp){
-				if(resp==1){
-					alert_toast("Data successfully deleted",'success')
-					setTimeout(function(){
-						location.reload()
-					},1500)
 
-				}
-			}
-		})
+<style>
+	#filters {
+		margin: auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
 	}
-</script>
+
+	#filters input, select{
+		border-radius: 25px;
+		padding: auto;
+	}
+</style>

@@ -253,7 +253,8 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
     // panY: true,
     // wheelX: "panX",
     // wheelY: "zoomX",
-    // pinchZoomX: true
+    // pinchZoomX: true,
+    layout: rootas.verticalLayout
   }));
 
 
@@ -293,14 +294,28 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
 
   var yAxis = chartas.yAxes.push(am5xy.ValueAxis.new(rootas, {
     maxDeviation: 0.3,
+    strictMinMax: true, // Fixed scale even if series availability changes
+    extraMax: 0.1, // Increasing by 10% of the max value
     renderer: yRenderer
   }));
 
   // Legend:
   var legend = chartas.children.push(am5.Legend.new(rootas, {
-    centerX: am5.p50,
-    x: am5.p50,
+    centerX: am5.percent(30),
+    x: am5.percent(60),
+    centerY: am5.percent(100),
+    y: am5.percent(100),
   }));
+
+  // Coloring series in this chart:
+  chartas.get("colors").set("colors", [
+    am5.color(0xaa8e55),
+    am5.color(0x637535),
+    am5.color(0x5aaa95),
+    am5.color(0x86a873),
+    am5.color(0xbb9f06)
+  ]);
+  
 
   // Create series
   function makeSeries(name, fieldName, color) {
@@ -316,8 +331,8 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
       })
     }));
 
-    myseriesas.columns.template.adapters.add("fill", () => color);
-    myseriesas.columns.template.adapters.add("stroke", () => color);
+    // myseriesas.columns.template.adapters.add("fill", () => color);
+    // myseriesas.columns.template.adapters.add("stroke", () => color);
 
     myseriesas.columns.template.setAll({
       cornerRadiusTL: 40,
@@ -333,6 +348,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
     myseriesas.data.setAll(category_studs_data);
 
     legend.data.push(myseriesas);
+    // legend.data.setAll([{color: color}])
 
     // Animation on load
     myseriesas.appear(1000);
@@ -351,8 +367,8 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
     // });
   }
 
-  makeSeries('عدد الدارسين', 'studs', '#aa8e55');
-  makeSeries('عدد الخريجين', 'grads', '#637535');
+  makeSeries('       عدد الدارسين', 'studs', '#aa8e55');
+  makeSeries('       عدد الخريجين', 'grads', '#637535');
   // Animation on load
   chartas.appear(1000, 100);
 

@@ -31,7 +31,7 @@ if ($_SESSION['login_type'] == 3) {
     </div>
     <?php
     // Get all courses:
-    $courses_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_course_get_courses&moodlewsrestformat=json';
+    $courses_url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&moodlewsrestformat=json&wsfunction=local_reports_service_get_students_count';
     $curl = curl_init();
     curl_setopt_array($curl, [
       CURLOPT_URL => $courses_url,
@@ -40,22 +40,28 @@ if ($_SESSION['login_type'] == 3) {
     ]);
 
     $decoded_courses = json_decode(curl_exec($curl), true);
+    //  $decoded_courses = [
+      // [0] => ["courseid": int,
+      // "coursename": string,
+      // "categoryid": int,
+      // "Enroled": int]
+      // ]
 
     // echo '<div dir="ltr">';
     // print_r($decoded_courses);
     // echo '</div>';
 
     // Prepare the ids parameter that will be passed in the url:
-    $cat_ids = '';
+    // $cat_ids = '';
 
-    foreach ($decoded_courses as $course) {
-      $cat_ids = $cat_ids . ',' . $course['categoryid'];
-    }
-    $cat_ids = ltrim($cat_ids, ',');
+    // foreach ($decoded_courses as $course) {
+    //   $cat_ids = $cat_ids . ',' . $course['categoryid'];
+    // }
+    // $cat_ids = ltrim($cat_ids, ',');
     // echo $cat_ids . '<br>';
 
     // Get all categories:
-    $categories_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_course_get_categories&moodlewsrestformat=json&criteria[0][key]=ids&criteria[0][value]=' . $cat_ids;
+    $categories_url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&wsfunction=core_course_get_categories&moodlewsrestformat=json';
     $curl = curl_init();
     curl_setopt_array($curl, [
       CURLOPT_URL => $categories_url,
@@ -74,55 +80,48 @@ if ($_SESSION['login_type'] == 3) {
     $cats_with_enrolled_studs = []; // An associative array with the structure: categoryid => No. of enrolled studs
     $cats_with_graduates = []; // An associative array with the structure: categoryid => No. of graduates
     $cats_with_statuses = []; // An associative array with the structure: categoryid => [isset, preliminary_startdate , fourth_enddate] dates as timestamp integers
+
+    $special_batches = [];
     foreach ($decoded_courses as $course) {
       $graduates_count = 0;
 
       if (!isset($cats_with_statuses[$course['categoryid']])) $cats_with_statuses[$course['categoryid']] = [0, 0, 0]; // 2550000000 -> 2050-10-21 23:10:00
-      if (strpos($course['fullname'], 'المستوى التمهيدي') !== false) {
-        $course_url =
-          'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_enrol_get_enrolled_users&moodlewsrestformat=json&courseid=' . $course['id'];
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-          CURLOPT_URL => $course_url,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_RETURNTRANSFER => true
-        ]);
-
-        $enrolled_studs = json_decode(curl_exec($curl), true);
-
-
-        $cats_with_enrolled_studs[$course['categoryid']] = count($enrolled_studs);
+      if (strpos($course['coursename'], 'المستوى التمهيدي') !== false){
         $cats_with_statuses[$course['categoryid']][0] = 1;
         $cats_with_statuses[$course['categoryid']][1] = $course['startdate'];
       }
 
-
-      if (strpos($course['fullname'], 'المستوى الرابع') !== false) {
-        $course_url =
-          'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=gradereport_user_get_grade_items&moodlewsrestformat=json&courseid=' . $course['id'];
-        $curl = curl_init();
-        curl_setopt_array($curl, [
-          CURLOPT_URL => $course_url,
-          CURLOPT_FOLLOWLOCATION => true,
-          CURLOPT_RETURNTRANSFER => true
-        ]);
-
-        $decoded_grades = json_decode(curl_exec($curl), true);
-
-        foreach ($decoded_grades['usergrades'] as $user_grade) {
-          foreach ($user_grade['gradeitems'] as $item) {
-            if ($item['itemtype'] == 'course' && $item['graderaw'] >= 0.6 * $item['grademax']) {
-              $graduates_count++;
-            }
-          }
-        }
-
-        $cats_with_graduates[$course['categoryid']] = $graduates_count;
-
-        $cats_with_statuses[$course['categoryid']][0] = 1;
-        $cats_with_statuses[$course['categoryid']][2] = $course['enddate'];
-        // echo $course['enddate'] . ' ||| ' . $cats_with_statuses[$course['categoryid']][2] .'<br>'.time();
+      if (strpos($course['coursename'], 'المستوى الأول') !== false) {
+        $cats_with_enrolled_studs[$course['categoryid']] = $course['Enroled'];
       }
+
+
+      // if (strpos($course['coursename'], 'المستوى الرابع') !== false) {
+      //   $grades_url =
+      //     'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&wsfunction=gradereport_user_get_grade_items&moodlewsrestformat=json&courseid=' . $course['courseid'];
+      //   $curl = curl_init();
+      //   curl_setopt_array($curl, [
+      //     CURLOPT_URL => $grades_url,
+      //     CURLOPT_FOLLOWLOCATION => true,
+      //     CURLOPT_RETURNTRANSFER => true
+      //   ]);
+
+      //   $decoded_grades = json_decode(curl_exec($curl), true);
+
+      //   foreach ($decoded_grades['usergrades'] as $user_grade) {
+      //     foreach ($user_grade['gradeitems'] as $item) {
+      //       if ($item['itemtype'] == 'course' && $item['graderaw'] >= 0.6 * $item['grademax']) {
+      //         $graduates_count++;
+      //       }
+      //     }
+      //   }
+
+      //   $cats_with_graduates[$course['categoryid']] = $graduates_count;
+
+      //   $cats_with_statuses[$course['categoryid']][0] = 1;
+      //   $cats_with_statuses[$course['categoryid']][2] = $course['enddate'];
+      //   // echo $course['enddate'] . ' ||| ' . $cats_with_statuses[$course['categoryid']][2] .'<br>'.time();
+      // }
     }
 
     // echo '<div dir="ltr">';

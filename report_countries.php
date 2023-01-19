@@ -30,6 +30,7 @@ $decoded = json_decode($result, true);
 $moodle_users = $decoded['users'];
 //	print_r( $moodle_users );
 
+// Preparing students countries statistics:
 $countries = [];
 
 include 'countries.php';
@@ -42,6 +43,33 @@ for ($i = 0; $i < count($moodle_users); $i++) {
   }
 }
 
+// Make an estimatio of the % of each country by removing unsetted country data elements.
+unset($countries['-']);
+
+// Preparing students type (male, femle) statistics:
+$custom_fields_data = []; // An associative array with the structure: userid => ['shortname' => 'value']
+
+for ($i; $i < count($moodle_users); $i++) {
+  $custom_fields_data[$moodle_users[$i]['id']] = [];
+  foreach ($moodle_users[$i]['customfields'] as $cfield) {
+    $custom_fields_data[$moodle_users[$i]['id']][$cfield['shortname']] = $cfield['value'];
+  }
+}
+
+print_r($custom_fields_data);
+$types = ['ذكر' => 0, 'أنثى' => 0];
+for ($i = 0; $i < count($moodle_users); $i++) {
+  if (!isset($custom_fields_data[$moodle_users[$i]['id']]['sex'])) {
+    continue;
+  }
+  if ($custom_fields_data[$moodle_users[$i]['id']]['sex'] == 'ذكر') {
+    $types['ذكر'] += 1;
+  }
+  if ($custom_fields_data[$moodle_users[$i]['id']]['sex'] == 'أنثى') {
+    $types['أنثى'] += 1;
+  }
+}
+print_r($types);
 ?>
 <div class="col-md-12">
   <div class="card card-outline card-success" dir="rtl">
@@ -49,13 +77,19 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       <b>تقرير بدول الدارسين</b>
     </div>
     <div class="chartsPanel">
-      <div class="chartCard" id="chartdiv" style="width: 50%;"></div>
-      <div class="chartCard" id="chartdiv2" style="width: 50%;"></div>
-
+      <div class="chartCard">
+        <div class="chartTitle"> الدارسون والدارسات </div>
+        <div id="chartdiv" style="width: 100%;"></div>
+      </div>
+      <div class="chartCard">
+        <div class="chartTitle"> دول الدارسين </div>
+        <div id="chartdiv2" style="width: 100%;"></div>
+      </div>
     </div>
 
     <div class="chartsPanel">
-      <div class="chartCard" id="chartCard3" style="width: 50%;">
+      <div class="chartCard" id="chartCard3">
+        <div class="chartTitle"> دول الدارسين </div>
         <div id="chartdiv3"></div>
       </div>
       <div class="chartCard" id="chartdiv4" style="width: 50%;"></div>
@@ -88,63 +122,3 @@ for ($i = 0; $i < count($moodle_users); $i++) {
   </div>
 </div>
 
-
-
-<style>
-  /* Chart canvas and div styles */
-  .chartCard {
-    background-color: whitesmoke;
-    box-shadow: -8px 8px 16px 0 rgba(0, 0, 0, 0.2);
-    /* h-offset v-offset blur spread color */
-    transition: 0.3s;
-    border-radius: 15px;
-    margin: 2%;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  .chartCard:hover {
-    box-shadow: -16px 16px 16px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  .chartsPanel {
-    display: flex;
-    flex-direction: row;
-  }
-
-  div[id^="chartdiv"] {
-    /* The Operator ^ - Match elements that starts with given value
-    The Operator * - Match elements that have an attribute containing a given value: div[id*="chartdiv"] 
-    */
-
-    width: 100%;
-    height: 300px;
-    font-family: 'arabic typesetting';
-    font-size: large;
-
-  }
-
-  #chartCard3 {
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-  }
-
-  /********************* TABLES ******************* */
-  td {
-    direction: rtl;
-    text-align: right;
-  }
-
-  th {
-    text-align: center;
-    background-color: #aa8e55;
-    color: white;
-  }
-
-  .card-header {
-    text-align: right;
-    color: #28a745;
-  }
-</style>

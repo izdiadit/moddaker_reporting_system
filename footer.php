@@ -166,6 +166,10 @@
 
 
 <style>
+	.card{
+		font-family: 'traditional arabic';
+		font-size: 25px;
+	}
 	/********************* TABLES ******************* */
 	table {
 		direction: ltr;
@@ -190,4 +194,80 @@
 		text-align: right;
 		color: #28a745;
 	}
+
+	/************************************   CHARTS   **********************************************/
+
+  /* Chart canvas and div styles */
+  .chartCard {
+    width: 50%;
+    background-color: whitesmoke;
+    box-shadow: -8px 8px 16px 0 rgba(0, 0, 0, 0.2);
+    /* h-offset v-offset blur spread color */
+    transition: 0.3s;
+    border-radius: 15px;
+    margin: 2%;
+    padding-top: 20px;
+    /* padding-bottom: 20px; */
+    padding-right: 2%;
+    padding-left: 2%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  .chartCard:hover {
+    box-shadow: -16px 16px 16px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .chartsPanel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  /* Responsive layout - makes a one column layout instead of a two-column layout */
+  @media (max-width: 766px) {
+    .chartsPanel {
+      flex-direction: column;
+    }
+    .chartCard{
+      width: 90%;
+    }
+  }
+
+  div[id^="chartdiv"] {
+    /* The Operator ^ - Match elements that starts with given value
+    The Operator * - Match elements that have an attribute containing a given value: div[id*="chartdiv"] 
+    */
+
+    width: 100%;
+    height: 300px;
+    /* font-family: 'traditional arabic'!important; */
+    font-size: large;
+
+  }
+
+  .chartTitle {
+    color: #977c47;
+    background-color: #28a7454c;
+    font-weight: 600;
+    border-left-style: solid;
+    border-left-width: 5px;
+    border-top-right-radius: 18px;
+    border-bottom-right-radius: 18px;
+    border-color: #28a745;
+
+    padding: 3px 15% 3px 15%;
+
+  }
+
+  #chartCard3 {
+    padding-top: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+  }
+
 </style>

@@ -31,7 +31,7 @@ if ($_SESSION['login_type'] == 3) {
 					<select class="form-select" name="username" id="username">
 						<!-- Filling the select options after getting the data of role users from the api -->
 						<?php 
-						$url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=ef620eccaf5a9f249e24ee3b6cc30ebf&moodlewsrestformat=json&wsfunction=local_reports_service_get_role_assignments&shortname=manager';
+						$url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&moodlewsrestformat=json&wsfunction=local_reports_service_get_role_assignments&shortname=manager';
 						$curl = curl_init($url);
 						curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
@@ -40,6 +40,9 @@ if ($_SESSION['login_type'] == 3) {
 
 						foreach ($st_aff_users as $user) {
 							echo "<option value='$user[username]'>$user[fullname]</option>";
+							if ($user['username'] == $_POST['username']) {
+								echo "<option value='$user[username]' selected='selected'>$user[fullname]</option>";
+							}
 						}
 						?>
 					</select>
@@ -79,7 +82,7 @@ if ($_SESSION['login_type'] == 3) {
 						$i = 0;
 						// Calling the api to get the logs data:
 
-						$service_url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=ef620eccaf5a9f249e24ee3b6cc30ebf&moodlewsrestformat=json&wsfunction=local_reports_service_get_logs_interval_by_username&starttime=' . $starttime . '&endtime=' . $endtime . '&username=' . $username;
+						$service_url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&moodlewsrestformat=json&wsfunction=local_reports_service_get_logs_interval_by_username&starttime=' . $starttime . '&endtime=' . $endtime . '&username=' . $username;
 						$curl = curl_init();
 						curl_setopt_array($curl, [
 							CURLOPT_URL => $service_url,

@@ -1,4 +1,4 @@
-  <aside style="display: flex; flex-direction: column;" class="main-sidebar sidebar-dark-primary elevation-4">
+  <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <div class="dropdown">
       <a href="./" class="brand-link">
         <!-- <?php if ($_SESSION['login_type'] == 1) : ?>

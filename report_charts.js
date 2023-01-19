@@ -13,7 +13,7 @@ var chart = root.container.children.push(
 var myseries = chart.series.push(
     am5percent.PieSeries.new(root, {
         name: "Series",
-        categoryField: "country",
+        categoryField: "type",
         valueField: "count",
     })
 );
@@ -33,7 +33,12 @@ myseries.labels.template.setAll({
     // oversizedBehavior: "wrap" // to truncate labels, use "truncate"
     text: "{category}: {valuePercentTotal.formatNumber('0.0')}%",
     radius: 10,
-    inside: true
+    inside: true,
+    textType: "radial", centerX: am5.percent(100)
+  });
+
+  myseries.ticks.template.setAll({
+    location: 1
   });
 
 // animation
@@ -58,7 +63,7 @@ The most easiest way is to simply set its colors setting to an array of Color ob
 myseries.slices.template.adapters.add("stroke", () => 'aliceblue');
 
 
-myseries.data.setAll(country_data);
+myseries.data.setAll(types_data);
 
 // Legend:
 // var legend = chart.children.push(am5.Legend.new(root, {

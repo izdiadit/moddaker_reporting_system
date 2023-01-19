@@ -49,14 +49,13 @@ unset($countries['-']);
 // Preparing students type (male, femle) statistics:
 $custom_fields_data = []; // An associative array with the structure: userid => ['shortname' => 'value']
 
-for ($i; $i < count($moodle_users); $i++) {
+for ($i = 0; $i < count($moodle_users); $i++) {
   $custom_fields_data[$moodle_users[$i]['id']] = [];
   foreach ($moodle_users[$i]['customfields'] as $cfield) {
     $custom_fields_data[$moodle_users[$i]['id']][$cfield['shortname']] = $cfield['value'];
   }
 }
 
-print_r($custom_fields_data);
 $types = ['ذكر' => 0, 'أنثى' => 0];
 for ($i = 0; $i < count($moodle_users); $i++) {
   if (!isset($custom_fields_data[$moodle_users[$i]['id']]['sex'])) {
@@ -69,7 +68,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     $types['أنثى'] += 1;
   }
 }
-print_r($types);
+// print_r($types);
 ?>
 <div class="col-md-12">
   <div class="card card-outline card-success" dir="rtl">
@@ -116,6 +115,19 @@ print_r($types);
       }
       console.log(result)
       console.log(country_data)
+
+      // Reading type data from php:
+      var types_result = <?php echo json_encode($types); ?>;
+      var types_data = [];
+      for (const key in types_result) {
+        if (types_result.hasOwnProperty.call(types_result, key)) {
+          types_data.push({
+            type: key,
+            count: types_result[key]
+          });
+        }
+      }
+
     </script>
 
     <script src="report_charts.js"></script>

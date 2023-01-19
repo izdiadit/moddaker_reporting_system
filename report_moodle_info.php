@@ -23,7 +23,7 @@ if ($_SESSION['login_type'] == 3) {
 			<div class="card-body" style="overflow:auto">
 		</div>
 			<?php
-			$site_info_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json';
+			$site_info_url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json';
 			$curl = curl_init($site_info_url);
 			curl_setopt_array(
 				$curl,
@@ -44,7 +44,7 @@ if ($_SESSION['login_type'] == 3) {
 					<th>المنصة</th>
 				</tr>
 				<tr>
-					<td><b><?php echo $site_info['siteurl'] ?></b></td>
+					<td><b><?php echo "<a href='$site_info[siteurl]'>$site_info[siteurl]</a>" ?></b></td>
 					<th>رابط المنصة</th>
 				</tr>
 				<tr>

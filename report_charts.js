@@ -1,7 +1,7 @@
 // Instantiating the chart:
 var root = am5.Root.new("chartdiv");
 var chart = root.container.children.push(
-    am5percent.PieChart.new(root, {})
+    am5percent.PieChart.new(root, {layout: root.verticalLayout})
 );
 
 // // Hide the amCharts logo
@@ -9,14 +9,26 @@ var chart = root.container.children.push(
 //     chart.logo.disabled = true;
 // }
 // chart.logo.disabled = true;
+
 // Adding series. Pie chart supports one series type: PieSeries
 var myseries = chart.series.push(
-    am5percent.PieSeries.new(root, {
-        name: "Series",
-        categoryField: "type",
-        valueField: "count",
-    })
-);
+  am5percent.PieSeries.new(root, {
+    name: "Series",
+    categoryField: "type",
+    valueField: "count",
+    legendLabelText: "       {category}: {valuePercentTotal}%", //Add the value with the category and empty the value label to avoid arabic lang overlapping
+    legendValueText: ""
+  })
+  );
+  // Legend:
+  var legend = chart.children.push(am5.Legend.new(root, {
+   centerX: am5.percent(30),
+   x: am5.percent(60),
+   centerY: am5.percent(100),
+   y: am5.percent(100),
+   layout: root.gridLayout
+  }));
+
 
 // Hiding tooltips:
 myseries.slices.template.setAll({ tooltipText: ""})
@@ -34,7 +46,7 @@ myseries.labels.template.setAll({
     text: "{category}: {valuePercentTotal.formatNumber('0.0')}%",
     radius: 10,
     inside: true,
-    textType: "radial", centerX: am5.percent(100)
+    textType: "radial", centerX: am5.percent(100),
   });
 
   myseries.ticks.template.setAll({
@@ -64,6 +76,7 @@ myseries.slices.template.adapters.add("stroke", () => 'aliceblue');
 
 
 myseries.data.setAll(types_data);
+legend.data.setAll(myseries.dataItems);
 
 // Legend:
 // var legend = chart.children.push(am5.Legend.new(root, {
@@ -76,14 +89,15 @@ myseries.data.setAll(types_data);
 
 // legend.data.setAll(myseries.dataItems);
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 if (document.body.contains(document.getElementById("chartdiv2"))) {
     // check if admin div exists, to avoid errors for nonadmin sessions
 	var root2 = am5.Root.new("chartdiv2");
 	var chart2 = root2.container.children.push(
-	    am5percent.PieChart.new(root2, {
-	        layout: root2.verticalLayout,
-	        innerRadius: am5.percent(60)
+    am5percent.PieChart.new(root2, {
+      layout: root2.verticalLayout,
+      innerRadius: am5.percent(60),
 	    })
 	);
 	
@@ -93,9 +107,19 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
 	        name: "Series",
 	        categoryField: "country",
 	        valueField: "count",
+          legendLabelText: "       {category}: {valuePercentTotal}%", //Add the value with the category and empty the value label to avoid arabic lang overlapping
+      legendValueText: ""
 	    })
 	);
 	
+   // Legend:
+   var legend = chart2.children.push(am5.Legend.new(root2, {
+    centerX: am5.percent(30),
+    x: am5.percent(60),
+    centerY: am5.percent(100),
+    y: am5.percent(100),
+    layout: root2.gridLayout
+   }));
 	root2.setThemes([
 	    am5themes_Animated.new(root2)
 	]);
@@ -106,6 +130,9 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
         // oversizedBehavior: "wrap" // to truncate labels, use "truncate"
         fontsize: 20,
       });
+
+  // Hiding tooltips:
+myseries2.slices.template.setAll({ tooltipText: ""})
 	
 	// Coloring one by one:
 	// myseries2.slices.template.adapters.add("fill", function(fill, target) {
@@ -134,7 +161,7 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
 	myseries2.slices.template.adapters.add("stroke", () => 'whitesmoke'); //same as chartCard background
 	myseries2.slices.template.adapters.add("strokeWidth", () => 5);
 	myseries2.data.setAll(country_data);
-	
+	legend.data.setAll(myseries2.dataItems);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 am5.ready(function() {

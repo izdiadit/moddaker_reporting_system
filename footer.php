@@ -162,7 +162,39 @@
 <script src="assets/plugins/datatables-buttons/js/buttons.print.min.js"></script>
 <script src="assets/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
+<script>
+	function openFullscreen(id) {
+        var elem = document.getElementById(id);
+        
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* For IE 11 */
+            elem.msRequestFullscreen();
+        } else if (elem.webkitRequestFullscreen){ /* For Safari */
+            elem.webkitRequestFullscreen();
+        }
+    }
+    function closeFullscreen() {
+        
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.msExitFullscreen) { /* For IE 11 */
+            document.msExitFullscreen();
+        } else if (document.webkitExitFullscreen){ /* For Safari */
+            document.webkitExitFullscreen();
+        }
 
+
+    }
+
+    function toggleFullscreen(id) {
+        if (document.fullscreenElement === null) {
+            openFullscreen(id);
+        } else {
+            closeFullscreen(id);
+        }
+    }
+</script>
 
 
 <style>
@@ -221,6 +253,19 @@
     box-shadow: -16px 16px 16px 8px rgba(0, 0, 0, 0.2);
   }
 
+  .chartCardHeader{
+	display: flex;
+	align-self: flex-start;
+	width: 100%;
+	justify-content: space-between;
+  }
+  .chartCardHeader .chartTitle {
+	align-self: center;
+  }
+  .chartCardHeader a{
+	justify-content: right;
+	float: right !important;
+  }
   .chartsPanel {
     display: flex;
     flex-direction: row;

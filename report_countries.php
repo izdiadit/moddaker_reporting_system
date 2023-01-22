@@ -80,8 +80,12 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         <div class="chartTitle"> الدارسون والدارسات </div>
         <div id="chartdiv" style="width: 100%;"></div>
       </div>
-      <div class="chartCard">
-        <div class="chartTitle"> دول الدارسين </div>
+      <div class="chartCard" id="chartCard2">
+        <div class="chartCardHeader">
+          <a href="#" onclick="toggleFullscreen('chartCard2')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <div class="chartTitle"> دول الدارسين </div>
+          <div style="visibility: hidden"></div>
+        </div>
         <div id="chartdiv2" style="width: 100%;"></div>
       </div>
     </div>
@@ -127,10 +131,40 @@ for ($i = 0; $i < count($moodle_users); $i++) {
           });
         }
       }
-
     </script>
 
     <script src="report_charts.js"></script>
+
+
+    <script>
+      $(document).ready(
+        $('.chartCard').each(function() {
+          // setFont(this);
+        }),
+
+        $('.am5-tooltip-container').each(
+          function() {
+            this.style.position = 'fixed';
+            this.style.margin = 'auto';
+          }
+        )
+      )
+
+      function setFont(mychart) {
+        descendants = [...mychart.getElementsByTagName('*')];
+        // console.log(typeof descendants);
+
+        descendants.forEach(element => {
+          element.style.fontFamily = 'arabic typesetting'
+          element.style.fontSize = 'large'
+          // element.style.backgroundColor = 'red'
+          // element.style.overflow = 'auto'
+          // element.style.margin = 'auto'
+          if (element.hasChildNodes()) {
+            setFont(element)
+          }
+        });
+      }
+    </script>
   </div>
 </div>
-

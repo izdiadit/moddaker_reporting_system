@@ -51,7 +51,7 @@ if ($_SESSION['login_type'] == 3) {
 					//$type = array('',"Admin","Project Manager","Employee");
 					//$qry = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users order by concat(firstname,' ',lastname) asc");
 
-					$service_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_user_get_users&moodlewsrestformat=json&criteria[0][key]=lastname&criteria[0][value]=%';
+					$service_url = 'https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6';
 					$curl = curl_init();
 					curl_setopt_array($curl, [
 						CURLOPT_URL => $service_url,

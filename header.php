@@ -10,6 +10,38 @@
   <title><?php echo $title ?> | <?php echo $_SESSION['system']['name'] ?></title>
   <?php ob_end_flush() ?>
 
+  <?php
+
+  function updateData($url, $dataClass, $lang)
+  {
+    $fanme = "$lang-$dataClass.json";
+    $url = 'https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6';
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+      CURLOPT_URL => $url,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_SSL_VERIFYPEER => 0,
+      CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+    ]);
+    $json = curl_exec($curl);
+    $file = fopen('ar-students.json', 'a+');
+    ftruncate($file, 0);
+    fwrite($file, '{"lastupdate": ' . time() . ',');
+    fwrite($file, '"data": ' . $json . '}');
+    fclose($file);
+  }
+
+  function getData($fname)
+  {
+    $json = file_get_contents($fname);
+    $data = json_decode($json, true);
+
+    return $data;
+  }
+  // updateData('', 'students', 'ar');
+  
+  ?>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome Icons -->

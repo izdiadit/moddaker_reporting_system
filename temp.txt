@@ -1,0 +1,18 @@
+<tr>
+							<!-- <th class="text-center"><?php echo $i + 1 ?></th> -->
+							<td><b><?php echo ucwords($moodle_users[$i]['username']) ?></b></td>
+							<td><b><?php echo $moodle_users[$i]['fullname'] ?></b></td>
+							<td><b><?php echo $moodle_users[$i]['email'] ?></b></td>
+							<td><b dir="ltr"><?php //echo date('Y-m-d h:i a', $moodle_users[$i]['firstaccess']) ?></b></td>
+							<td><b dir="ltr"><?php //echo date('Y-m-d h:i a', $moodle_users[$i]['lastaccess']) ?></b></td>
+							<!-- <td><b><?php //echo $moodle_users[$i]['confirmed'] ? 'مؤكّد' : 'غير مؤكّد' ?></b></td>
+							<td><b><?php //echo $moodle_users[$i]['suspended'] ? 'معلّق' : 'غير معلّق' ?></b></td> -->
+							<td><b><?php echo $moodle_users[$i]['lang'] ?></b></td>
+							<td><b><?php echo $moodle_users[$i]['city'] ?? '-' ?></b></td>
+							<td><b><?php echo $string[$moodle_users[$i]['country'] ?? '-'] ?? '-' ?></b></td>
+							<td><b><?php echo $moodle_users[$i]['sex'] ?? '-' ?></b></td>
+							<td><b><?php echo $moodle_users[$i]['Age'] ?? '-' ?></b></td>
+							<td><b><?php echo $moodle_users[$i][''] ?? '-' ?></b></td>
+							<td><b><?php echo $moodle_users[$i]['AcademicQualification'] ?? '-' ?></b></td>
+							<td><b><?php echo $moodle_users[$i]['QuranMemorize'] ?? '-' ?></b></td>
+						</tr>

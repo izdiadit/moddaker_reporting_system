@@ -150,8 +150,8 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         )
       )
 
-      function setFont(mychart) {
-        descendants = [...mychart.getElementsByTagName('*')];
+      function setFont(myelement) {
+        descendants = [...myelement.getElementsByTagName('*')];
         // console.log(typeof descendants);
 
         descendants.forEach(element => {

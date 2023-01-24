@@ -122,7 +122,7 @@
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <strong>حقوق الطبع محفوظة &copy; 2023 <br> <a href="http://izdiad.net/">شركة ازدياد للحلول المتكاملة</a></strong>
+    <strong>حقوق الطبع محفوظة &copy; <?php echo date('Y')?> <br> <a href="http://izdiad.net/">شركة ازدياد للحلول المتكاملة</a></strong>
     
     <div class="float-right d-none d-sm-inline-block">
       <b><?php echo $_SESSION['system']['name'] ?></b>

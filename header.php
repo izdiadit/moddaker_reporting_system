@@ -14,7 +14,7 @@
 
   function updateData($url, $dataClass, $lang)
   {
-    $fanme = "$lang-$dataClass.json";
+    $fanme = "fetcheddata/$lang-$dataClass.json";
     $url = 'https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6';
     $curl = curl_init();
     curl_setopt_array($curl, [
@@ -25,7 +25,7 @@
       CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
     ]);
     $json = curl_exec($curl);
-    $file = fopen('ar-students.json', 'a+');
+    $file = fopen('fetcheddata/en-students.json', 'a+');
     ftruncate($file, 0);
     fwrite($file, '{"lastupdate": ' . time() . ',');
     fwrite($file, '"data": ' . $json . '}');

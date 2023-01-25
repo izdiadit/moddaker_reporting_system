@@ -31,7 +31,7 @@ if ($_SESSION['login_type'] == 3) {
     </div>
     <?php
     // Get all courses:
-    $courses_url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&moodlewsrestformat=json&wsfunction=local_reports_service_get_students_count';
+    $courses_url = 'https://ar.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_course_info&wstoken=26abc81f3a71f2c17ceec76c5d45b465';
     $curl = curl_init();
     curl_setopt_array($curl, [
       CURLOPT_URL => $courses_url,
@@ -81,9 +81,8 @@ if ($_SESSION['login_type'] == 3) {
     $cats_with_graduates = []; // An associative array with the structure: categoryid => No. of graduates
     $cats_with_statuses = []; // An associative array with the structure: categoryid => [isset, preliminary_startdate , fourth_enddate] dates as timestamp integers
 
-    $special_batches = [];
+    $special_batches = [6,7,9]; // الدفعة الأولى: 6 - الدفعة الثانية: 7 - الدفعة الثالثة: 9
     foreach ($decoded_courses as $course) {
-      $graduates_count = 0;
 
       if (!isset($cats_with_statuses[$course['categoryid']])) $cats_with_statuses[$course['categoryid']] = [0, 0, 0]; // 2550000000 -> 2050-10-21 23:10:00
       if (strpos($course['coursename'], 'المستوى التمهيدي') !== false){
@@ -95,7 +94,16 @@ if ($_SESSION['login_type'] == 3) {
         $cats_with_enrolled_studs[$course['categoryid']] = $course['Enroled'];
       }
 
+      if (strpos($course['coursename'], 'المستوى الرابع') !== false) {
+        $cats_with_graduates[$course['categoryid']] = $course['Graduates'];
+      }
 
+      if (strpos($course['coursename'], 'المستوى الرابع') !== false) {
+        $cats_with_graduates[$course['categoryid']] = $course['Graduates'];
+      }
+      if (in_array($course['categoryid'], $special_batches) && strpos($course['coursename'], 'المستوى الثالث') !== false) {
+        $cats_with_graduates[$course['categoryid']] = $course['Graduates'];
+      }
       // if (strpos($course['coursename'], 'المستوى الرابع') !== false) {
       //   $grades_url =
       //     'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&wsfunction=gradereport_user_get_grade_items&moodlewsrestformat=json&courseid=' . $course['courseid'];
@@ -148,7 +156,7 @@ if ($_SESSION['login_type'] == 3) {
       <tbody>
         <?php $i = 0; ?>
         <?php foreach ($decoded_categories as $cat) :
-
+        if (!strpos($cat['name'], 'دفعة ال') !== false) continue;
         ?>
           <tr>
             <th><?php echo ++$i; ?></th>
@@ -157,7 +165,7 @@ if ($_SESSION['login_type'] == 3) {
             <td><?php echo $cats_with_graduates[$cat["id"]] ?? '-'; ?></td>
             <td><?php
 
-                if ($cats_with_statuses[$cat["id"]][0] == 0) {
+                if (!isset($cats_with_statuses[$cat["id"]]) || $cats_with_statuses[$cat["id"]][0] == 0) {
                   echo '-';
                 } else {
                   if ($cats_with_statuses[$cat["id"]][1] > time()) {
@@ -165,7 +173,7 @@ if ($_SESSION['login_type'] == 3) {
                     echo date('Y-m-d', $cats_with_statuses[$cat["id"]][1]);
                   } elseif (time() > $cats_with_statuses[$cat["id"]][2]) {
                     echo 'منتهية' . '<br>';
-                    echo date('Y-m-d', $cats_with_statuses[$cat["id"]][2]); // 
+                    // echo date('Y-m-d', $cats_with_statuses[$cat["id"]][2]); // 
                   } else { // preliminary_startdate > time() > fourth_enddate
                     echo 'قيد الدراسة';
                   }

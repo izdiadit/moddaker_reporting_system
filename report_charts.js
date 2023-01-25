@@ -16,7 +16,7 @@ var myseries = chart.series.push(
     name: "Series",
     categoryField: "type",
     valueField: "count",
-    legendLabelText: "       {category}: {valuePercentTotal}%", //Add the value with the category and empty the value label to avoid arabic lang overlapping
+    legendLabelText: "       {category}: {valuePercentTotal.formatNumber('0.00')}%", //Add the value with the category and empty the value label to avoid arabic lang overlapping
     legendValueText: ""
   })
   );
@@ -107,7 +107,7 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
 	        name: "Series",
 	        categoryField: "country",
 	        valueField: "count",
-          legendLabelText: "       {category}: {valuePercentTotal}%", //Add the value with the category and empty the value label to avoid arabic lang overlapping
+          legendLabelText: "       {category}: {valuePercentTotal.formatNumber('0.0')}%", //Add the value with the category and empty the value label to avoid arabic lang overlapping
       legendValueText: ""
 	    })
 	);

@@ -15,56 +15,62 @@ if ($_SESSION['login_type'] == 3) {
   ';
   exit;
 }
-$service_url = 'https://moddaker.com/birmingham/webservice/rest/server.php?wstoken=6205b87bf70f63264e85e23200a67b88&wsfunction=core_user_get_users&moodlewsrestformat=json&criteria[0][key]=lastname&criteria[0][value]=%';
-$curl = curl_init();
-curl_setopt_array($curl, [
-  CURLOPT_URL => $service_url,
-  CURLOPT_FOLLOWLOCATION => true,
-  CURLOPT_RETURNTRANSFER => true
-]);
 
 
-$result = curl_exec($curl);
-$decoded = json_decode($result, true);
+include 'countries.php';
 
-$moodle_users = $decoded['users'];
-//	print_r( $moodle_users );
+$data = getData('fetcheddata/en-students.json');
+$moodle_users = $data['data'];
+echo $data['lastupdate'] . '<br>';
+	// print_r( $moodle_users[0] );
 
 // Preparing students countries statistics:
 $countries = [];
 
-include 'countries.php';
 for ($i = 0; $i < count($moodle_users); $i++) {
-  $moodle_users[$i]['country'] = $moodle_users[$i]['country'] ?? '-';
-  if (array_key_exists($string[$moodle_users[$i]['country']], $countries)) {
-    $countries[$string[$moodle_users[$i]['country']]] += 1;
+  if(!array_key_exists($moodle_users[$i]['country'], $string)) $moodle_users[$i]['country'] = '-';
+
+  $temp = $moodle_users[$i]['country'] ?? '-';
+
+  if (array_key_exists($string[$temp], $countries)) {
+    $countries[$string[$temp]] += 1;
   } else {
-    $countries[$string[$moodle_users[$i]['country']]] = 1;
+    $countries[$string[$temp]] = 1;
   }
 }
 
-// Make an estimatio of the % of each country by removing unsetted country data elements.
+// Make an estimation of the % of each country by removing unsetted country data elements.
+$unsetted = $countries['-'];
+// echo $unsetted;
 unset($countries['-']);
 
-// Preparing students type (male, femle) statistics:
-$custom_fields_data = []; // An associative array with the structure: userid => ['shortname' => 'value']
+// Reform coutries data by gathering all minor values in one element:
+  
+  arsort($countries); // Sorts the array descendingly by values
+  $reformed_countries = array_slice($countries, 0, 7, true);
+  $reformed_countries['دول أخرى'] = array_sum(array_slice($countries, 7, count($countries), true));
 
-for ($i = 0; $i < count($moodle_users); $i++) {
-  $custom_fields_data[$moodle_users[$i]['id']] = [];
-  foreach ($moodle_users[$i]['customfields'] as $cfield) {
-    $custom_fields_data[$moodle_users[$i]['id']][$cfield['shortname']] = $cfield['value'];
-  }
-}
+  // echo array_sum($reformed_countries) + $unsetted; for en: 8023
+
+// Preparing students type (male, femle) statistics:
+
+// $custom_fields_data = []; // An associative array with the structure: userid => ['shortname' => 'value']
+// for ($i = 0; $i < count($moodle_users); $i++) {
+//   $custom_fields_data[$moodle_users[$i]['id']] = [];
+//   foreach ($moodle_users[$i]['customfields'] as $cfield) {
+//     $custom_fields_data[$moodle_users[$i]['id']][$cfield['shortname']] = $cfield['value'];
+//   }
+// }
 
 $types = ['ذكر' => 0, 'أنثى' => 0];
 for ($i = 0; $i < count($moodle_users); $i++) {
-  if (!isset($custom_fields_data[$moodle_users[$i]['id']]['sex'])) {
+  if (!isset($moodle_users[$i]['sex'])) {
     continue;
   }
-  if ($custom_fields_data[$moodle_users[$i]['id']]['sex'] == 'ذكر') {
+  if ($moodle_users[$i]['sex'] == 'ذكر' || $moodle_users[$i]['sex'] == 'male') {
     $types['ذكر'] += 1;
   }
-  if ($custom_fields_data[$moodle_users[$i]['id']]['sex'] == 'أنثى') {
+  if ($moodle_users[$i]['sex'] == 'أنثى' || $moodle_users[$i]['sex'] == 'female') {
     $types['أنثى'] += 1;
   }
 }
@@ -73,11 +79,15 @@ for ($i = 0; $i < count($moodle_users); $i++) {
 <div class="col-md-12">
   <div class="card card-outline card-success" dir="rtl">
     <div class="card-header">
-      <b>تقرير بدول الدارسين</b>
+      <b>مدكر في أرقام</b>
     </div>
     <div class="chartsPanel">
-      <div class="chartCard">
-        <div class="chartTitle"> الدارسون والدارسات </div>
+      <div class="chartCard" id="chartCard1">
+        <div class="chartCardHeader">
+          <a href="#" onclick="toggleFullscreen('chartCard1')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <div class="chartTitle"> الدارسون والدارسات </div>
+          <div style="visibility: hidden"></div>
+        </div>
         <div id="chartdiv" style="width: 100%;"></div>
       </div>
       <div class="chartCard" id="chartCard2">
@@ -106,7 +116,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
 
     <script>
       // Reading country_data from php:
-      var result = <?php echo json_encode($countries); ?>;
+      var result = <?php echo json_encode($reformed_countries); ?>;
       // // var country_data = JSON.parse(result);
       var country_data = [];
       for (const key in result) {

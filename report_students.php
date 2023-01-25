@@ -62,7 +62,7 @@ if ($_SESSION['login_type'] == 3) {
 
 
 					// $result = curl_exec($curl);
-					$data = getData('ar-students.json');
+					$data = getData('fetcheddata/en-students.json');
 					$moodle_users = $data['data'];
 					echo $data['lastupdate'].'<br>';
 					// print_r($moodle_users);
@@ -73,24 +73,9 @@ if ($_SESSION['login_type'] == 3) {
 
 					require_once 'countries.php';
 
-					for ($i; $i < count($moodle_users); $i++) :
-					// 	foreach ($moodle_users as $user):
-					// 		$i++;
-					// echo "<tr>
-					// 	<td>$i</td> 
-					// 	<td> ucwords($user[username])</td>
-					// 	<td> $user[fullname]</td> 
-					// 	<td> $user[email]</td> 
-					// 	<td> $user[QuranMemorize]</td> 
-					// 	<td> date('Y-m-d h:i a', $user[firstaccess])</td> 
-					// 	<td> date('Y-m-d h:i a', $user[lastaccess])</td>
-					// 	<td> $user[confirmed] ? 'مؤكّد' : 'غير مؤكّد'</td>
-					// 	<td> $user[suspended] ? 'معلّق' : 'غير معلّق''</td>
-					// 	<td> $user[sex]</td> 
-					// 	<td> $user[Age]</td> 
-					// 	<td> $user[AcademicQualification]</td> 
-					// </tr>";
-					
+
+					$data_rendering_ended = false;
+					for ($i; $i < count($moodle_users); $i++) :					
 					// echo '<tr>';
 					// 	echo ($i + 1).' | '; 
 					// 	echo ucwords($moodle_users[$i]['username']).' | ';
@@ -126,7 +111,10 @@ if ($_SESSION['login_type'] == 3) {
 							<td><b><?php echo $moodle_users[$i]['QuranMemorize'] ?? '-' ?></b></td>
 						</tr>
 						
-					<?php endfor; ?>
+					<?php
+					endfor;
+					$data_rendering_ended = true;
+					?>
 				</tbody>
 			</table>
 		</div>
@@ -137,7 +125,7 @@ if ($_SESSION['login_type'] == 3) {
 
 		setTimeout(() => {
 		table = document.getElementById('list');
-		table.style.display = 'block';
+		table.style.display = 'table';
 	}, 5000);
 
 		// $('#list').dataTable()
@@ -149,7 +137,7 @@ if ($_SESSION['login_type'] == 3) {
 		var table = $('#list').DataTable({
 			orderCellsTop: true,
 			fixedHeader: true,
-			dom: "<'row'<'col-sm-3 col-md-3'l>>" + "<'row'<'col-sm-12 col-md-12 col-lg-12't>>" + "<'row' <'col-sm-5 col-md-5'i><'col-sm-7 col-md-7'p>>",
+			// dom: "<'row'<'col-sm-3 col-md-3'l>>" + "<'row'<'col-sm-12 col-md-12 col-lg-12't>>" + "<'row' <'col-sm-5 col-md-5'i><'col-sm-7 col-md-7'p>>",
 			searching: false,
 			language: {
 				"sProcessing": "جارٍ التحميل...",

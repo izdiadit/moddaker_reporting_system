@@ -16,7 +16,7 @@ var myseries = chart.series.push(
     name: "Series",
     categoryField: "type",
     valueField: "count",
-    legendLabelText: "       {category}: {valuePercentTotal.formatNumber('0.00')}%", //Add the value with the category and empty the value label to avoid arabic lang overlapping
+    legendLabelText: "[fontFamily: calibri]       {category}: {valuePercentTotal.formatNumber('0.00')}%[/]", //Add the value with the category and empty the value label to avoid arabic lang overlapping
     legendValueText: ""
   })
   );
@@ -43,7 +43,7 @@ root.setThemes([
 myseries.labels.template.setAll({
     // maxWidth: 150,
     // oversizedBehavior: "wrap" // to truncate labels, use "truncate"
-    text: "{category}: {valuePercentTotal.formatNumber('0.0')}%",
+    text: "[fontFamily: calibri]{category}: {valuePercentTotal.formatNumber('0.0')}%[/]",
     radius: 10,
     inside: true,
     textType: "radial", centerX: am5.percent(100),
@@ -107,7 +107,7 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
 	        name: "Series",
 	        categoryField: "country",
 	        valueField: "count",
-          legendLabelText: "       {category}: {valuePercentTotal.formatNumber('0.0')}%", //Add the value with the category and empty the value label to avoid arabic lang overlapping
+          legendLabelText: "[fontFamily: calibri]       {category}: {valuePercentTotal.formatNumber('0.0')}%[/]", //Add the value with the category and empty the value label to avoid arabic lang overlapping
       legendValueText: ""
 	    })
 	);
@@ -118,10 +118,13 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
     x: am5.percent(60),
     centerY: am5.percent(100),
     y: am5.percent(100),
-    layout: root2.gridLayout
+    layout: am5.GridLayout.new(root2, {
+      maxColumns: 2,
+      fixedWidthGrid: false
+    })
    }));
 	root2.setThemes([
-	    am5themes_Animated.new(root2)
+    am5themes_Responsive.new(root2)
 	]);
 
     // Styling labels:
@@ -129,6 +132,7 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
         // maxWidth: 150,
         // oversizedBehavior: "wrap" // to truncate labels, use "truncate"
         fontsize: 20,
+        text: "[fontFamily: calibri]{category}: {valuePercentTotal.formatNumber('0.0')}%[/]",
       });
 
   // Hiding tooltips:

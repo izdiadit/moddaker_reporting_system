@@ -237,7 +237,7 @@
     /* h-offset v-offset blur spread color */
     transition: 0.3s;
     border-radius: 15px;
-    margin: 2%;
+    margin: 1%;
     padding-top: 20px;
     /* padding-bottom: 20px; */
     padding-right: 2%;
@@ -288,7 +288,7 @@
     */
 
     width: 100%;
-    height: 300px;
+    height: 500px;
     /* font-family: 'traditional arabic'!important; */
     font-size: large;
 

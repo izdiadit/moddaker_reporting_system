@@ -156,7 +156,7 @@ if ($_SESSION['login_type'] == 3) {
       <tbody>
         <?php $i = 0; ?>
         <?php foreach ($decoded_categories as $cat) :
-        if (!strpos($cat['name'], 'دفعة ال') !== false) continue;
+        if (!(strpos($cat['name'], 'دفعة ال') !== false) || $cat['name'] == "مشرفات الدفعة الأولى") continue;
         ?>
           <tr>
             <th><?php echo ++$i; ?></th>
@@ -224,7 +224,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
       <b>العرض التفاعلي للحالة الأكاديمية</b>
     </div>
     <div class="chartsPanel">
-      <div id="chartdivas1" style="width: 50%; margin: auto;"></div>
+      <div id="chartdivas1" style="width: 75%; margin: auto;"></div>
 
     </div>
 
@@ -272,19 +272,22 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
 
   // Create axes
   var xRenderer = am5xy.AxisRendererX.new(rootas, {
-    minGridDistance: 30
+    minGridDistance: 30,
+    cellStartLocation: 0.2,
+      cellEndLocation: 0.8
   });
   xRenderer.labels.template.setAll({
     rotation: 0,
     centerY: am5.p50,
     centerX: am5.p50,
+    text: "[fontFamily: calibri; fontSize: 20px;]{category}[/]"
   });
 
   var yRenderer = am5xy.AxisRendererY.new(rootas, {
     minGridDistance: 30
   });
   yRenderer.labels.template.setAll({
-    paddingLeft: 30,
+    paddingLeft: 50,
   });
 
   var xAxis = chartas.xAxes.push(am5xy.CategoryAxis.new(rootas, {
@@ -295,7 +298,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
   }));
   xAxis.get("renderer").labels.template.setAll({
     oversizedBehavior: "wrap",
-    maxWidth: 100,
+    maxWidth: 120,
     textAlign: "center",
   });
 
@@ -327,7 +330,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
   // Create series
   function makeSeries(name, fieldName, color) {
     var myseriesas = chartas.series.push(am5xy.ColumnSeries.new(rootas, {
-      name: name,
+      name: `[fontFamily: calibri; fontSize: 23px]${name}[/]`,
       xAxis: xAxis,
       yAxis: yAxis,
       valueYField: fieldName,
@@ -344,11 +347,11 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
     myseriesas.columns.template.setAll({
       cornerRadiusTL: 40,
       cornerRadiusTR: 40,
-      width: am5.percent(65)
+      width: am5.percent(95)
     });
 
     myseriesas.columns.template.setAll({
-      tooltipText: "{valueY}*"
+      tooltipText: "{value}"
     });
 
     xAxis.data.setAll(category_studs_data);

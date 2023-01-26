@@ -112,7 +112,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/percent.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/xy.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Animated.js"></script>
-    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Dataviz.js"></script>
+    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Responsive.js"></script>
 
     <script>
       // Reading country_data from php:

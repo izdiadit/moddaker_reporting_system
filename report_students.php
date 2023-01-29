@@ -15,6 +15,14 @@ if ($_SESSION['login_type'] == 3) {
 	exit;
 } ?>
 <div class="col-lg-12  w-fit">
+<div class="card card-outline card-success">
+		<div class="card-header">
+
+		</div>
+		<div class="card-body" style="overflow:auto">
+
+		</div>
+</div>
 	<div class="card card-outline card-success">
 		<div class="card-header">
 			<!-- <div class="card-tools">
@@ -62,20 +70,21 @@ if ($_SESSION['login_type'] == 3) {
 
 
 					// $result = curl_exec($curl);
-					$data = getData('fetcheddata/en-students.json');
+					$data = getData('fetcheddata/ar-students.json');
+					echo count($data['data']);
+					echo '<br>';
 					$moodle_users = $data['data'];
-					echo $data['lastupdate'].'<br>';
+					echo date('Y/m/d h:i:s' ,$data['lastupdate']);
 					// print_r($moodle_users);
 					// exit;
-					$custom_fields_data = []; // An associative array with the structure: userid => ['shortname' => 'value']
-					//	print_r( $moodle_users );
 
 
 					require_once 'countries.php';
 
 
 					$data_rendering_ended = false;
-					for ($i; $i < count($moodle_users); $i++) :					
+					// print_r(array_slice($moodle_users, 0, 1000));
+					for ($i; $i < count(array_slice($moodle_users, 0, 50000)); $i++) :					
 					// echo '<tr>';
 					// 	echo ($i + 1).' | '; 
 					// 	echo ucwords($moodle_users[$i]['username']).' | ';
@@ -90,7 +99,9 @@ if ($_SESSION['login_type'] == 3) {
 					// 	echo $moodle_users[$i]['Age'].' | '; 
 					// 	echo $moodle_users[$i]['AcademicQualification'].' | '; 
 					// 	echo $string[$moodle_users[$i]['country'] ?? '-'] ?? '-'; echo ' | ';
-					// echo '</tr>';
+					// echo '</br>';
+					
+					
 					?>
 					<tr>
 							<th class="text-center"><?php echo $i + 1 ?></th>
@@ -126,7 +137,7 @@ if ($_SESSION['login_type'] == 3) {
 		setTimeout(() => {
 		table = document.getElementById('list');
 		table.style.display = 'table';
-	}, 5000);
+	}, 18000);
 
 		// $('#list').dataTable()
 		$('#list thead tr')
@@ -138,7 +149,7 @@ if ($_SESSION['login_type'] == 3) {
 			orderCellsTop: true,
 			fixedHeader: true,
 			// dom: "<'row'<'col-sm-3 col-md-3'l>>" + "<'row'<'col-sm-12 col-md-12 col-lg-12't>>" + "<'row' <'col-sm-5 col-md-5'i><'col-sm-7 col-md-7'p>>",
-			searching: false,
+			searching: true,
 			language: {
 				"sProcessing": "جارٍ التحميل...",
 				"sLengthMenu": "أظهر _MENU_ من الصفوف",

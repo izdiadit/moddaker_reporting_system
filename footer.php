@@ -230,7 +230,9 @@
 	/************************************   CHARTS   **********************************************/
 
   /* Chart canvas and div styles */
+  @import url('https://fonts.googleapis.com/css?family=Tajawal');
   .chartCard {
+	font-family: 'Tajawal', 'Traditional Arabic';
     width: 50%;
     background-color: whitesmoke;
     box-shadow: -8px 8px 16px 0 rgba(0, 0, 0, 0.2);
@@ -290,7 +292,7 @@
     width: 100%;
     height: 500px;
     /* font-family: 'traditional arabic'!important; */
-    font-size: large;
+    font-size: 1.5rem;
 
   }
 
@@ -298,6 +300,7 @@
     color: #977c47;
     background-color: #28a7454c;
     font-weight: 600;
+	font-size: larger;
     border-left-style: solid;
     border-left-width: 5px;
     border-top-right-radius: 18px;
@@ -313,6 +316,11 @@
     padding-right: 10px;
     padding-bottom: 10px;
     padding-left: 10px;
+  }
+
+  /******************************** Datatables ***********************************/
+  .dataTables_filter{
+	display: none;
   }
 
 </style>

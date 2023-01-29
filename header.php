@@ -14,21 +14,65 @@
 
   function updateData($url, $dataClass, $lang)
   {
-    $fanme = "fetcheddata/$lang-$dataClass.json";
-    $url = 'https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6';
-    $curl = curl_init();
-    curl_setopt_array($curl, [
-      CURLOPT_URL => $url,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_RETURNTRANSFER => true,
-      CURLOPT_SSL_VERIFYPEER => 0,
-      CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-    ]);
-    $json = curl_exec($curl);
-    $file = fopen('fetcheddata/en-students.json', 'a+');
+    if ($lang == 'ar' && $dataClass == 'students') {
+      updateArStudentsData();
+    }
+    else {
+      $fanme = "fetcheddata/$lang-$dataClass.json";
+      // $url = 'https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6';
+      $curl = curl_init();
+      curl_setopt_array($curl, [
+        CURLOPT_URL => $url,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => 0,
+        CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+      ]);
+      $json = curl_exec($curl);
+      $file = fopen($fanme, 'a+');
+      ftruncate($file, 0);
+      fwrite($file, '{"lastupdate": ' . time() . ',');
+      fwrite($file, '"data": ' . $json . '}');
+      fclose($file);
+    }
+  }
+
+  function updateArStudentsData()
+  {
+    // Get the total number of users:
+    $total_count = file_get_contents("https://ar.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_total_users&wstoken=26abc81f3a71f2c17ceec76c5d45b465");
+    $total_count = json_decode($total_count);
+
+    $students_data = [];
+    $start = 0;
+    
+    while (true) {
+      $end = $start + 5000;
+
+      $curl = curl_init("https://ar.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users_limited&wstoken=26abc81f3a71f2c17ceec76c5d45b465&startlimit=$start&endlimit=$end");
+      curl_setopt_array($curl, [
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => 0,
+        CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+      ]);
+      $json = curl_exec($curl);
+      $data = json_decode($json, true);
+      $students_data = array_merge($students_data, $data);
+      
+      $start = $end + 1;
+      if ($end >= $total_count) {
+        break;
+      }
+    }
+
+    // Save data in a json file:
+    $students_json = json_encode($students_data);
+    $fanme = "fetcheddata/ar-students.json";
+    $file = fopen($fanme, 'a+');
     ftruncate($file, 0);
     fwrite($file, '{"lastupdate": ' . time() . ',');
-    fwrite($file, '"data": ' . $json . '}');
+    fwrite($file, '"data": ' . $students_json . '}');
     fclose($file);
   }
 
@@ -39,8 +83,13 @@
 
     return $data;
   }
+
+
+  // Ar Students:
   // updateData('', 'students', 'ar');
   
+  // En Students:
+  // updateData('https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6', 'students', 'ar');
   ?>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">

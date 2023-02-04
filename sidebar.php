@@ -53,26 +53,26 @@
               <p>Task</p>
             </a>
           </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link nav-edit_user">
-                <i class="fas fa-th-list nav-icon"></i>
-                <p>Reports</p>
-                <i class="right fas fa-angle-left"></i>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="./index.php?page=report_general_view" class="nav-link nav-country tree-item">
-                    <i class="fas fa-angle-right nav-icon"></i>
-                    <p>مدكر في أرقام</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index.php?page=report_academic_status" class="nav-link nav-as tree-item">
-                    <i class="fas fa-angle-right nav-icon"></i>
-                    <p>الحالة الأكاديمية</p>
-                  </a>
-                </li>
-                <?php if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) : ?>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-edit_user">
+              <i class="fas fa-th-list nav-icon"></i>
+              <p>Reports</p>
+              <i class="right fas fa-angle-left"></i>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="./index.php?page=report_general_view" class="nav-link nav-country tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>مدكر في أرقام</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index.php?page=report_academic_status" class="nav-link nav-as tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>الحالة الأكاديمية</p>
+                </a>
+              </li>
+              <?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2) : ?>
                 <li class="nav-item">
                   <a href="./index.php?page=report_moodle_info" class="nav-link nav-as tree-item">
                     <i class="fas fa-angle-right nav-icon"></i>
@@ -91,34 +91,34 @@
                     <p>تقرير شؤون الدارسين</p>
                   </a>
                 </li>
-              </ul>
-            </li>
-          <?php endif; ?>
-          <?php if ($_SESSION['login_type'] == 1) : ?>
-            <li class="nav-item">
-              <a href="#" class="nav-link nav-edit_user">
-                <i class="nav-icon fas fa-users"></i>
-                <p>
-                  إدارة المستخدمين
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="./index.php?page=new_user" class="nav-link nav-new_user tree-item">
-                    <i class="fas fa-angle-right nav-icon"></i>
-                    <p>مستخدم جديد</p>
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a href="./index.php?page=user_list" class="nav-link nav-user_list tree-item">
-                    <i class="fas fa-angle-right nav-icon"></i>
-                    <p>قائمة المستخدمين</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
-          <?php endif; ?>
+                <?php endif; ?>
+            </ul>
+          </li>
+        <?php if ($_SESSION['login_type'] == 1) : ?>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-edit_user">
+              <i class="nav-icon fas fa-users"></i>
+              <p>
+                إدارة المستخدمين
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="./index.php?page=new_user" class="nav-link nav-new_user tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>مستخدم جديد</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index.php?page=user_list" class="nav-link nav-user_list tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>قائمة المستخدمين</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        <?php endif; ?>
         </ul>
       </nav>
     </div>

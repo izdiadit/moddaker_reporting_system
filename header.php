@@ -46,6 +46,7 @@
     $students_data = [];
     $start = 0;
     
+    // $i = 0;
     while (true) {
       $end = $start + 5000;
 
@@ -59,12 +60,18 @@
       $json = curl_exec($curl);
       $data = json_decode($json, true);
       $students_data = array_merge($students_data, $data);
-      
+      // echo $i.' / '.$start.' / '.$end.' / ';
+      print_r(count($students_data));
+      echo '---';
+
       $start = $end + 1;
       if ($end >= $total_count) {
         break;
       }
+      // $i++;
     }
+
+    // echo "The last length: "; print_r(count($students_data)); echo '<br>';
 
     // Save data in a json file:
     $students_json = json_encode($students_data);
@@ -87,9 +94,16 @@
 
   // Ar Students:
   // updateData('', 'students', 'ar');
+
   
   // En Students:
-  // updateData('https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6', 'students', 'ar');
+  // updateData('https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6', 'students', 'en');
+  
+  // Id Students:
+  // updateData('https://id.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=e550100be5197a3e25596068c83ab9d2', 'students', 'id');
+  
+  // Fr Students:
+  // updateData('https://fr.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=f5a13ccf5b087df6ed67b12afce7dc3a', 'students', 'fr');
   ?>
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">

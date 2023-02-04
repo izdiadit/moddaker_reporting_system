@@ -1,22 +1,59 @@
 <?php
 include 'db_connect.php';
-if ($_SESSION['login_type'] == 3) {
-	echo '
-  <div class="error-content">
-  <h3><i class="fas fa-exclamation-triangle text-danger"></i> Denied! </h3>
+if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 
-  <p>
-  You do not have permission to view this page.
-    Meanwhile, you may <a href="./">return to dashboard</a>.
-  </p>
+	//header("Location: ./index.php?page=report_general_view"); // header doesn't work because of previous output
 
-</div>
-  ';
-	exit;
+	// An alternative solution is to use javascript:
+
+	echo '<script> location.replace("./index.php?page=report_general_view"); </script>';
 } ?>
 
 <div class="col-lg-12  w-fit">
+	<!-- Language Selection Card -->
 	<div class="card card-outline card-success">
+		<div class="card-header">
+
+		</div>
+		<div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
+			<?php
+			// The array of languages will be selected by the user, and elements will appear depending on the user type:
+			$langs = [
+				'ar' => 'العربية',
+				'!ar' => 'كل النسخ عدا العربية',
+				'id' => 'الإندونيسية',
+				'en' => 'الإنجليزية',
+				'fr' => 'الفرنسية'
+			];
+			$tokens = [
+				'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
+				'!ar' => '',
+				'id' => 'e550100be5197a3e25596068c83ab9d2',
+				'en' => '5d67dc5eec6b25617c0e55c00c8a9fd6',
+				'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a'
+			];
+
+			// Check the selected langauage/s to get its data:
+			$Lang = $_POST['lang'] ?? 'ar';
+			$token = $tokens[$Lang];
+			?>
+			<!-- Language Selection Form -->
+			<form id="langFilter" dir="rtl" action="./index.php?page=report_st_affairs" method="post">
+				<!-- <input type="text" value="report_students" id="page" hidden> -->
+				<label for="lang">اختر نسخة برنامج مدكر: </label>
+				<select name="lang" id="lang" onchange="this.form.submit()">
+					<?php foreach ($langs as $key => $lang) {
+						if ($key == $_POST['lang'] || $key == $_GET['lang']) { // To assure that the submitted option will be selected after submitting form:
+							echo "<option value='$key' selected='selected'>$lang</option>";
+						} else {
+							echo "<option value='$key'>$lang</option>";
+						}
+					} ?>
+				</select>
+			</form>
+		</div>
+	</div>
+	<div class="card card-outline card-success" style="overflow: auto;">
 		<div class="card-header">
 			<!-- <div class="card-tools">
 				<a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_user"><i class="fa fa-plus"></i> Add New User</a>
@@ -30,8 +67,8 @@ if ($_SESSION['login_type'] == 3) {
 					</label>
 					<select class="form-select" name="username" id="username">
 						<!-- Filling the select options after getting the data of role users from the api -->
-						<?php 
-						$url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&moodlewsrestformat=json&wsfunction=local_reports_service_get_role_assignments&shortname=manager';
+						<?php
+						$url = "https://$Lang.moddaker.com/webservice/rest/server.php?wstoken=$token&moodlewsrestformat=json&wsfunction=local_reports_service_get_role_assignments&shortname=manager";
 						$curl = curl_init($url);
 						curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
@@ -39,9 +76,10 @@ if ($_SESSION['login_type'] == 3) {
 						$st_aff_users = json_decode($result, true);
 
 						foreach ($st_aff_users as $user) {
-							echo "<option value='$user[username]'>$user[fullname]</option>";
 							if ($user['username'] == $_POST['username']) {
 								echo "<option value='$user[username]' selected='selected'>$user[fullname]</option>";
+							} else {
+								echo "<option value='$user[username]'>$user[fullname]</option>";
 							}
 						}
 						?>
@@ -59,6 +97,9 @@ if ($_SESSION['login_type'] == 3) {
 				</div>
 				<br>
 				<input type="submit" value="اعرض التقرير">
+
+				 <!-- To assure the language is set even after submitting this form: -->
+				<input type="hidden" name="lang" id="lang" value="<?php echo $Lang ?>">
 				<br>
 				<br>
 			</form>
@@ -82,7 +123,7 @@ if ($_SESSION['login_type'] == 3) {
 						$i = 0;
 						// Calling the api to get the logs data:
 
-						$service_url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&moodlewsrestformat=json&wsfunction=local_reports_service_get_logs_interval_by_username&starttime=' . $starttime . '&endtime=' . $endtime . '&username=' . $username;
+						$service_url = "https://$Lang.moddaker.com/webservice/rest/server.php?wstoken=$token&moodlewsrestformat=json&wsfunction=local_reports_service_get_logs_interval_by_username&starttime=" . $starttime . '&endtime=' . $endtime . '&username=' . $username;
 						$curl = curl_init();
 						curl_setopt_array($curl, [
 							CURLOPT_URL => $service_url,
@@ -104,7 +145,7 @@ if ($_SESSION['login_type'] == 3) {
 									<th class="text-center"><?php echo ++$i ?></th>
 									<td><b><?php echo $username ?></b></td>
 									<td><b><?php echo $row['eventname'] ?></b></td>
-									<td dir="ltr"><b><?php echo date('h:i:s', $row['timecreated']) . ' ' . date('a', $row['timecreated']) . ' ' .  date('Y-m-d', $row['timecreated'])?></b></td>
+									<td dir="ltr"><b><?php echo date('h:i:s', $row['timecreated']) . ' ' . date('a', $row['timecreated']) . ' ' .  date('Y-m-d', $row['timecreated']) ?></b></td>
 									<td><b><?php echo $row['relateduserid'] ?></b></td>
 								</tr>
 						<?php endforeach;
@@ -132,7 +173,7 @@ if ($_SESSION['login_type'] == 3) {
 				"sProcessing": "جارٍ التحميل...",
 				"sLengthMenu": "أظهر _MENU_ من الصفوف",
 				"sZeroRecords": "لم يعثر على أية سجلات",
-				"sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ صفًّا",
+				"sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ من الصفوف",
 				"sInfoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
 				"sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخلاً)",
 				"sInfoPostFix": "",
@@ -149,20 +190,6 @@ if ($_SESSION['login_type'] == 3) {
 	})
 </script>
 <style>
-	#filters {
-		margin: auto;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-	}
-
-	#filters input,
-	select {
-		border-radius: 25px;
-		padding: 5px;
-	}
-
 	/*************************************** */
 	/* @import url(https://fonts.googleapis.com/css?family=Tajawal); */
 
@@ -182,41 +209,6 @@ if ($_SESSION['login_type'] == 3) {
 		padding-top: 0px !important;
 		white-space: nowrap;
 		color: #64b99c !important;
-	}
-
-	table.dataTable>tbody>tr.child ul.dtr-details {
-		display: inline-block;
-		list-style-type: none;
-		margin: 0;
-		padding: 0;
-		text-align: right;
-	}
-
-	.table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child:before,
-	table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>th:first-child:before {
-		top: 9px;
-		left: 4px;
-		height: 14px;
-		width: 14px;
-		display: block;
-		position: absolute;
-		color: white;
-		border: 2px solid white;
-		border-radius: 14px;
-		box-shadow: 0 0 3px #444;
-		box-sizing: content-box;
-		text-align: center;
-		text-indent: 0 !important;
-		font-family: 'Courier New', Courier, monospace;
-		line-height: 14px;
-		content: '+';
-		background-color: #60b6ab;
-	}
-
-	.table.dataTable.dtr-inline.collapsed>tbody>tr.parent>td:first-child:before,
-	table.dataTable.dtr-inline.collapsed>tbody>tr.parent>th:first-child:before {
-		content: '-';
-		background-color: #d33333;
 	}
 
 	.page-item.active .page-link {

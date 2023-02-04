@@ -6,32 +6,81 @@
 <?php
 
 include 'db_connect.php';
-if ($_SESSION['login_type'] == 3) {
-  echo '
-  <div class="error-content">
-  <h3><i class="fas fa-exclamation-triangle text-danger"></i> Denied! </h3>
-
-  <p>
-  You do not have permission to view this page.
-    Meanwhile, you may <a href="./">return to dashboard</a>.
-  </p>
-
-</div>
-  ';
-  exit;
-}
 
 ?>
+<!-- Language Selection Card -->
+<div class="card card-outline card-success">
+		<div class="card-header">
 
+		</div>
+		<div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
+			<?php
+			// The array of languages will be selected by the user, and elements will appear depending on the user type:
+			$langs = [
+				'ar' => 'العربية',
+				// '!ar' => 'كل النسخ عدا العربية',
+				'id' => 'الإندونيسية',
+				'en' => 'الإنجليزية',
+				'fr' => 'الفرنسية'
+			];
+			$tokens = [
+				'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
+				// '!ar' => '',
+				'id' => 'e550100be5197a3e25596068c83ab9d2',
+				'en' => '5d67dc5eec6b25617c0e55c00c8a9fd6',
+				'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a'
+			];
+			$Batch_cat_names = [
+				'ar' => 'دفعة ال',
+				// '!ar' => '',
+				'id' => 'Level Persiapan',
+				'en' => 'Batch',
+				'fr' => 'Miscellaneous'
+			];
+			$first_levels = [
+				'ar' => 'المستوى الأول',
+				// '!ar' => '',
+				'id' => 'Hizb Al A\'laa',
+				'en' => 'The First Level',
+				'fr' => '***'
+			];
+			$fourth_levels = [
+				'ar' => 'المستوى الرابع',
+				// '!ar' => '',
+				'id' => '***',
+				'en' => 'The Fourth Level',
+				'fr' => '***'
+			];
+
+			// Check the selected langauage/s to get its data:
+			$Lang = $_POST['lang'] ?? 'ar';
+			$token = $tokens[$Lang];
+			?>
+			<!-- Language Selection Form -->
+			<form id="langFilter" dir="rtl" action="./index.php?page=report_academic_status" method="post">
+				<!-- <input type="text" value="report_students" id="page" hidden> -->
+				<label for="lang">اختر نسخة برنامج مدكر: </label>
+				<select name="lang" id="lang" onchange="this.form.submit()">
+					<?php foreach ($langs as $key => $lang) {
+						if ($key == $_POST['lang'] || $key == $_GET['lang']) { // To assure that the submitted option will be selected after submitting form:
+							echo "<option value='$key' selected='selected'>$lang</option>";
+						} else {
+							echo "<option value='$key'>$lang</option>";
+						}
+					} ?>
+				</select>
+			</form>
+		</div>
+	</div>
 <!-- /////////////////////////////////////////////////////      Academic Status Report      //////////////////////////////////////////////////////////////// -->
-<div class="col-md-12">
+<div class="col-md-12" id="asr-table-card">
   <div class="card card-outline card-success" dir="rtl" style="padding: 5px;">
     <div class="card-header">
       <b>الحالة الأكاديمية</b>
     </div>
     <?php
     // Get all courses:
-    $courses_url = 'https://ar.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_course_info&wstoken=26abc81f3a71f2c17ceec76c5d45b465';
+    $courses_url = "https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_course_info&wstoken=$token";
     $curl = curl_init();
     curl_setopt_array($curl, [
       CURLOPT_URL => $courses_url,
@@ -40,7 +89,7 @@ if ($_SESSION['login_type'] == 3) {
     ]);
 
     $decoded_courses = json_decode(curl_exec($curl), true);
-    //  $decoded_courses = [
+    //  The array structure: $decoded_courses = [
       // [0] => ["courseid": int,
       // "coursename": string,
       // "categoryid": int,
@@ -61,7 +110,7 @@ if ($_SESSION['login_type'] == 3) {
     // echo $cat_ids . '<br>';
 
     // Get all categories:
-    $categories_url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&wsfunction=core_course_get_categories&moodlewsrestformat=json';
+    $categories_url = "https://$Lang.moddaker.com/webservice/rest/server.php?wstoken=$token&wsfunction=core_course_get_categories&moodlewsrestformat=json";
     $curl = curl_init();
     curl_setopt_array($curl, [
       CURLOPT_URL => $categories_url,
@@ -84,53 +133,29 @@ if ($_SESSION['login_type'] == 3) {
     $special_batches = [6,7,9]; // الدفعة الأولى: 6 - الدفعة الثانية: 7 - الدفعة الثالثة: 9
     foreach ($decoded_courses as $course) {
 
-      if (!isset($cats_with_statuses[$course['categoryid']])) $cats_with_statuses[$course['categoryid']] = [0, 0, 0]; // 2550000000 -> 2050-10-21 23:10:00
+      if (!isset($cats_with_statuses[$course['categoryid']])) $cats_with_statuses[$course['categoryid']] = [0, 0, 0];
       if (strpos($course['coursename'], 'المستوى التمهيدي') !== false){
         $cats_with_statuses[$course['categoryid']][0] = 1;
         $cats_with_statuses[$course['categoryid']][1] = $course['startdate'];
       }
 
-      if (strpos($course['coursename'], 'المستوى الأول') !== false) {
+      if (strpos($course['coursename'], $first_levels[$Lang]) !== false) {
         $cats_with_enrolled_studs[$course['categoryid']] = $course['Enroled'];
       }
 
-      if (strpos($course['coursename'], 'المستوى الرابع') !== false) {
+      if (strpos($course['coursename'], $fourth_levels[$Lang]) !== false) {
         $cats_with_graduates[$course['categoryid']] = $course['Graduates'];
       }
 
-      if (strpos($course['coursename'], 'المستوى الرابع') !== false) {
+      if (strpos($course['coursename'], $fourth_levels[$Lang]) !== false) {
         $cats_with_graduates[$course['categoryid']] = $course['Graduates'];
       }
       if (in_array($course['categoryid'], $special_batches) && strpos($course['coursename'], 'المستوى الثالث') !== false) {
         $cats_with_graduates[$course['categoryid']] = $course['Graduates'];
       }
-      // if (strpos($course['coursename'], 'المستوى الرابع') !== false) {
-      //   $grades_url =
-      //     'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&wsfunction=gradereport_user_get_grade_items&moodlewsrestformat=json&courseid=' . $course['courseid'];
-      //   $curl = curl_init();
-      //   curl_setopt_array($curl, [
-      //     CURLOPT_URL => $grades_url,
-      //     CURLOPT_FOLLOWLOCATION => true,
-      //     CURLOPT_RETURNTRANSFER => true
-      //   ]);
-
-      //   $decoded_grades = json_decode(curl_exec($curl), true);
-
-      //   foreach ($decoded_grades['usergrades'] as $user_grade) {
-      //     foreach ($user_grade['gradeitems'] as $item) {
-      //       if ($item['itemtype'] == 'course' && $item['graderaw'] >= 0.6 * $item['grademax']) {
-      //         $graduates_count++;
-      //       }
-      //     }
-      //   }
-
-      //   $cats_with_graduates[$course['categoryid']] = $graduates_count;
-
-      //   $cats_with_statuses[$course['categoryid']][0] = 1;
-      //   $cats_with_statuses[$course['categoryid']][2] = $course['enddate'];
-      //   // echo $course['enddate'] . ' ||| ' . $cats_with_statuses[$course['categoryid']][2] .'<br>'.time();
-      // }
     }
+
+
 
     // echo '<div dir="ltr">';
     // print_r($cats_with_enrolled_studs);
@@ -156,7 +181,11 @@ if ($_SESSION['login_type'] == 3) {
       <tbody>
         <?php $i = 0; ?>
         <?php foreach ($decoded_categories as $cat) :
-        if (!(strpos($cat['name'], 'دفعة ال') !== false) || $cat['name'] == "مشرفات الدفعة الأولى") continue;
+          if (!(strpos($cat['name'], $Batch_cat_names[$Lang]) !== false) || $cat['name'] == "مشرفات الدفعة الأولى"){
+            unset($cats_with_enrolled_studs[$cat['id']]);
+            unset($cats_with_graduates[$cat['id']]);
+            continue;
+          } 
         ?>
           <tr>
             <th><?php echo ++$i; ?></th>
@@ -196,8 +225,6 @@ if ($_SESSION['login_type'] == 3) {
     </table>
   </div>
 </div>
-
-<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <!-- //////////////////////////////////////////////////      Academic Status Interactive Report      ///////////////////////////////////////////////////////////// -->
 <?php
 function swap_data_from_dictionary($dict, $data, $old, $new)
@@ -231,6 +258,8 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
 
   </div>
 </div>
+<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
+
 <script>
   // Reading category_studs_data from php:
   var cats_with_enrolled_studs = <?php echo json_encode($cats_studs_for_js); ?>;
@@ -337,7 +366,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
       sequencedInterpolation: true,
       categoryXField: "batch",
       tooltip: am5.Tooltip.new(rootas, {
-        labelText: "{studsY}"
+        // labelText: "{valueY}"
       })
     }));
 
@@ -351,7 +380,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
     });
 
     myseriesas.columns.template.setAll({
-      tooltipText: "{value}"
+      tooltipText: "{valueY}"
     });
 
     xAxis.data.setAll(category_studs_data);
@@ -386,163 +415,19 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
 
   // legend.data.setAll(chartas.series.values);
 </script>
-<!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-<!-- report -->
-<div class="col-md-12">
-  <div class="card card-outline card-success" dir="rtl">
-    <div class="card-header">
-      <b>شاشة التقارير</b>
-    </div>
-
-  </div>
-</div>
 
 <!-- /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <script>
-  window.onload = function() {
-
-
-    var chart = new CanvasJS.Chart("chartContainer", {
-      theme: "light2",
-      animationEnabled: true,
-      title: {
-        text: "World Energy Consumption by Sector - 2012"
-      },
-      data: [{
-        type: "pie",
-        indexLabel: "{y}",
-        yValueFormatString: "#,##0.00\"%\"",
-        indexLabelPlacement: "inside",
-        indexLabelFontColor: "#36454F",
-        indexLabelFontSize: 18,
-        indexLabelFontWeight: "bolder",
-        showInLegend: true,
-        legendText: "{label}",
-        dataPoints: <?php echo json_encode($dataPoints, JSON_NUMERIC_CHECK); ?>
-      }]
-    });
-    chart.render();
-
-  }
-</script>
-<script>
-  $(document).ready(function() {
-    $('#report_by').click(function() {
-      var report_item = document.getElementById('report_by').value;
-      var item1 = document.getElementById('employee_list')
-      if (report_item == 2) {
-        item1.style.display = 'block'
-
-      } else {
-        item1.style.display = 'none'
-
-
-      }
-
-    })
-    $('#submit_data').click(function() {
-      // const  rm_pie_chart=()=>{
-      //  let rm_canva = document.getElementById("pie_chart")
-      //  rm_canva.remove()
-      //   let new_canva = document.createElement("canva")
-      //   new_canva.id = ("pie_chart")
-      //   new_canva.getContext("2d")
-      //   $("pie-chart").append(new_canva)
-      // }
-      var language = $('#project_id option:selected').val();
-      makechart();
-    });
-
-    function makechart() {
-      // ظبطتتتتتتتتتتتتتتتتتتتتتتتتت
-      $('#pie_chart').replaceWith($('<canvas id="pie_chart"></canvas>'));
-      $('#doughnut_chart').replaceWith($('<canvas id="doughnut_chart"></canvas>'));
-      $('#bar_chart').replaceWith($('<canvas id="bar_chart"></canvas>'));
-      var project = $('#project_id option:selected').val();
-      var employee = $('#employee_id option:selected').val();
-      var from_date = new Date($('#from_date').val());
-      var to_date = new Date($('#to_date').val());
-      var report_by = $('#report_by option:selected').val();
-      if (project == "") {
-        alert("Please Choose project");
-        return;
-      }
-      if (report_by == 0) {
-        alert("Please Choose Report Type");
-        return;
-      }
-
-      $.ajax({
-        url: "data.php",
-        method: "POST",
-        data: {
-          action: 'fetch',
-          project: project,
-          employee: employee,
-          from_date: from_date.toISOString().slice(0, 10),
-          to_date: to_date.toISOString().slice(0, 10),
-          report_by: report_by
-        },
-        dataType: "JSON",
-        success: function(data) {
-          var report_by = [];
-          var total = [];
-          var color = [];
-
-          for (var count = 0; count < data.length; count++) {
-            report_by.push(data[count].report_by);
-            total.push(data[count].total);
-            color.push(data[count].color);
-            // console.log(data[count].project_id)
-          }
-
-          var chart_data = {
-            labels: report_by,
-            datasets: [{
-              label: 'Vote',
-              backgroundColor: color,
-              color: '#fff',
-              data: total
-            }]
-          };
-
-          var options = {
-            responsive: true,
-            scales: {
-              yAxes: [{
-                ticks: {
-                  min: 0
-                }
-              }]
-            }
-          };
-
-          var group_chart1 = $('#pie_chart');
-
-          var graph1 = new Chart(group_chart1, {
-            type: "pie",
-            data: chart_data
-          });
-
-          var group_chart2 = $('#doughnut_chart');
-
-          var graph2 = new Chart(group_chart2, {
-            type: "doughnut",
-            data: chart_data
-          });
-
-          var group_chart3 = $('#bar_chart');
-
-          var graph3 = new Chart(group_chart3, {
-            type: 'bar',
-            data: chart_data,
-            options: options
-          });
-
-        }
-      })
+  // Close academic status report table if the user is neither admin (1) nor manager (2):
+    var login_type = <?php echo json_encode($_SESSION['login_type'])?>;
+    console.log(login_type);
+    console.log(typeof login_type);
+    if (!(login_type == '1' || login_type == '2')) {
+      var card = document.getElementById("asr-table-card");
+      card.style.display = 'none';
     }
 
+  $(document).ready(function() {
     function dateFormater(date, separator) {
       var day = date.getDate();
       // add +1 to month because getMonth() returns month from 0 to 11

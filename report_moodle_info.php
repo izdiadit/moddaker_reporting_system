@@ -1,29 +1,68 @@
 <?php
 include 'db_connect.php';
-if ($_SESSION['login_type'] == 3) {
-	echo '
-  <div class="error-content">
-  <h3><i class="fas fa-exclamation-triangle text-danger"></i> Denied! </h3>
+if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 
-  <p>
-  You do not have permission to view this page.
-    Meanwhile, you may <a href="./">return to dashboard</a>.
-  </p>
+	//header("Location: ./index.php?page=report_general_view"); // header doesn't work because of previous output
 
-</div>
-  ';
-	exit;
-} ?>
+	// An alternative solution is to use javascript:
+
+	echo '<script> location.replace("./index.php?page=report_general_view"); </script>';
+}
+?>
 <div class="col-lg-12  w-fit">
+	<!-- Language Selection Card -->
+	<div class="card card-outline card-success">
+		<div class="card-header">
+
+		</div>
+		<div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
+			<?php
+			// The array of languages will be selected by the user, and elements will appear depending on the user type:
+			$langs = [
+				'ar' => 'العربية',
+				'!ar' => 'كل النسخ عدا العربية',
+				'id' => 'الإندونيسية',
+				'en' => 'الإنجليزية',
+				'fr' => 'الفرنسية'
+			];
+			$tokens = [
+				'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
+				'!ar' => '',
+				'id' => 'e550100be5197a3e25596068c83ab9d2',
+				'en' => '5d67dc5eec6b25617c0e55c00c8a9fd6',
+				'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a'
+			];
+
+			// Check the selected langauage/s to get its data:
+			$Lang = $_POST['lang'] ?? 'ar';
+			$token = $tokens[$Lang];
+			?>
+			<!-- Language Selection Form -->
+			<form id="langFilter" dir="rtl" action="./index.php?page=report_moodle_info" method="post">
+				<!-- <input type="text" value="report_students" id="page" hidden> -->
+				<label for="lang">اختر نسخة برنامج مدكر: </label>
+				<select name="lang" id="lang" onchange="this.form.submit()">
+					<?php foreach ($langs as $key => $lang) {
+						if ($key == $_POST['lang'] || $key == $_GET['lang']) { // To assure that the submitted option will be selected after submitting form:
+							echo "<option value='$key' selected='selected'>$lang</option>";
+						} else {
+							echo "<option value='$key'>$lang</option>";
+						}
+					} ?>
+				</select>
+			</form>
+		</div>
+	</div>
+	<!-- END OF Language Selection Card -->
 	<div class="card card-outline card-success">
 		<div class="card-header">
 			<!-- <div class="card-tools">
 				<a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_user"><i class="fa fa-plus"></i> Add New User</a>
 			</div> -->
 			<div class="card-body" style="overflow:auto">
-		</div>
+			</div>
 			<?php
-			$site_info_url = 'https://ar.moddaker.com/webservice/rest/server.php?wstoken=26abc81f3a71f2c17ceec76c5d45b465&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json';
+			$site_info_url = "https://$Lang.moddaker.com/webservice/rest/server.php?wstoken=$token&wsfunction=core_webservice_get_site_info&moodlewsrestformat=json";
 			$curl = curl_init($site_info_url);
 			curl_setopt_array(
 				$curl,
@@ -38,59 +77,33 @@ if ($_SESSION['login_type'] == 3) {
 
 			// print_r($site_info);
 			?>
+			<style>
+				td {
+					text-align: center !important;
+				}
+			</style>
 			<table class="table tabe-hover table-bordered" id="list" style="margin: auto;">
 				<tr>
-					<td><b><?php echo $site_info['sitename'] ?></b></td>
 					<th>المنصة</th>
+					<td><b><?php echo $site_info['sitename'] ?></b></td>
 				</tr>
 				<tr>
-					<td><b><?php echo "<a href='$site_info[siteurl]'>$site_info[siteurl]</a>" ?></b></td>
 					<th>رابط المنصة</th>
+					<td><b><?php echo "<a href='$site_info[siteurl]'>$site_info[siteurl]</a>" ?></b></td>
 				</tr>
 				<tr>
-					<td><b><?php echo $site_info['release'] ?></b></td>
 					<th>إصدار الموودل</th>
+					<td><b><?php echo $site_info['release'] ?></b></td>
 				</tr>
 				<tr>
-					<td><b><?php echo $site_info['sitecalendartype'] ?></b></td>
 					<th>نوع التقويم</th>
+					<td><b><?php echo $site_info['sitecalendartype'] ?></b></td>
 				</tr>
 				<tr>
-					<td><b><?php echo $site_info['theme'] ?></b></td>
 					<th>الثيم</th>
+					<td><b><?php echo $site_info['theme'] ?></b></td>
 				</tr>
 			</table>
 		</div>
 	</div>
 </div>
-<script>
-	$(document).ready(function() {
-		$('#list').dataTable()
-		$('.view_user').click(function() {
-			uni_modal("<i class='fa fa-id-card'></i> User Details", "view_user.php?id=" + $(this).attr('data-id'))
-		})
-		$('.delete_user').click(function() {
-			_conf("Are you sure to delete this user?", "delete_user", [$(this).attr('data-id')])
-		})
-	})
-
-	function delete_user($id) {
-		start_load()
-		$.ajax({
-			url: 'ajax.php?action=delete_user',
-			method: 'POST',
-			data: {
-				id: $id
-			},
-			success: function(resp) {
-				if (resp == 1) {
-					alert_toast("Data successfully deleted", 'success')
-					setTimeout(function() {
-						location.reload()
-					}, 1500)
-
-				}
-			}
-		})
-	}
-</script>

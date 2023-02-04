@@ -1,34 +1,80 @@
 <?php
 include 'db_connect.php';
-if ($_SESSION['login_type'] == 3) {
-	echo '
-  <div class="error-content">
-  <h3><i class="fas fa-exclamation-triangle text-danger"></i> Denied! </h3>
+if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 
-  <p>
-  You do not have permission to view this page.
-    Meanwhile, you may <a href="./">return to dashboard</a>.
-  </p>
+	//header("Location: ./index.php?page=report_general_view"); // header doesn't work because of previous output
 
-</div>
-  ';
-	exit;
+	// An alternative solution is to use javascript:
+
+	echo '<script> location.replace("./index.php?page=report_general_view"); </script>';
 } ?>
-<div class="col-lg-12  w-fit">
-<div class="card card-outline card-success">
-		<div class="card-header">
-
-		</div>
-		<div class="card-body" style="overflow:auto">
-
-		</div>
-</div>
+<div class="col-lg-12  w-fit" dir="rtl">
 	<div class="card card-outline card-success">
 		<div class="card-header">
-			<!-- <div class="card-tools">
-				<a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_user"><i class="fa fa-plus"></i> Add New User</a>
-			</div> -->
-			<!-- <div id="filter"></div> -->
+
+		</div>
+		<div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
+			<?php
+			// The array of languages will be sliced depending on the user:
+			$langs = [
+				'ar' => 'العربية',
+				'!ar' => 'كل النسخ عدا العربية',
+				'id' => 'الإندونيسية',
+				'en' => 'الإنجليزية',
+				'fr' => 'الفرنسية'
+			];
+
+			// Check the selected langauage/s to get its data:
+			$lang = $_POST['lang'] ?? 'ar';
+
+			$templang = $_POST['lang'] ?? 'ar'; //will be deleted after adding all of the langs json files.
+			if (in_array($lang, ['!ar'])) {
+				$templang = 'en';
+			}
+			$data = getData("fetcheddata/$templang-students.json");
+			echo count($data['data']);
+			echo '<br>';
+			$moodle_users = $data['data'];
+			echo date('Y/m/d h:i:s', $data['lastupdate']);
+			// print_r($moodle_users);
+			// exit;
+			?>
+			<form id="langFilter" dir="rtl" action="./index.php?page=report_students" method="post">
+				<!-- <input type="text" value="report_students" id="page" hidden> -->
+				<label for="lang">اختر نسخة برنامج مدكر: </label>
+				<select name="lang" id="lang" onchange="this.form.submit()">
+					<?php foreach ($langs as $key => $lang) {
+						if ($key == $_POST['lang'] || $key == $_GET['lang']) { // To assure that the submitted option will be selected after submitting form:
+							echo "<option value='$key' selected='selected'>$lang</option>";
+						} else {
+							echo "<option value='$key'>$lang</option>";
+						}
+					} ?>
+				</select>
+			</form>
+		</div>
+	</div>
+	<div class="card card-outline card-success">
+		<div class="card-header">
+				<ul class="data-slicing-btns">
+					<?php
+					if (count($moodle_users) > 25000) {
+						// prepare slices:
+						$length = count($moodle_users);
+						for ($i=0; $i < $length; $i += 25000) { 
+							$sliceStr = $i;
+							$sliceEnd = $i + 25000;
+
+							if ($sliceEnd > $length) {
+								$sliceEnd = $length;
+							}
+							echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$templang&sliceStr=$sliceStr&sliceEnd=$sliceEnd'>$sliceStr - $sliceEnd</a></li>";
+						}
+						// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$templang&sliceStr=2000&sliceEnd=50000'>25000-50000</a></li>";
+						// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$templang&sliceStr=50000&sliceEnd=75000'>50000-75000</a></li>";
+					}
+					?>
+				</ul>
 		</div>
 		<div class="card-body" style="overflow:auto">
 			<table class="table tabe-hover table-bordered" id="list" style="display: none; left: 0">
@@ -54,74 +100,36 @@ if ($_SESSION['login_type'] == 3) {
 				</thead>
 				<tbody>
 					<?php
-					$i = 0;
-					//$type = array('',"Admin","Project Manager","Employee");
-					//$qry = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users order by concat(firstname,' ',lastname) asc");
-
-					// $service_url = 'https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6';
-					// $curl = curl_init();
-					// curl_setopt_array($curl, [
-					// 	CURLOPT_URL => $service_url,
-					// 	CURLOPT_FOLLOWLOCATION => true,
-					// 	CURLOPT_RETURNTRANSFER => true,
-					// 	CURLOPT_SSL_VERIFYPEER => 0,
-					// 	CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
-					// ]);
-
-
-					// $result = curl_exec($curl);
-					$data = getData('fetcheddata/ar-students.json');
-					echo count($data['data']);
-					echo '<br>';
-					$moodle_users = $data['data'];
-					echo date('Y/m/d h:i:s' ,$data['lastupdate']);
-					// print_r($moodle_users);
-					// exit;
-
-
 					require_once 'countries.php';
-
-
 					$data_rendering_ended = false;
-					// print_r(array_slice($moodle_users, 0, 1000));
-					for ($i; $i < count(array_slice($moodle_users, 0, 50000)); $i++) :					
-					// echo '<tr>';
-					// 	echo ($i + 1).' | '; 
-					// 	echo ucwords($moodle_users[$i]['username']).' | ';
-					// 	echo $moodle_users[$i]['fullname'].' | '; 
-					// 	echo $moodle_users[$i]['email'].' | '; 
-					// 	echo $moodle_users[$i]['QuranMemorize'].' | '; 
-					// 	echo date('Y-m-d h:i a', $moodle_users[$i]['firstaccess']).' | '; 
-					// 	echo date('Y-m-d h:i a', $moodle_users[$i]['lastaccess']).' | ';
-					// 	echo $moodle_users[$i]['confirmed'] ? 'مؤكّد' : 'غير مؤكّد'; echo ' | ';
-					// 	echo $moodle_users[$i]['suspended'] ? 'معلّق' : 'غير معلّق'; echo ' | ';
-					// 	echo $moodle_users[$i]['sex'].' | '; 
-					// 	echo $moodle_users[$i]['Age'].' | '; 
-					// 	echo $moodle_users[$i]['AcademicQualification'].' | '; 
-					// 	echo $string[$moodle_users[$i]['country'] ?? '-'] ?? '-'; echo ' | ';
-					// echo '</br>';
-					
-					
+					// Determine the currently displayed portion of the array if it is too long:
+					$sliceStr = $_GET['sliceStr'] ?? 0;
+					$sliceEnd = $_GET['sliceEnd'] ?? 25000;
+					echo (count($moodle_users) > 25500)? "<br><p dir='rtl' style='margin: auto'>عرض النتائج من $sliceStr إلى $sliceEnd </p><br>" : "";
+					$current_displayed = array_slice($moodle_users, $sliceStr, $sliceEnd);
+
+
+					for ($i = 0; $i < count($current_displayed); $i++) :
 					?>
-					<tr>
-							<th class="text-center"><?php echo $i + 1 ?></th>
-							<td><b><?php echo ucwords($moodle_users[$i]['username']) ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['fullname'] ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['email'] ?></b></td>
-							<td><b dir="ltr"><?php echo date('Y-m-d h:i a', $moodle_users[$i]['firstaccess']) ?></b></td>
-							<td><b dir="ltr"><?php echo date('Y-m-d h:i a', $moodle_users[$i]['lastaccess']) ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['confirmed'] ? 'مؤكّد' : 'غير مؤكّد' ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['suspended'] ? 'معلّق' : 'غير معلّق' ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['lang'] ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['city'] ?? '-' ?></b></td>
-							<td><b><?php echo $string[$moodle_users[$i]['country'] ?? '-'] ?? '-' ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['sex'] ?? '-' ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['Age'] ?? '-' ?></b></td>
-							<td><b><?php echo $moodle_users[$i][''] ?? '-' ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['AcademicQualification'] ?? '-' ?></b></td>
-							<td><b><?php echo $moodle_users[$i]['QuranMemorize'] ?? '-' ?></b></td>
+						<tr>
+							<td class="text-center"><?php echo $i + 1 ?></td>
+							<td><b><?php echo ucwords($current_displayed[$i]['username']) ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['fullname'] ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['email'] ?></b></td>
+							<td><b dir="ltr"><?php echo date('Y-m-d h:i a', $current_displayed[$i]['firstaccess']) ?></b></td>
+							<td><b dir="ltr"><?php echo date('Y-m-d h:i a', $current_displayed[$i]['lastaccess']) ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['confirmed'] ? 'مؤكّد' : 'غير مؤكّد' ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['suspended'] ? 'معلّق' : 'غير معلّق' ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['lang'] ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['city'] ?? '-' ?></b></td>
+							<td><b><?php echo $string[$current_displayed[$i]['country'] ?? '-'] ?? '-' ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['sex'] ?? '-' ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['Age'] ?? '-' ?></b></td>
+							<td><b><?php echo $current_displayed[$i][''] ?? '-' ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['AcademicQualification'] ?? '-' ?></b></td>
+							<td><b><?php echo $current_displayed[$i]['QuranMemorize'] ?? '-' ?></b></td>
 						</tr>
-						
+
 					<?php
 					endfor;
 					$data_rendering_ended = true;
@@ -135,10 +143,12 @@ if ($_SESSION['login_type'] == 3) {
 	$(document).ready(function() {
 
 		setTimeout(() => {
-		table = document.getElementById('list');
-		table.style.display = 'table';
-	}, 18000);
+			table = document.getElementById('list');
+			table.style.display = 'table';
+		}, 5000);
 
+		var lang = <?php echo json_encode($templang) ?>; // don't forget to replace with lang 
+		console.log(lang)
 		// $('#list').dataTable()
 		$('#list thead tr')
 			.clone(true)
@@ -150,6 +160,38 @@ if ($_SESSION['login_type'] == 3) {
 			fixedHeader: true,
 			// dom: "<'row'<'col-sm-3 col-md-3'l>>" + "<'row'<'col-sm-12 col-md-12 col-lg-12't>>" + "<'row' <'col-sm-5 col-md-5'i><'col-sm-7 col-md-7'p>>",
 			searching: true,
+			// serverSide: (lang == 'ar')? true : false,
+			// ajax: (lang != 'ar')? null: {
+			// 	url: 'http://localhost/moddaker_reporting_system/fetcheddata/ar-students.json',
+			// 	dataSrc: function (json) {
+			// 		// data = JSON.parse(json);
+			// 		mydata = Object.values(json.data);
+			// 		mydata.slice(0,5).forEach(el => {
+
+			// 			console.log(`Length: ${el.username}`)
+			// 		});
+			// 		return Object.values(json.data);
+			// 	},
+			// 	// dataSrc: 'data',
+			// },
+			// columns: [
+			// 	{data: 'username', defaultContent: "-"},
+			// 	{data: 'username', defaultContent: "-"},
+			// 	{data: 'fullname', defaultContent: "-"},
+			// 	{data: 'email', defaultContent: "-"},
+			// 	{data: 'firstaccess', defaultContent: "-"},
+			// 	{data: 'lastaccess', defaultContent: "-"},
+			// 	{data: 'confirmed', defaultContent: "-"},
+			// 	{data: 'suspended', defaultContent: "-"},
+			// 	{data: 'lang', defaultContent: "-"},
+			// 	{data: 'city', defaultContent: "-"},
+			// 	{data: 'country', defaultContent: "-"},
+			// 	{data: 'sex', defaultContent: "-"},
+			// 	{data: 'Age', defaultContent: "-"},
+			// 	{data: 'Age', defaultContent: "-"},
+			// 	{data: 'AcademicQualification', defaultContent: "-"},
+			// 	{data: 'QuranMemorize', defaultContent: "-"}
+			// ],
 			language: {
 				"sProcessing": "جارٍ التحميل...",
 				"sLengthMenu": "أظهر _MENU_ من الصفوف",
@@ -167,7 +209,7 @@ if ($_SESSION['login_type'] == 3) {
 					"sLast": "الأخير"
 				}
 			},
-			initComplete: function() {
+			initComplete: function() {//(lang == 'ar')? null : function() {
 				var api = this.api();
 
 				// For each column
@@ -240,7 +282,7 @@ if ($_SESSION['login_type'] == 3) {
 	/** Padding function:
 	 * n : the number to be padded.
 	 * width: the length of the result.
-	 * z: the char to pad with. defult: '0'*/ 
+	 * z: the char to pad with. defult: '0'*/
 	function pad(n, width, z) {
 		z = z || '0';
 		n = n + '';
@@ -268,7 +310,8 @@ if ($_SESSION['login_type'] == 3) {
 	}
 </script>
 <style>
-	.col-sm-12, .col-md-6{
+	.col-sm-12,
+	.col-md-6 {
 		width: fit-content;
 	}
 </style>

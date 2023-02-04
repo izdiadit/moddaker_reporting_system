@@ -1,7 +1,7 @@
 // Instantiating the chart:
 var root = am5.Root.new("chartdiv");
 var chart = root.container.children.push(
-    am5percent.PieChart.new(root, {})
+    am5percent.PieChart.new(root, {layout: root.verticalLayout})
 );
 
 // // Hide the amCharts logo
@@ -9,14 +9,26 @@ var chart = root.container.children.push(
 //     chart.logo.disabled = true;
 // }
 // chart.logo.disabled = true;
+
 // Adding series. Pie chart supports one series type: PieSeries
 var myseries = chart.series.push(
-    am5percent.PieSeries.new(root, {
-        name: "Series",
-        categoryField: "country",
-        valueField: "count",
-    })
-);
+  am5percent.PieSeries.new(root, {
+    name: "Series",
+    categoryField: "type",
+    valueField: "count",
+    legendLabelText: "[fontFamily: calibri]       {category}: {valuePercentTotal.formatNumber('0.00')}%[/]", //Add the value with the category and empty the value label to avoid arabic lang overlapping
+    legendValueText: ""
+  })
+  );
+  // Legend:
+  var legend = chart.children.push(am5.Legend.new(root, {
+   centerX: am5.percent(30),
+   x: am5.percent(60),
+   centerY: am5.percent(100),
+   y: am5.percent(100),
+   layout: root.gridLayout
+  }));
+
 
 // Hiding tooltips:
 myseries.slices.template.setAll({ tooltipText: ""})
@@ -31,9 +43,14 @@ root.setThemes([
 myseries.labels.template.setAll({
     // maxWidth: 150,
     // oversizedBehavior: "wrap" // to truncate labels, use "truncate"
-    text: "{category}: {valuePercentTotal.formatNumber('0.0')}%",
+    text: "[fontFamily: calibri]{category}: {valuePercentTotal.formatNumber('0.0')}%[/]",
     radius: 10,
-    inside: true
+    inside: true,
+    textType: "radial", centerX: am5.percent(100),
+  });
+
+  myseries.ticks.template.setAll({
+    location: 1
   });
 
 // animation
@@ -55,56 +72,23 @@ The most easiest way is to simply set its colors setting to an array of Color ob
 */
 // myseries.set("fill", am5.color('#ff0000'));
 
-// myseries.slices.template.adapters.add("fill", function(fill, target) {
-//     var factor = Math.ceil(Math.max(country_data.length,10) / (myseries.slices.indexOf(target)+1));
-//     var gdegree = factor % 16;
-//     var half_degree = Math.ceil(gdegree/2);
-//     var gdegree = gdegree.toString(16);
-//     var half_degree = half_degree.toString(16);
-//     // console.log(`#5${gdegree}5`);
-//     return `#a${gdegree}${half_degree}`;//chart.get("colors").getIndex(myseries.slices.indexOf(target));
-//     // when g > r colors tends to blue and its derivatives and vice versa.
-//     // blue, seablue, violete ... / red, brown, orange ...
-//   });
 myseries.slices.template.adapters.add("stroke", () => 'aliceblue');
 
-// The data is set directly on series via its data property:
-dummydata = [{
-        country: "السودان",
-        students: 3000
-    }, {
-        country: "السعودية",
-        students: 2000
-    }, {
-        country: "مصر",
-        students: 3000
-    }, {
-        country: "إِندونيسيا",
-        students: 1000
-    }]
 
+myseries.data.setAll(types_data);
+legend.data.setAll(myseries.dataItems);
+myseries.appear(1000);
+chart.appear(1000, 1000);
 
-myseries.data.setAll(country_data);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Legend:
-// var legend = chart.children.push(am5.Legend.new(root, {
-// 	centerY: am5.percent(100),
-// 	y: am5.percent(100),
-// 	// marginTop: 15,
-// 	// marginBottom: 15,
-// 	layout: root.verticalLayout
-// }));
-
-// legend.data.setAll(myseries.dataItems);
-
-// Admin dedicated charts: //////////////////////////////////////////////////////////////////////
 if (document.body.contains(document.getElementById("chartdiv2"))) {
     // check if admin div exists, to avoid errors for nonadmin sessions
 	var root2 = am5.Root.new("chartdiv2");
 	var chart2 = root2.container.children.push(
-	    am5percent.PieChart.new(root2, {
-	        layout: root2.verticalLayout,
-	        innerRadius: am5.percent(60)
+    am5percent.PieChart.new(root2, {
+      layout: root2.verticalLayout,
+      innerRadius: am5.percent(60),
 	    })
 	);
 	
@@ -114,11 +98,24 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
 	        name: "Series",
 	        categoryField: "country",
 	        valueField: "count",
+          legendLabelText: "[fontFamily: calibri]       {category}: {valuePercentTotal.formatNumber('0.0')}%[/]", //Add the value with the category and empty the value label to avoid arabic lang overlapping
+      legendValueText: ""
 	    })
 	);
 	
+   // Legend:
+   var legend = chart2.children.push(am5.Legend.new(root2, {
+    centerX: am5.percent(30),
+    x: am5.percent(60),
+    centerY: am5.percent(100),
+    y: am5.percent(100),
+    layout: am5.GridLayout.new(root2, {
+      maxColumns: 2,
+      fixedWidthGrid: false
+    })
+   }));
 	root2.setThemes([
-	    am5themes_Animated.new(root2)
+    am5themes_Responsive.new(root2)
 	]);
 
     // Styling labels:
@@ -126,7 +123,11 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
         // maxWidth: 150,
         // oversizedBehavior: "wrap" // to truncate labels, use "truncate"
         fontsize: 20,
+        text: "[fontFamily: calibri]{category}: {valuePercentTotal.formatNumber('0.0')}%[/]",
       });
+
+  // Hiding tooltips:
+myseries2.slices.template.setAll({ tooltipText: ""})
 	
 	// Coloring one by one:
 	// myseries2.slices.template.adapters.add("fill", function(fill, target) {
@@ -155,7 +156,7 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
 	myseries2.slices.template.adapters.add("stroke", () => 'whitesmoke'); //same as chartCard background
 	myseries2.slices.template.adapters.add("strokeWidth", () => 5);
 	myseries2.data.setAll(country_data);
-	
+	legend.data.setAll(myseries2.dataItems);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 am5.ready(function() {
@@ -208,22 +209,27 @@ var myseries3 = chart3.series.push(am5xy.ColumnSeries.new(root3,{
 myseries3.columns.template.setAll({
     cornerRadiusTR: 30,
     cornerRadiusTL: 30,
-    width: 50
+    width: 35
 })
 
 //coloring:
-myseries3.columns.template.adapters.add("fill", () => 'darkgoldenrod');
-myseries3.columns.template.adapters.add("stroke", () => 'green');
-myseries3.columns.template.adapters.add("strokeWidth", () => 7);
+// myseries3.columns.template.adapters.add("fill", () => 'darkgoldenrod');
+// myseries3.columns.template.adapters.add("stroke", () => 'green');
 
-country_data_for_xy = [];
-for (const e in country_data) {
-        const temp = country_data[e];
-        temp.country = country_data[e].country
-        temp.count = Number(country_data[e].count)
-        country_data_for_xy.push(temp)
-}
-console.log(country_data_for_xy);
+myseries3.columns.template.adapters.add("fill", function(fill, target) {
+  return chart3.get("colors").getIndex(myseries3.columns.indexOf(target));
+});
+
+myseries3.columns.template.adapters.add("strokeWidth", () => 3);
+
+// country_data_for_xy = [];
+// for (const e in country_data) {
+//         const temp = country_data[e];
+//         temp.country = country_data[e].country
+//         temp.count = Number(country_data[e].count)
+//         country_data_for_xy.push(temp)
+// }
+// console.log(country_data_for_xy);
 
 // Styling the labels:
 xaxis.get("renderer").labels.template.setAll({
@@ -233,137 +239,15 @@ xaxis.get("renderer").labels.template.setAll({
   });
 
 
-xaxis.data.setAll(country_data_for_xy);
-myseries3.data.setAll(country_data_for_xy);
+xaxis.data.setAll(country_data);
+myseries3.data.setAll(country_data);
 
 myseries3.appear(1000);
 chart3.appear(1000, 100);
 });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-am5.ready(function() {
 
-    // Create root element
-    // https://www.amcharts.com/docs/v5/getting-started/#Root_element
-    var root = am5.Root.new("chartdiv4");
-    
-    
-    // Set themes
-    // https://www.amcharts.com/docs/v5/concepts/themes/
-    root.setThemes([
-      am5themes_Animated.new(root)
-    ]);
-    
-    
-    // Create chart
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/
-    var chart = root.container.children.push(am5xy.XYChart.new(root, {
-      panX: true,
-      panY: true,
-      wheelX: "panX",
-      wheelY: "zoomX",
-      pinchZoomX:true
-    }));
-    
-    // Add cursor
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
-    var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {}));
-    cursor.lineY.set("visible", false);
-    
-    
-    // Create axes
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
-    var xRenderer = am5xy.AxisRendererX.new(root, { minGridDistance: 30 });
-    xRenderer.labels.template.setAll({
-      rotation: -90,
-      centerY: am5.p50,
-      centerX: am5.p100,
-      paddingRight: 15
-    });
-    
-    var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, {
-      maxDeviation: 0.3,
-      categoryField: "country",
-      renderer: xRenderer,
-      tooltip: am5.Tooltip.new(root, {})
-    }));
-    
-    var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, {
-      maxDeviation: 0.3,
-      renderer: am5xy.AxisRendererY.new(root, {})
-    }));
-    
-    
-    // Create series
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
-    var series = chart.series.push(am5xy.ColumnSeries.new(root, {
-      name: "Series 1",
-      xAxis: xAxis,
-      yAxis: yAxis,
-      valueYField: "value",
-      sequencedInterpolation: true,
-      categoryXField: "country",
-      tooltip: am5.Tooltip.new(root, {
-        labelText:"{valueY}"
-      })
-    }));
-    
-    series.columns.template.setAll({ cornerRadiusTL: 5, cornerRadiusTR: 5 });
-    series.columns.template.adapters.add("fill", function(fill, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
-    
-    series.columns.template.adapters.add("stroke", function(stroke, target) {
-      return chart.get("colors").getIndex(series.columns.indexOf(target));
-    });
-    
-    
-    // Set data
-    var data = [{
-      country: "USA",
-      value: 2025
-    }, {
-      country: "China",
-      value: 1882
-    }, {
-      country: "Japan",
-      value: 1809
-    }, {
-      country: "Germany",
-      value: 1322
-    }, {
-      country: "UK",
-      value: 1122
-    }, {
-      country: "France",
-      value: 1114
-    }, {
-      country: "India",
-      value: 984
-    }, {
-      country: "Spain",
-      value: 711
-    }, {
-      country: "Netherlands",
-      value: 665
-    }, {
-      country: "South Korea",
-      value: 443
-    }, {
-      country: "Canada",
-      value: 441
-    }];
-    
-    xAxis.data.setAll(data);
-    series.data.setAll(data);
-    
-    
-    // Make stuff animate on load
-    // https://www.amcharts.com/docs/v5/concepts/animations/
-    series.appear(1000);
-    chart.appear(1000, 100);
-    
-    }); // end am5.ready()
 /* WARNING 1:  It's a good practice to make sure that setting data happens as late into code as possible. Once you set data, all related objects are created, 
 so any configuration settings applied afterwards might not carry over.
 
@@ -379,3 +263,8 @@ root.dispose();
 Trying to create a new root element in a <div> container before disposing the old one that is currently residing there, will result in an error.
 */
 
+/* 
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////               Academic Status               //////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+*/

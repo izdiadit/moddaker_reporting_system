@@ -3,59 +3,59 @@
 include 'db_connect.php';
 ?>
 
-	<!-- Language Selection Card -->
-	<div class="card card-outline card-success">
-		<div class="card-header">
+<!-- Language Selection Card -->
+<div class="card card-outline card-success">
+  <div class="card-header">
 
-		</div>
-		<div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
-			<?php
-			// The array of languages will be selected by the user, and elements will appear depending on the user type:
-			$langs = [
-				'ar' => 'العربية',
-				'!ar' => 'كل النسخ عدا العربية',
-				'id' => 'الإندونيسية',
-				'en' => 'الإنجليزية',
-				'fr' => 'الفرنسية'
-			];
-			$tokens = [
-				'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
-				'!ar' => '',
-				'id' => 'e550100be5197a3e25596068c83ab9d2',
-				'en' => '5d67dc5eec6b25617c0e55c00c8a9fd6',
-				'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a'
-			];
+  </div>
+  <div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
+    <?php
+    // The array of languages will be selected by the user, and elements will appear depending on the user type:
+    $langs = [
+      'ar' => 'العربية',
+      '!ar' => 'كل النسخ عدا العربية',
+      'id' => 'الإندونيسية',
+      'en' => 'الإنجليزية',
+      'fr' => 'الفرنسية'
+    ];
+    $tokens = [
+      'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
+      '!ar' => '',
+      'id' => 'e550100be5197a3e25596068c83ab9d2',
+      'en' => '5d67dc5eec6b25617c0e55c00c8a9fd6',
+      'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a'
+    ];
 
-			// Check the selected langauage/s to get its data:
-			$Lang = $_POST['lang'] ?? 'ar';
-			$token = $tokens[$Lang];
-			?>
-			<!-- Language Selection Form -->
-			<form id="langFilter" dir="rtl" action="./index.php?page=report_general_view" method="post">
-				<!-- <input type="text" value="report_students" id="page" hidden> -->
-				<label for="lang">اختر نسخة برنامج مدكر: </label>
-				<select name="lang" id="lang" onchange="this.form.submit()">
-					<?php foreach ($langs as $key => $lang) {
-						if ($key == $_POST['lang'] || $key == $_GET['lang']) { // To assure that the submitted option will be selected after submitting form:
-							echo "<option value='$key' selected='selected'>$lang</option>";
-						} else {
-							echo "<option value='$key'>$lang</option>";
-						}
-					} ?>
-				</select>
-			</form>
-		</div>
-	</div>
-	<!-- END OF Language Selection Card -->
+    // Check the selected langauage/s to get its data:
+    $Lang = $_POST['lang'] ?? 'ar';
+    $token = $tokens[$Lang];
+    ?>
+    <!-- Language Selection Form -->
+    <form id="langFilter" dir="rtl" action="./index.php?page=report_general_view" method="post">
+      <!-- <input type="text" value="report_students" id="page" hidden> -->
+      <label for="lang">اختر نسخة برنامج مدكر: </label>
+      <select name="lang" id="lang" onchange="this.form.submit()">
+        <?php foreach ($langs as $key => $lang) {
+          if ($key == $_POST['lang'] || $key == $_GET['lang']) { // To assure that the submitted option will be selected after submitting form:
+            echo "<option value='$key' selected='selected'>$lang</option>";
+          } else {
+            echo "<option value='$key'>$lang</option>";
+          }
+        } ?>
+      </select>
+    </form>
+  </div>
+</div>
+<!-- END OF Language Selection Card -->
 
 <?php
 include 'countries.php';
 
 $data = getData("fetcheddata/$Lang-students.json");
 $moodle_users = $data['data'];
-echo $data['lastupdate'] . '<br>';
+// echo $data['lastupdate'] . '<br>';
 
-	// print_r( $moodle_users[0] );
+// print_r( $moodle_users[0] );
 
 // Preparing students countries statistics:
 $countries_url = "https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_countries&wstoken=$token";
@@ -73,11 +73,10 @@ $countries_data = json_decode($result, true);
 
 $countries = [];
 foreach ($countries_data as $row) {
-  if(!array_key_exists($row['country'], $string)) $row['country'] = '-';
+  if (!array_key_exists($row['country'], $string)) $row['country'] = '-';
 
   $temp = $row['country'] ?? '-';
   $countries[$string[$temp]] = $row['count'];
-  
 }
 
 
@@ -87,12 +86,12 @@ $unsetted = $countries['-'];
 unset($countries['-']);
 
 // Reform coutries data by gathering all minor values in one element:
-  
-  arsort($countries); // Sorts the array descendingly by values
-  $reformed_countries = array_slice($countries, 0, 7, true);
-  if(count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(array_slice($countries, 7, count($countries), true));
 
-  // echo array_sum($reformed_countries) + $unsetted; for en: 8023
+arsort($countries); // Sorts the array descendingly by values
+$reformed_countries = array_slice($countries, 0, 7, true);
+if (count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(array_slice($countries, 7, count($countries), true));
+
+// echo array_sum($reformed_countries) + $unsetted; for en: 8023
 
 // Preparing students type (male, femle) statistics:
 
@@ -116,12 +115,27 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     $types['أنثى'] += 1;
   }
 }
-print_r($types);
+// print_r($types);
 ?>
 <div class="col-md-12">
   <div class="card card-outline card-success" dir="rtl">
     <div class="card-header">
       <b>مدكر في أرقام</b>
+    </div>
+    <div class="chartsPanel">
+      <div class="chartCard" id="chartCard0" style="margin: auto;">
+        <div class="chartCardHeader">
+          <a href="#" onclick="toggleFullscreen('chartCard0')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <div class="chartTitle"> عدد دارسي النسخة <?php echo $langs[$Lang]?> </div>
+          <div style="visibility: hidden"></div>
+        </div>
+        <?php
+        // Get the total number of users:
+        $total_count = file_get_contents("https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_total_users&wstoken=$token");
+        $total_count = json_decode($total_count);
+        ?>
+        <div style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo $total_count ?></div>
+      </div>
     </div>
     <div class="chartsPanel">
       <div class="chartCard" id="chartCard1">
@@ -132,6 +146,7 @@ print_r($types);
         </div>
         <div id="chartdiv" style="width: 100%;"></div>
       </div>
+
       <div class="chartCard" id="chartCard2">
         <div class="chartCardHeader">
           <a href="#" onclick="toggleFullscreen('chartCard2')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
@@ -142,13 +157,13 @@ print_r($types);
       </div>
     </div>
 
-    <div class="chartsPanel">
+    <!-- <div class="chartsPanel">
       <div class="chartCard" id="chartCard3">
         <div class="chartTitle"> دول الدارسين </div>
         <div id="chartdiv3"></div>
       </div>
       <div class="chartCard" id="chartdiv4" style="width: 50%;"></div>
-    </div>
+    </div> -->
 
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/index.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/percent.js"></script>

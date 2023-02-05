@@ -73,8 +73,7 @@ function updateData($url, $dataClass, $lang)
       $data = json_decode($json, true);
       $students_data = array_merge($students_data, $data);
       // echo $i.' / '.$start.' / '.$end.' / ';
-      print_r(count($students_data));
-      echo '---';
+      print_r(count($students_data)." records have been fetched ---.<br>\n");
 
       $start = $end + 1;
       if ($end >= $total_count) {
@@ -108,6 +107,16 @@ function updateData($url, $dataClass, $lang)
 
 
 
+  
+  // Id Students:
+  // updateData('https://id.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=e550100be5197a3e25596068c83ab9d2','students','id');
+  
+  // En Students:
+  // updateData('https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6','students','en');
+  
+  // Fr Students:
+  // updateData('https://fr.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=f5a13ccf5b087df6ed67b12afce7dc3a','students','fr');
 
-  updateData('https://fr.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=f5a13ccf5b087df6ed67b12afce7dc3a', 'students', 'fr');
+  // Ar Students:
+  updateData('','students','ar');
 ?>

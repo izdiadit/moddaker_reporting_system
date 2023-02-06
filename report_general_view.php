@@ -126,6 +126,20 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       <div class="chartCard" id="chartCard0" style="margin: auto;">
         <div class="chartCardHeader">
           <a href="#" onclick="toggleFullscreen('chartCard0')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <div class="chartTitle"> عدد دارسي مدكّر </div>
+          <div style="visibility: hidden"></div>
+        </div>
+        <?php
+        // Get the total number of users:
+        
+        ?>
+        <div style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo '175000+' ?></div>
+      </div>
+    </div>
+    <div class="chartsPanel">
+      <div class="chartCard" id="chartCard1" style="margin: auto;">
+        <div class="chartCardHeader">
+          <a href="#" onclick="toggleFullscreen('chartCard1')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
           <div class="chartTitle"> عدد دارسي النسخة <?php echo $langs[$Lang]?> </div>
           <div style="visibility: hidden"></div>
         </div>
@@ -134,22 +148,22 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         $total_count = file_get_contents("https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_total_users&wstoken=$token");
         $total_count = json_decode($total_count);
         ?>
-        <div style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo $total_count ?></div>
+        <div id="counter" style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo $total_count ?></div>
       </div>
     </div>
     <div class="chartsPanel">
-      <div class="chartCard" id="chartCard1">
+      <div class="chartCard" id="chartCard2">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard1')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <a href="#" onclick="toggleFullscreen('chartCard2')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
           <div class="chartTitle"> الدارسون والدارسات </div>
           <div style="visibility: hidden"></div>
         </div>
         <div id="chartdiv" style="width: 100%;"></div>
       </div>
 
-      <div class="chartCard" id="chartCard2">
+      <div class="chartCard" id="chartCard3">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard2')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <a href="#" onclick="toggleFullscreen('chartCard3')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
           <div class="chartTitle"> دول الدارسين </div>
           <div style="visibility: hidden"></div>
         </div>
@@ -233,5 +247,50 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         });
       }
     </script>
+
+    <style>
+      #counter ::after {
+  /* font: 800 40px system-ui; */
+  content: counter(<?php echo $total_count?>);
+  animation: <?php echo $total_count?> 5s linear infinite alternate;
+  counter-reset: count 0;
+}
+
+@keyframes counter {
+  0% {
+    counter-increment: count 0;
+  }
+  10% {
+    counter-increment: count 1;
+  }
+  20% {
+    counter-increment: count 2;
+  }
+  30% {
+    counter-increment: count 3;
+  }
+  40% {
+    counter-increment: count 4;
+  }
+  50% {
+    counter-increment: count 5;
+  }
+  60% {
+    counter-increment: count 6;
+  }
+  70% {
+    counter-increment: count 7;
+  }
+  80% {
+    counter-increment: count 8;
+  }
+  90% {
+    counter-increment: count 9;
+  }
+  100% {
+    counter-increment: count 10;
+  }
+}
+    </style>
   </div>
 </div>

@@ -166,7 +166,18 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 	</div>
 </div>
 <script>
+	// Start date and end date validation:
+	var starttime = document.getElementById('starttime');
+	var endtime = document.getElementById('endtime');
+
+	function validatedates(){
+		if (starttime.value > endtime.value) {
+			console.log(`${starttime.value} > ${endtime.value}`)
+		}
+	}
+
 	$(document).ready(function() {
+		validatedates();
 		$('#list').dataTable({
 			searching: false,
 			"language": {

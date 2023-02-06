@@ -299,6 +299,8 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+
+		margin: 0.5%;
 	}
 
 	/* Responsive layout - makes a one column layout instead of a two-column layout */
@@ -375,6 +377,7 @@
 		border-radius: 30px !important;
 	}
 
+	
 	/******************************** Slicing Links **********************************/
 	ul.data-slicing-btns {
 		list-style-type: none;

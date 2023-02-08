@@ -54,39 +54,39 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link nav-edit_user">
+            <a href="#" class="nav-link nav-reports">
               <i class="fas fa-th-list nav-icon"></i>
-              <p>Reports</p>
+              <p>التقارير</p>
               <i class="right fas fa-angle-left"></i>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="./index.php?page=report_general_view" class="nav-link nav-country tree-item">
+                <a href="./index.php?page=report_general_view" class="nav-link nav-report_general_view tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>مدكر في أرقام</p>
                 </a>
               </li>
               <li class="nav-item">
-                <a href="./index.php?page=report_academic_status" class="nav-link nav-as tree-item">
+                <a href="./index.php?page=report_academic_status" class="nav-link nav-report_academic_status tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>الحالة الأكاديمية</p>
                 </a>
               </li>
               <?php if ($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2) : ?>
                 <li class="nav-item">
-                  <a href="./index.php?page=report_moodle_info" class="nav-link nav-as tree-item">
+                  <a href="./index.php?page=report_moodle_info" class="nav-link nav-report_moodle_info tree-item">
                     <i class="fas fa-angle-right nav-icon"></i>
                     <p>تقرير معلومات المنصة</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="./index.php?page=report_students" class="nav-link nav-as tree-item">
+                  <a href="./index.php?page=report_students" class="nav-link nav-report_students tree-item">
                     <i class="fas fa-angle-right nav-icon"></i>
                     <p>الطلاب</p>
                   </a>
                 </li>
                 <li class="nav-item">
-                  <a href="./index.php?page=report_st_affairs" class="nav-link nav-as tree-item">
+                  <a href="./index.php?page=report_st_affairs" class="nav-link nav-report_st_affairs tree-item">
                     <i class="fas fa-angle-right nav-icon"></i>
                     <p>تقرير شؤون الدارسين</p>
                   </a>

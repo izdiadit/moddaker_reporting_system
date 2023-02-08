@@ -123,7 +123,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       <b>مدكر في أرقام</b>
     </div>
     <div class="chartsPanel">
-      <div class="chartCard" id="chartCard0" style="margin: auto;">
+      <div class="chartCard" id="chartCard0">
         <div class="chartCardHeader">
           <a href="#" onclick="toggleFullscreen('chartCard0')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
           <div class="chartTitle"> عدد دارسي مدكّر </div>
@@ -135,9 +135,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         ?>
         <div style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo '175000+' ?></div>
       </div>
-    </div>
-    <div class="chartsPanel">
-      <div class="chartCard" id="chartCard1" style="margin: auto;">
+      <div class="chartCard" id="chartCard1">
         <div class="chartCardHeader">
           <a href="#" onclick="toggleFullscreen('chartCard1')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
           <div class="chartTitle"> عدد دارسي النسخة <?php echo $langs[$Lang]?> </div>

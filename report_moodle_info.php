@@ -85,23 +85,23 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			<table class="table tabe-hover table-bordered" id="list" style="margin: auto;">
 				<tr>
 					<th>المنصة</th>
-					<td><b><?php echo $site_info['sitename'] ?></b></td>
+					<td class="rounded"><b><?php echo $site_info['sitename'] ?></b></td>
 				</tr>
 				<tr>
 					<th>رابط المنصة</th>
-					<td><b><?php echo "<a href='$site_info[siteurl]'>$site_info[siteurl]</a>" ?></b></td>
+					<td class="rounded"><b><?php echo "<a href='$site_info[siteurl]'>$site_info[siteurl]</a>" ?></b></td>
 				</tr>
 				<tr>
 					<th>إصدار الموودل</th>
-					<td><b><?php echo $site_info['release'] ?></b></td>
+					<td class="rounded"><b><?php echo $site_info['release'] ?></b></td>
 				</tr>
 				<tr>
 					<th>نوع التقويم</th>
-					<td><b><?php echo $site_info['sitecalendartype'] ?></b></td>
+					<td class="rounded"><b><?php echo $site_info['sitecalendartype'] ?></b></td>
 				</tr>
 				<tr>
 					<th>الثيم</th>
-					<td><b><?php echo $site_info['theme'] ?></b></td>
+					<td class="rounded"><b><?php echo $site_info['theme'] ?></b></td>
 				</tr>
 			</table>
 		</div>

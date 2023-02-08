@@ -1,0 +1,274 @@
+	.main-header,
+	.sidebar,
+	a.brand-link {
+		background-color: #5d6c34 !important;
+	}
+
+	.content-wrapper{
+		direction: rtl;
+	}
+
+	.modal{
+		text-align: justify;
+		font-family: 'Traditional arabic';
+		font-size: 30px;
+	}
+	h1.m-0{
+		font-family: 'Traditional arabic';
+		font-size: 50px;
+		color: #5d6c34;
+		text-align: center;
+		margin: auto !important;
+	}
+	.modal-title{
+		font-size: 40px;
+	}
+	.card {
+		font-family: 'traditional arabic';
+		font-size: 25px;
+		overflow: auto;
+		direction: rtl;
+	}
+
+	.card-header {
+		text-align: right;
+		color: #28a745;
+	}
+
+	.nav-link[class^="nav-"].active {
+		background-color: #977c47 !important;
+	}
+	.nav-link[class^="nav-"].tree-item.active {
+		background-color: whitesmoke !important;
+	}
+
+	.os-content{
+		padding-top: 9% !important;
+		font-size: 17px;
+	}
+
+	.btn {
+		font-size: 25px;
+		border-radius: 15px !important;
+		margin-right: 0.5%;
+	}
+
+	.dropdown-menu {
+		font-size: 23px;
+		border-radius: 15px;
+		text-align: right;
+	}
+
+	/********************* Datatables And TABLES ******************* */
+	table,
+	table.table-bordered,
+	table.tabe-hover {
+		direction: rtl;
+		margin: auto;
+		border-radius: 30px !important;
+		border-collapse: unset !important;
+	}
+
+	th {
+		text-align: center;
+		background-color: #aa8e55;
+		color: white;
+		border-radius: 30px;
+	}
+
+	td {
+		direction: rtl;
+		text-align: right;
+		overflow: auto;
+		color: #5d6c34;
+		direction: rtl;
+		border-style: none !important;
+	}
+
+	td.rounded {
+		border-style: solid !important;
+		border-radius: 30px !important;
+	}
+
+
+	tr:nth-child(even) {
+		background-color: #f1f1f1;
+	}
+
+	tr:last-child>td:last-child{
+		border-bottom-left-radius: 30px;
+	}
+
+	.dataTables_filter {
+		display: none;
+	}
+
+	table.dataTable {
+		direction: rtl;
+	}
+
+	/************************************   CHARTS   **********************************************/
+
+	/* Chart canvas and div styles */
+	@import url('https://fonts.googleapis.com/css?family=Tajawal');
+
+	.chartCard {
+		font-family: 'Tajawal', 'Traditional Arabic';
+		width: 50%;
+		background-color: whitesmoke;
+		box-shadow: -8px 8px 16px 0 rgba(0, 0, 0, 0.2);
+		/* h-offset v-offset blur spread color */
+		transition: 0.3s;
+		border-radius: 15px;
+		margin: 1%;
+		padding-top: 20px;
+		/* padding-bottom: 20px; */
+		padding-right: 2%;
+		padding-left: 2%;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-evenly;
+	}
+
+	.chartCard:hover {
+		box-shadow: -16px 16px 16px 8px rgba(0, 0, 0, 0.2);
+	}
+
+	.chartCardHeader {
+		display: flex;
+		align-self: flex-start;
+		width: 100%;
+		justify-content: space-between;
+	}
+
+	.chartCardHeader .chartTitle {
+		align-self: center;
+	}
+
+	.chartCardHeader a {
+		justify-content: right;
+		float: right !important;
+	}
+
+	.chartsPanel {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+
+		margin: 0.5%;
+	}
+
+	/* Responsive layout - makes a one column layout instead of a two-column layout */
+	@media (max-width: 766px) {
+		.chartsPanel {
+			flex-direction: column;
+		}
+
+		.chartCard {
+			width: 90%;
+		}
+	}
+
+	div[id^="chartdiv"] {
+		/* The Operator ^ - Match elements that starts with given value
+    The Operator * - Match elements that have an attribute containing a given value: div[id*="chartdiv"] 
+    */
+
+		width: 100%;
+		height: 500px;
+		/* font-family: 'traditional arabic'!important; */
+		font-size: 1.5rem;
+
+	}
+
+	.chartTitle {
+		color: #977c47;
+		background-color: #28a7454c;
+		font-weight: 600;
+		font-size: larger;
+		border-left-style: solid;
+		border-left-width: 5px;
+		border-top-right-radius: 18px;
+		border-bottom-right-radius: 18px;
+		border-color: #28a745;
+
+		padding: 3px 15% 3px 15%;
+
+	}
+
+	#chartCard3 {
+		padding-top: 10px;
+		padding-right: 10px;
+		padding-bottom: 10px;
+		padding-left: 10px;
+	}
+
+	/******************************** Forms And Inputs ***********************************/
+	#filters {
+		margin: auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+	}
+
+	#filters input,
+	select {
+		border-radius: 25px;
+		padding: 5px;
+	}
+
+	/******************************** Slicing Links **********************************/
+	ul.data-slicing-btns {
+		list-style-type: none;
+
+		display: grid;
+		grid-template-columns: 185px 185px 185px 185px;
+
+		font-size: 20px;
+		font-weight: 700;
+		color: #977c47;
+	}
+
+	@media (max-width: 1024px) {
+		ul.data-slicing-btns {
+			display: grid;
+			grid-template-columns: 185px 185px 185px;
+		}
+	}
+
+	@media (max-width: 780px) {
+		ul.data-slicing-btns {
+			display: grid;
+			grid-template-columns: 185px 185px;
+		}
+	}
+
+	ul.data-slicing-btns>li {
+		/* padding: 0.9rem; */
+		border-radius: 15px;
+		border: 1px solid #977c47;
+		margin: 0.1rem;
+		width: 170px;
+	}
+
+	ul.data-slicing-btns>li>a {
+		display: block;
+		padding: 0.9rem 0.3rem 0.9rem 0.3rem;
+		text-decoration: none;
+		border-radius: 15px;
+		width: 170px;
+		text-align: center;
+	}
+
+	ul.data-slicing-btns li a:hover {
+		background-color: #aa8e55;
+		color: white;
+	}
+
+	ul.data-slicing-btns li a:active {
+		background-color: #5d6c34;
+		color: white;
+	}

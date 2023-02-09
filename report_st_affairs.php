@@ -18,20 +18,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 		<div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
 			<?php
 			// The array of languages will be selected by the user, and elements will appear depending on the user type:
-			$langs = [
-				'ar' => 'العربية',
-				'!ar' => 'كل النسخ عدا العربية',
-				'id' => 'الإندونيسية',
-				'en' => 'الإنجليزية',
-				'fr' => 'الفرنسية'
-			];
-			$tokens = [
-				'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
-				'!ar' => '',
-				'id' => 'e550100be5197a3e25596068c83ab9d2',
-				'en' => '5d67dc5eec6b25617c0e55c00c8a9fd6',
-				'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a'
-			];
+			include 'langs.php';
 
 			// Check the selected langauage/s to get its data:
 			$Lang = $_POST['lang'] ?? 'ar';
@@ -108,7 +95,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 				$starttime = strtotime($_POST['starttime']);
 				$endtime = strtotime($_POST['endtime']);
 			?>
-				<table class="table table-striped dt-responsive" id="list">
+				<table class="table" id="list">
 					<thead>
 						<tr>
 							<th class="text-center">#</th>
@@ -142,11 +129,11 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 							foreach ($log_data as $row) :
 							?>
 								<tr>
-									<th class="text-center"><?php echo ++$i ?></th>
-									<td><b><?php echo $username ?></b></td>
-									<td><b><?php echo $row['eventname'] ?></b></td>
-									<td dir="ltr"><b><?php echo date('h:i:s', $row['timecreated']) . ' ' . date('a', $row['timecreated']) . ' ' .  date('Y-m-d', $row['timecreated']) ?></b></td>
-									<td><b><?php echo $row['relateduserid'] ?></b></td>
+									<td class="text-center"><?php echo ++$i ?></td>
+									<td><?php echo $username ?></td>
+									<td><?php echo $row['eventname'] ?></td>
+									<td dir="ltr"><?php echo date('h:i:s', $row['timecreated']) . ' ' . date('a', $row['timecreated']) . ' ' .  date('Y-m-d', $row['timecreated']) ?></td>
+									<td><?php echo $row['relateduserid'] ?></td>
 								</tr>
 						<?php endforeach;
 						} ?>
@@ -200,54 +187,3 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 		})
 	})
 </script>
-<style>
-	/*************************************** */
-	/* @import url(https://fonts.googleapis.com/css?family=Tajawal); */
-
-	.card {
-		/* direction: rtl; */
-		/* background: #DFE7E5 !important; */
-		font-family: 'traditional arabic' !important;
-		font-size: 25px;
-	}
-
-	h3 {
-		color: #32c19a;
-	}
-
-
-	div.dataTables_wrapper div.dataTables_info {
-		padding-top: 0px !important;
-		white-space: nowrap;
-		color: #64b99c !important;
-	}
-
-	.page-item.active .page-link {
-		z-index: 1;
-		color: #fff !important;
-		background-color: #42c2a1 !important;
-		border-color: #42c2a1 !important;
-		border-radius: 8px !important;
-	}
-
-	.page-link {
-		position: relative;
-		display: block;
-		padding: .5rem .75rem;
-		margin-left: -1px;
-		line-height: 1.25;
-		color: #42c2a1 !important;
-		background-color: #fff;
-		border: 1px solid #dee2e6;
-	}
-
-	.dataTables_info,
-	.dataTables_length {
-		float: right;
-	}
-
-	#list_paginate,
-	.dataTables_filter {
-		float: left;
-	}
-</style>

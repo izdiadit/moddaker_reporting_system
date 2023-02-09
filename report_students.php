@@ -16,13 +16,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 		<div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
 			<?php
 			// The array of languages will be sliced depending on the user:
-			$langs = [
-				'ar' => 'العربية',
-				'!ar' => 'كل النسخ عدا العربية',
-				'id' => 'الإندونيسية',
-				'en' => 'الإنجليزية',
-				'fr' => 'الفرنسية'
-			];
+			include 'langs.php';
 
 			// Check the selected langauage/s to get its data:
 			$lang = $_POST['lang'] ?? 'ar';
@@ -196,7 +190,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 				"sProcessing": "جارٍ التحميل...",
 				"sLengthMenu": "أظهر _MENU_ من الصفوف",
 				"sZeroRecords": "لم يعثر على أية سجلات",
-				"sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ صفًّا",
+				"sInfo": "إظهار _START_ إلى _END_ من أصل _TOTAL_ من الصفوف",
 				"sInfoEmpty": "يعرض 0 إلى 0 من أصل 0 سجل",
 				"sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخلاً)",
 				"sInfoPostFix": "",

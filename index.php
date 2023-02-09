@@ -26,6 +26,7 @@
   <?php 
     // Set Page Title In Arabic:
     $titles = [
+      'home' => 'نظام تقارير مدّكر',
       'report_academic_status' => 'تقرير الحالة الأكاديمية',
       'report_students' => 'الطلاب',
       'report_st_affairs' => 'تقرير شؤون الدارسين',

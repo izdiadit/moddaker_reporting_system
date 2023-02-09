@@ -16,20 +16,8 @@ include 'db_connect.php';
 		<div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
 			<?php
 			// The array of languages will be selected by the user, and elements will appear depending on the user type:
-			$langs = [
-				'ar' => 'العربية',
-				// '!ar' => 'كل النسخ عدا العربية',
-				'id' => 'الإندونيسية',
-				'en' => 'الإنجليزية',
-				'fr' => 'الفرنسية'
-			];
-			$tokens = [
-				'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
-				// '!ar' => '',
-				'id' => 'e550100be5197a3e25596068c83ab9d2',
-				'en' => '5d67dc5eec6b25617c0e55c00c8a9fd6',
-				'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a'
-			];
+			include 'langs.php';
+      
 			$Batch_cat_names = [
 				'ar' => 'دفعة ال',
 				// '!ar' => '',
@@ -80,15 +68,17 @@ include 'db_connect.php';
     </div>
     <?php
     // Get all courses:
-    $courses_url = "https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_course_info&wstoken=$token";
-    $curl = curl_init();
-    curl_setopt_array($curl, [
-      CURLOPT_URL => $courses_url,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_RETURNTRANSFER => true
-    ]);
+    // $courses_url = "https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_course_info&wstoken=$token";
+    // $curl = curl_init();
+    // curl_setopt_array($curl, [
+    //   CURLOPT_URL => $courses_url,
+    //   CURLOPT_FOLLOWLOCATION => true,
+    //   CURLOPT_RETURNTRANSFER => true
+    // ]);
 
-    $decoded_courses = json_decode(curl_exec($curl), true);
+    // $decoded_courses = json_decode(curl_exec($curl), true);
+    $data = getData("fetcheddata/$Lang-ac.json");
+    $decoded_courses = $data['courses'];
     //  The array structure: $decoded_courses = [
       // [0] => ["courseid": int,
       // "coursename": string,
@@ -110,16 +100,17 @@ include 'db_connect.php';
     // echo $cat_ids . '<br>';
 
     // Get all categories:
-    $categories_url = "https://$Lang.moddaker.com/webservice/rest/server.php?wstoken=$token&wsfunction=core_course_get_categories&moodlewsrestformat=json";
-    $curl = curl_init();
-    curl_setopt_array($curl, [
-      CURLOPT_URL => $categories_url,
-      CURLOPT_FOLLOWLOCATION => true,
-      CURLOPT_RETURNTRANSFER => true
-    ]);
+    // $categories_url = "https://$Lang.moddaker.com/webservice/rest/server.php?wstoken=$token&wsfunction=core_course_get_categories&moodlewsrestformat=json";
+    // $curl = curl_init();
+    // curl_setopt_array($curl, [
+    //   CURLOPT_URL => $categories_url,
+    //   CURLOPT_FOLLOWLOCATION => true,
+    //   CURLOPT_RETURNTRANSFER => true
+    // ]);
 
-    $decoded_categories = json_decode(curl_exec($curl), true);
-
+    // $decoded_categories = json_decode(curl_exec($curl), true);
+    
+    $decoded_categories = $data['categories'];
     // echo '<div dir="ltr">';
     // print_r($decoded_categories);
     // echo '</div>';
@@ -207,17 +198,6 @@ include 'db_connect.php';
                     echo 'قيد الدراسة';
                   }
                 }
-                // if ($cats_with_statuses[$cat["id"]][0] == 0) {
-                //   echo '-';
-                // } elseif ($cats_with_statuses[$cat["id"]][1] > time()) {
-                //   echo 'تسجيلها مرتقب' . '<br>';
-                //   echo date('Y-m-d', $cats_with_statuses[$cat["id"]][1]);
-                // } elseif ($cats_with_statuses[$cat["id"]][2] < time()) {
-                //   echo 'منتهية' . '<br>';
-                //   echo date('Y-m-d', $cats_with_statuses[$cat["id"]][2]);
-                // } elseif ($cats_with_statuses[$cat["id"]][1] < time() && $cats_with_statuses[$cat["id"]][2] > time()) {
-                //   echo 'قيد الدراسة';
-                // }
                 ?></td>
           </tr>
         <?php endforeach; ?>
@@ -251,7 +231,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
       <b>العرض التفاعلي للحالة الأكاديمية</b>
     </div>
     <div class="chartsPanel">
-      <div id="chartdivas1" style="width: 75%; margin: auto;"></div>
+      <div id="chartdivas1" style="height: 400px; width: 75%; margin: auto;"></div>
 
     </div>
 
@@ -450,62 +430,3 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
 
   });
 </script>
-
-<style>
-  /* Chart canvas and div styles */
-  .chartCard {
-    background-color: whitesmoke;
-    box-shadow: -8px 8px 16px 0 rgba(0, 0, 0, 0.2);
-    /* h-offset v-offset blur spread color */
-    transition: 0.3s;
-    border-radius: 15px;
-    margin: 2%;
-    padding-top: 20px;
-    padding-bottom: 20px;
-  }
-
-  .chartCard:hover {
-    box-shadow: -16px 16px 16px 8px rgba(0, 0, 0, 0.2);
-  }
-
-  .chartsPanel {
-    display: flex;
-    flex-direction: row;
-  }
-
-  div[id^="chartdiv"] {
-    /* The Operator ^ - Match elements that starts with given value
-    The Operator * - Match elements that have an attribute containing a given value: div[id*="chartdiv"] 
-    */
-
-    width: 100%;
-    height: 300px;
-    font-family: 'arabic typesetting';
-    font-size: large;
-
-  }
-
-  #chartCard3 {
-    padding-top: 10px;
-    padding-right: 10px;
-    padding-bottom: 10px;
-    padding-left: 10px;
-  }
-
-  /********************* TABLES ******************* */
-  td {
-    direction: rtl;
-    text-align: right;
-  }
-
-  th {
-    text-align: center;
-    background-color: #aa8e55;
-    color: white;
-  }
-
-  .card-header {
-    text-align: right;
-    color: #28a745;
-  }
-</style>

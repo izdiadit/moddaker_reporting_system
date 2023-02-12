@@ -203,18 +203,18 @@
 
 	/////////// Slicing buttons Styles:
 	$(document).ready(
-        $('.data-slicing-btns li a').each(function () {
-            if (this.href == document.URL) {
-                this.style.backgroundColor = '#5d6c34';
-                this.style.color = 'white';
-            }
+		$('.data-slicing-btns li a').each(function() {
+			if (this.href == document.URL) {
+				this.style.backgroundColor = '#5d6c34';
+				this.style.color = 'white';
+			}
 			if (document.URL.split('?')[1] == 'page=report_students') {
-                let elem = $( ".data-slicing-btns li:nth-child(1) a" );
+				let elem = $(".data-slicing-btns li:nth-child(1) a");
 				elem[0].style.backgroundColor = '#5d6c34';
-                elem[0].style.color = 'white';
-            }
-        })
-    )
+				elem[0].style.color = 'white';
+			}
+		})
+	)
 </script>
 
 
@@ -238,6 +238,37 @@
 		color: #5d6c34;
 	}
 
+	/********** */
+	tr:nth-child(even) {
+		background-color: #d79c244f;
+	}
+
+	.main-header,
+	.main-sidebar,
+	.sidebar-dark-primary,
+	.dropdown>.brand-link {
+		background-color: #5d6c34 !important;
+	}
+
+	.btn,
+	.dropdown-menu,
+	.show {
+		font-size: 22px;
+		border-radius: 13px !important;
+	}
+
+	.btn{
+		margin-right: 0.7%;
+		margin-left: 0.7%;
+	}
+
+	.dropdown-menu,
+	.show{
+		left: 30px;
+		text-align: right;
+	}
+
+	/**************/
 	th {
 		text-align: center;
 		background-color: #aa8e55;
@@ -370,6 +401,7 @@
 	table.dataTable {
 		direction: rtl;
 	}
+
 	table {
 		direction: rtl;
 		border-radius: 30px !important;
@@ -386,14 +418,16 @@
 		font-weight: 700;
 		color: #977c47;
 	}
+
 	@media (max-width: 1024px) {
-		ul.data-slicing-btns{
+		ul.data-slicing-btns {
 			display: grid;
 			grid-template-columns: 185px 185px 185px;
 		}
 	}
+
 	@media (max-width: 780px) {
-		ul.data-slicing-btns{
+		ul.data-slicing-btns {
 			display: grid;
 			grid-template-columns: 185px 185px;
 		}
@@ -420,6 +454,7 @@
 		background-color: #aa8e55;
 		color: white;
 	}
+
 	ul.data-slicing-btns li a:active {
 		background-color: #5d6c34;
 		color: white;

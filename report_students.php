@@ -145,7 +145,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 		setTimeout(() => {
 			table = document.getElementById('list');
 			table.style.display = 'table';
-		}, 5000);
+		}, 2000);
 
 		var lang = <?php echo json_encode($templang) ?>; // don't forget to replace with lang 
 		console.log(lang)

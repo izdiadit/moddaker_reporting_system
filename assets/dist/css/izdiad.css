@@ -221,6 +221,10 @@
 
 	}
 
+	.customTooltip{
+		color: whitesmoke;
+		
+	}
 	/* #chartCard3 {
 		padding-top: 10px;
 		padding-right: 10px;

@@ -303,7 +303,9 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
     maxDeviation: 0.3,
     categoryField: "batch",
     renderer: xRenderer,
-    tooltip: am5.Tooltip.new(rootas, {})
+    tooltip: am5.Tooltip.new(rootas, {
+      
+    })
   }));
   xAxis.get("renderer").labels.template.setAll({
     oversizedBehavior: "wrap",
@@ -345,9 +347,6 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
       valueYField: fieldName,
       sequencedInterpolation: true,
       categoryXField: "batch",
-      tooltip: am5.Tooltip.new(rootas, {
-        // labelText: "{valueY}"
-      })
     }));
 
     // myseriesas.columns.template.adapters.add("fill", () => color);
@@ -359,8 +358,10 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
       width: am5.percent(95)
     });
 
+
     myseriesas.columns.template.setAll({
-      tooltipText: "{valueY}"
+      // tooltipText: "{valueY}"
+      tooltipHTML: "<div class='customTooltip'>{valueY}</div>"
     });
 
     xAxis.data.setAll(category_studs_data);

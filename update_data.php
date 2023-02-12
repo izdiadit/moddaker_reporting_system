@@ -73,8 +73,7 @@ function updateData($url, $dataClass, $lang)
       $data = json_decode($json, true);
       $students_data = array_merge($students_data, $data);
       // echo $i.' / '.$start.' / '.$end.' / ';
-      print_r(count($students_data));
-      echo '---';
+      print_r(count($students_data)." records have been fetched ---.<br>\n");
 
       $start = $end + 1;
       if ($end >= $total_count) {
@@ -108,6 +107,80 @@ function updateData($url, $dataClass, $lang)
 
 
 
+  function updateAcademicStatus($Lang){
+    include 'langs.php';
 
-  updateData('https://fr.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=f5a13ccf5b087df6ed67b12afce7dc3a', 'students', 'fr');
+    // Get all courses:
+    $courses_url = "https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_course_info&wstoken=$tokens[$Lang]";
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+      CURLOPT_URL => $courses_url,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_RETURNTRANSFER => true
+    ]);
+
+
+     /*  The array structure: $decoded_courses = [
+      [0] => ["courseid": int,
+      "coursename": string,
+      "startdate": int,
+      "enddate": int,
+      "categoryid": int,
+      "Enroled": int],
+      "Graduates": int
+      ]
+      */
+    $courses = curl_exec($curl);
+    
+    // Get all categories:
+    $categories_url = "https://$Lang.moddaker.com/webservice/rest/server.php?wstoken=$tokens[$Lang]&wsfunction=core_course_get_categories&moodlewsrestformat=json";
+    $curl = curl_init();
+    curl_setopt_array($curl, [
+      CURLOPT_URL => $categories_url,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_RETURNTRANSFER => true
+    ]);
+
+    $categories = curl_exec($curl);
+
+    // Write data in ajson file:
+    $file = fopen("$Lang-ac-new.json", 'a+');
+    ftruncate($file, 0);
+    fwrite($file, '{"lastupdate": ' . time() . ',');
+    fwrite($file, '"courses": ' . $courses . ',');
+    fwrite($file, '"categories": ' . $categories . '}');
+    fclose($file);
+
+    echo "New file: (fetcheddata/$Lang-ac-new.json) has been created<br>\n";
+
+    // Replace the old file with the updated one:
+    $fname = "fetcheddata/$Lang-ac.json";
+    if (file_exists($fname)) {
+        echo "File ($fname) exists and will be replaced with the updated one.<br>\n";
+        unlink($fname);
+    }
+    rename("$Lang-ac-new.json", $fname);
+    echo "File ($fname) is up to date ".date('d-m-Y H:i:s a', time())." .\n";
+  }
+  
+  // Id Students:
+  // updateData('https://id.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=e550100be5197a3e25596068c83ab9d2','students','id');
+  
+  // En Students:
+  // updateData('https://en.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=5d67dc5eec6b25617c0e55c00c8a9fd6','students','en');
+  
+  // Fr Students:
+  // updateData('https://fr.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=f5a13ccf5b087df6ed67b12afce7dc3a','students','fr');
+
+  // Ar Students:
+  // updateData('','students','ar');
+
+  // Ar academic status:
+  updateAcademicStatus('ar');
+  // Id academic status:
+  updateAcademicStatus('id');
+  // En academic status:
+  updateAcademicStatus('en');
+  // Fr academic status:
+  updateAcademicStatus('fr');
 ?>

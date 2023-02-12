@@ -18,20 +18,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 		<div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
 			<?php
 			// The array of languages will be selected by the user, and elements will appear depending on the user type:
-			$langs = [
-				'ar' => 'العربية',
-				'!ar' => 'كل النسخ عدا العربية',
-				'id' => 'الإندونيسية',
-				'en' => 'الإنجليزية',
-				'fr' => 'الفرنسية'
-			];
-			$tokens = [
-				'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
-				'!ar' => '',
-				'id' => 'e550100be5197a3e25596068c83ab9d2',
-				'en' => '5d67dc5eec6b25617c0e55c00c8a9fd6',
-				'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a'
-			];
+			include 'langs.php';
 
 			// Check the selected langauage/s to get its data:
 			$Lang = $_POST['lang'] ?? 'ar';
@@ -85,23 +72,23 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			<table class="table tabe-hover table-bordered" id="list" style="margin: auto;">
 				<tr>
 					<th>المنصة</th>
-					<td><b><?php echo $site_info['sitename'] ?></b></td>
+					<td class="rounded"><b><?php echo $site_info['sitename'] ?></b></td>
 				</tr>
 				<tr>
 					<th>رابط المنصة</th>
-					<td><b><?php echo "<a href='$site_info[siteurl]'>$site_info[siteurl]</a>" ?></b></td>
+					<td class="rounded"><b><?php echo "<a href='$site_info[siteurl]'>$site_info[siteurl]</a>" ?></b></td>
 				</tr>
 				<tr>
 					<th>إصدار الموودل</th>
-					<td><b><?php echo $site_info['release'] ?></b></td>
+					<td class="rounded"><b><?php echo $site_info['release'] ?></b></td>
 				</tr>
 				<tr>
 					<th>نوع التقويم</th>
-					<td><b><?php echo $site_info['sitecalendartype'] ?></b></td>
+					<td class="rounded"><b><?php echo $site_info['sitecalendartype'] ?></b></td>
 				</tr>
 				<tr>
 					<th>الثيم</th>
-					<td><b><?php echo $site_info['theme'] ?></b></td>
+					<td class="rounded"><b><?php echo $site_info['theme'] ?></b></td>
 				</tr>
 			</table>
 		</div>

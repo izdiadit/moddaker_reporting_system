@@ -17,7 +17,10 @@ var myseries = chart.series.push(
     categoryField: "type",
     valueField: "count",
     legendLabelText: "[fontFamily: calibri]       {category}: {valuePercentTotal.formatNumber('0.00')}%[/]", //Add the value with the category and empty the value label to avoid arabic lang overlapping
-    legendValueText: ""
+    legendValueText: "",
+    tooltip: am5.Tooltip.new(root, {
+        labelHTML: "<div class='customTooltip'>{category}: {valuePercentTotal.formatNumber('0.0')}%</div>"
+    })
   })
   );
   // Legend:
@@ -31,7 +34,7 @@ var myseries = chart.series.push(
 
 
 // Hiding tooltips:
-myseries.slices.template.setAll({ tooltipText: ""})
+myseries.slices.template.setAll({ })
 
 
 // set themes:
@@ -96,10 +99,13 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
 	var myseries2 = chart2.series.push(
 	    am5percent.PieSeries.new(root2, {
 	        name: "Series",
-	        categoryField: "country",
-	        valueField: "count",
-          legendLabelText: "[fontFamily: calibri]       {category}: {valuePercentTotal.formatNumber('0.0')}%[/]", //Add the value with the category and empty the value label to avoid arabic lang overlapping
-      legendValueText: ""
+            categoryField: "country",
+            valueField: "count",
+            legendLabelText: "[fontFamily: calibri]       {category}: {valuePercentTotal.formatNumber('0.0')}%[/]", //Add the value with the category and empty the value label to avoid arabic lang overlapping
+            legendValueText: "",
+            tooltip: am5.Tooltip.new(root2, {
+                labelHTML: "<div class='customTooltip'>{category}: {valuePercentTotal.formatNumber('0.0')}%</div>"
+            })
 	    })
 	);
 	
@@ -126,8 +132,8 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
         text: "[fontFamily: calibri]{category}: {valuePercentTotal.formatNumber('0.0')}%[/]",
       });
 
-  // Hiding tooltips:
-myseries2.slices.template.setAll({ tooltipText: ""})
+//   // Hiding tooltips:
+// myseries2.slices.template.setAll({ tooltipText: ""})
 	
 	// Coloring one by one:
 	// myseries2.slices.template.adapters.add("fill", function(fill, target) {
@@ -152,13 +158,14 @@ myseries2.slices.template.setAll({ tooltipText: ""})
 	    duration: 2000,
 	    easing: am5.ease.inOut(am5.ease.cubic) // linear (Constant speed during all duration) - circle - cubic elastic - ...
 	});
-	// myseries2.slices.template.setAll({tooltipText: ""})
+	// myseries2.slices.template.setAll({tooltipHTML: "<div class='customTooltip'>{category}: {value}%</div>"})
 	myseries2.slices.template.adapters.add("stroke", () => 'whitesmoke'); //same as chartCard background
 	myseries2.slices.template.adapters.add("strokeWidth", () => 5);
 	myseries2.data.setAll(country_data);
 	legend.data.setAll(myseries2.dataItems);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
 am5.ready(function() {
 var root3 = am5.Root.new("chartdiv3");
 var chart3 = root3.container.children.push(
@@ -245,6 +252,7 @@ myseries3.data.setAll(country_data);
 myseries3.appear(1000);
 chart3.appear(1000, 100);
 });
+*/
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -263,8 +271,3 @@ root.dispose();
 Trying to create a new root element in a <div> container before disposing the old one that is currently residing there, will result in an error.
 */
 
-/* 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////               Academic Status               //////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-*/

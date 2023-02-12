@@ -22,6 +22,23 @@
   <?php include 'topbar.php' ?>
   <?php include 'sidebar.php' ?>
 
+
+  <?php 
+    // Set Page Title In Arabic:
+    $titles = [
+      'home' => 'نظام تقارير مدّكر',
+      'report_academic_status' => 'تقرير الحالة الأكاديمية',
+      'report_students' => 'الطلاب',
+      'report_st_affairs' => 'تقرير شؤون الدارسين',
+      'report_general_view' => 'مدكر في أرقام',
+      'report_moodle_info' => 'معلومات المنصة',
+      'user_list' => 'قائمة المستخدمين',
+      'new_user' => 'مستخدم جديد',
+      'edit_user' => 'تعديل معلومات المستخدم',
+    ];
+    $page = isset($_GET['page']) ? $_GET['page'] : 'home';
+    echo $page;
+  ?>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
   	 <div class="toast" id="alert_toast" role="alert" aria-live="assertive" aria-atomic="true">
@@ -33,9 +50,7 @@
     <div class="content-header">
       <div class="container-fluid">
         <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0"><?php echo $title ?></h1>
-          </div><!-- /.col -->
+            <h1 class="m-0"><?php echo $titles[$page] ?></h1><!-- /.col -->
 
         </div><!-- /.row -->
             <hr class="border-primary">
@@ -52,7 +67,6 @@
                 include '404.html';
             }else{
             include $page.'.php';
-
             }
           ?>
       </div><!--/. container-fluid -->
@@ -62,14 +76,14 @@
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
         <div class="modal-header">
-        <h5 class="modal-title">Confirmation</h5>
+        <h5 class="modal-title">تأكيد</h5>
       </div>
       <div class="modal-body">
         <div id="delete_content"></div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id='confirm' onclick="">Continue</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id='confirm' onclick="">تأكيد</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
       </div>
       </div>
     </div>
@@ -83,8 +97,8 @@
       <div class="modal-body">
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id='submit' onclick="$('#uni_modal form').submit()">Save</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id='submit' onclick="$('#uni_modal form').submit()">حفظ</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">إلغاء</button>
       </div>
       </div>
     </div>

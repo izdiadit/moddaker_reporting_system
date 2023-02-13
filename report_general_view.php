@@ -21,7 +21,7 @@ include 'db_connect.php';
     <form id="langFilter" dir="rtl" action="./index.php?page=report_general_view" method="post">
       <!-- <input type="text" value="report_students" id="page" hidden> -->
       <label for="lang">اختر نسخة برنامج مدكر: </label>
-      <select name="lang" id="lang" onchange="this.form.submit()">
+      <select class="selectpicker" name="lang" id="lang" onchange="this.form.submit()">
         <?php foreach ($langs as $key => $lang) {
           if ($key == $_POST['lang'] || $key == $_GET['lang']) { // To assure that the submitted option will be selected after submitting form:
             echo "<option value='$key' selected='selected'>$lang</option>";
@@ -112,7 +112,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <div class="chartsPanel">
       <div class="chartCard" id="chartCard0">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard0')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <a href="#" onclick="toggleFullscreen('chartCard0')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i>  ملء الشاشة</a>
           <div class="chartTitle"> عدد دارسي مدكّر </div>
           <div style="visibility: hidden"></div>
         </div>
@@ -124,7 +124,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       </div>
       <div class="chartCard" id="chartCard1">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard1')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <a href="#" onclick="toggleFullscreen('chartCard1')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i>  ملء الشاشة</a>
           <div class="chartTitle"> عدد دارسي النسخة <?php echo $langs[$Lang]?> </div>
           <div style="visibility: hidden"></div>
         </div>
@@ -139,7 +139,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <div class="chartsPanel">
       <div class="chartCard" id="chartCard2">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard2')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <a href="#" onclick="toggleFullscreen('chartCard2')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i>  ملء الشاشة</a>
           <div class="chartTitle"> الدارسون والدارسات </div>
           <div style="visibility: hidden"></div>
         </div>
@@ -148,7 +148,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
 
       <div class="chartCard" id="chartCard3">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard3')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <a href="#" onclick="toggleFullscreen('chartCard3')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i>  ملء الشاشة</a>
           <div class="chartTitle"> دول الدارسين </div>
           <div style="visibility: hidden"></div>
         </div>

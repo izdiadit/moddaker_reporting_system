@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <?php session_start() ?>
 <?php 
 	if(!isset($_SESSION['login_id']))

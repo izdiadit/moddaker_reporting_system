@@ -46,7 +46,7 @@ root.setThemes([
 myseries.labels.template.setAll({
     // maxWidth: 150,
     // oversizedBehavior: "wrap" // to truncate labels, use "truncate"
-    text: "[fontFamily: calibri]{category}: {valuePercentTotal.formatNumber('0.0')}%[/]",
+    text: window.innerWidth >= 1218? "[fontFamily: calibri]{category}: {valuePercentTotal.formatNumber('0.0')}%[/]" : "",
     radius: 10,
     inside: true,
     textType: "radial", centerX: am5.percent(100),
@@ -132,8 +132,6 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
         text: "[fontFamily: calibri]{category}: {valuePercentTotal.formatNumber('0.0')}%[/]",
       });
 
-//   // Hiding tooltips:
-// myseries2.slices.template.setAll({ tooltipText: ""})
 	
 	// Coloring one by one:
 	// myseries2.slices.template.adapters.add("fill", function(fill, target) {
@@ -150,19 +148,20 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
 	//     }
 	//   });
 	
-	myseries2.animate({
-	    key: "startAngle",
-	    from: 270,
-	    to: 630,
-	    loops: 1,
-	    duration: 2000,
-	    easing: am5.ease.inOut(am5.ease.cubic) // linear (Constant speed during all duration) - circle - cubic elastic - ...
-	});
-	// myseries2.slices.template.setAll({tooltipHTML: "<div class='customTooltip'>{category}: {value}%</div>"})
+	// myseries2.animate({
+	//     key: "startAngle",
+	//     from: 270,
+	//     to: 630,
+	//     loops: 1,
+	//     duration: 3000,
+	//     easing: am5.ease.inOut(am5.ease.cubic) // linear (Constant speed during all duration) - circle - cubic elastic - ...
+	// });
 	myseries2.slices.template.adapters.add("stroke", () => 'whitesmoke'); //same as chartCard background
 	myseries2.slices.template.adapters.add("strokeWidth", () => 5);
 	myseries2.data.setAll(country_data);
 	legend.data.setAll(myseries2.dataItems);
+
+    myseries2.appear(1000,1000);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*

@@ -67,6 +67,12 @@
                 </a>
               </li>
               <li class="nav-item">
+                <a href="./index.php?page=test_map" class="nav-link nav-test_map tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>خارطة الدول</p>
+                </a>
+              </li>
+              <li class="nav-item">
                 <a href="./index.php?page=report_academic_status" class="nav-link nav-report_academic_status tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>الحالة الأكاديمية</p>

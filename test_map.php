@@ -80,29 +80,7 @@ if (count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(ar
 
 // echo array_sum($reformed_countries) + $unsetted; for en: 8023
 
-// Preparing students type (male, femle) statistics:
 
-// $custom_fields_data = []; // An associative array with the structure: userid => ['shortname' => 'value']
-// for ($i = 0; $i < count($moodle_users); $i++) {
-//   $custom_fields_data[$moodle_users[$i]['id']] = [];
-//   foreach ($moodle_users[$i]['customfields'] as $cfield) {
-//     $custom_fields_data[$moodle_users[$i]['id']][$cfield['shortname']] = $cfield['value'];
-//   }
-// }
-
-$types = ['ذكر' => 0, 'أنثى' => 0];
-for ($i = 0; $i < count($moodle_users); $i++) {
-  if (!isset($moodle_users[$i]['sex'])) {
-    continue;
-  }
-  if ($moodle_users[$i]['sex'] == 'ذكر' || $moodle_users[$i]['sex'] == 'male' || $moodle_users[$i]['sex'] == 'Mal') {
-    $types['ذكر'] += 1;
-  }
-  if ($moodle_users[$i]['sex'] == 'أنثى' || $moodle_users[$i]['sex'] == 'female' || $moodle_users[$i]['sex'] == 'Femelle') {
-    $types['أنثى'] += 1;
-  }
-}
-// print_r($types);
 ?>
 <div class="col-md-12">
   <div class="card card-outline card-success" dir="rtl">
@@ -110,60 +88,13 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       <b>مدكر في أرقام</b>
     </div>
     <div class="chartsPanel">
-      <div class="chartCard" id="chartCard0">
-        <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard0')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
-          <div class="chartTitle"> عدد دارسي مدكّر </div>
-          <div style="visibility: hidden"></div>
-        </div>
-        <?php
-        // Get the total number of users:
-
-        ?>
-        <div style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo '180000+' ?></div>
-      </div>
-      <div class="chartCard" id="chartCard1">
-        <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard1')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
-          <div class="chartTitle"> عدد دارسي النسخة <?php echo $langs[$Lang] ?> </div>
-          <div style="visibility: hidden"></div>
-        </div>
-        <?php
-        // Get the total number of users:
-        $total_count = file_get_contents("https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_total_users&wstoken=$token");
-        $total_count = json_decode($total_count);
-        ?>
-        <div id="counter" style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo $total_count ?></div>
-      </div>
-    </div>
-    <div class="chartsPanel">
-      <div class="chartCard" id="chartCard2">
-        <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard2')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
-          <div class="chartTitle"> الدارسون والدارسات </div>
-          <div style="visibility: hidden"></div>
-        </div>
-        <div id="chartdiv" style="width: 100%;"></div>
-      </div>
-
-      <div class="chartCard" id="chartCard3">
-        <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard3')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
-          <div class="chartTitle"> دول الدارسين </div>
-          <div style="visibility: hidden"></div>
-        </div>
-        <div id="chartdiv3" style="width: 100%;"></div>
-      </div>
-    </div>
-
-    <div class="chartsPanel">
-      <div class="chartCard" id="chartCard4">
+      <div class="chartCard" id="chartCard4" style="width: 100%">
         <div class="chartCardHeader">
           <a href="#" onclick="toggleFullscreen('chartCard4')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
           <div class="chartTitle"> دول الدارسين </div>
           <div style="visibility: hidden"></div>
         </div>
-        <div id="chartdiv4" style="width: 100%;"></div>
+        <div id="chartdiv4" style="width: 100%; height: 750px; margin-top: 5px;"></div>
       </div>
     </div>
 
@@ -176,39 +107,25 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <!-- Sources For Maps -->
     <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/geodata/lang/AR.js"></script>
 
     <script type="text/javascript" src="countries_map.js"></script>
 
     <script>
       // Reading country_data from php:
-      var result = <?php echo json_encode($reformed_countries); ?>;
+      var result = <?php echo json_encode($countries_data); ?>;
       // // var country_data = JSON.parse(result);
       var country_data = [];
       for (const key in result) {
         if (result.hasOwnProperty.call(result, key)) {
-          country_data.push({
-            country: key,
-            count: result[key]
-          });
+          country_data.push(result[key].country);
         }
       }
+
+      country_data.splice(country_data.indexOf('AQ'),1);
       console.log(result)
       console.log(country_data)
-
-      // Reading type data from php:
-      var types_result = <?php echo json_encode($types); ?>;
-      var types_data = [];
-      for (const key in types_result) {
-        if (types_result.hasOwnProperty.call(types_result, key)) {
-          types_data.push({
-            type: key,
-            count: types_result[key]
-          });
-        }
-      }
     </script>
-
-    <script src="report_charts.js"></script>
 
 
     <script>

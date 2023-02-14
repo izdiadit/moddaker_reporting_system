@@ -33,8 +33,8 @@ var myseries = chart.series.push(
   }));
 
 
-// Hiding tooltips:
-myseries.slices.template.setAll({ })
+// // Hiding tooltips:
+// myseries.slices.template.setAll({ })
 
 
 // set themes:
@@ -85,9 +85,9 @@ chart.appear(1000, 1000);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-if (document.body.contains(document.getElementById("chartdiv2"))) {
+if (document.body.contains(document.getElementById("chartdiv3"))) {
     // check if admin div exists, to avoid errors for nonadmin sessions
-	var root2 = am5.Root.new("chartdiv2");
+	var root2 = am5.Root.new("chartdiv3");
 	var chart2 = root2.container.children.push(
     am5percent.PieChart.new(root2, {
       layout: root2.verticalLayout,
@@ -120,6 +120,11 @@ if (document.body.contains(document.getElementById("chartdiv2"))) {
       fixedWidthGrid: false
     })
    }));
+
+    legend.itemContainers.template.setup = function (item) {
+        item.events.disableType("pointerover")
+    };
+
 	root2.setThemes([
     am5themes_Responsive.new(root2)
 	]);

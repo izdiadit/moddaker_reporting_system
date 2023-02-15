@@ -27,7 +27,7 @@ am5.ready(function() {
     
     // Create main polygon series for countries
     // https://www.amcharts.com/docs/v5/charts/map-chart/map-polygon-series/
-    var polygonSeries = chart.series.push(am5map.MapPolygonSeries.new(root_map, {
+    var polygonSeriesa = chart.series.push(am5map.MapPolygonSeries.new(root_map, {
       geoJSON: am5geodata_worldLow,
       geodataNames: am5geodata_lang_AR,
       fill: am5.color(0xc5c7c7),

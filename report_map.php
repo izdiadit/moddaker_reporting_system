@@ -14,11 +14,12 @@ include 'db_connect.php';
     include 'langs.php';
 
     // Check the selected langauage/s to get its data:
-    $Lang = $_POST['lang'] ?? 'ar';
+    $Lang = $_POST['lang'] ?? array_keys($langs)[0];
+    // print_r(array_keys($langs)[0]);
     $token = $tokens[$Lang];
     ?>
     <!-- Language Selection Form -->
-    <form id="langFilter" dir="rtl" action="./index.php?page=report_general_view" method="post">
+    <form id="langFilter" dir="rtl" action="./index.php?page=report_map" method="post">
       <!-- <input type="text" value="report_students" id="page" hidden> -->
       <label for="lang">اختر نسخة برنامج مدكر: </label>
       <select class="selectpicker" name="lang" id="lang" onchange="this.form.submit()">
@@ -58,27 +59,27 @@ curl_setopt_array(
 $result = curl_exec($curl);
 $countries_data = json_decode($result, true);
 
-$countries = [];
-foreach ($countries_data as $row) {
-  if (!array_key_exists($row['country'], $string)) $row['country'] = '-';
+// $countries = [];
+// foreach ($countries_data as $row) {
+//   if (!array_key_exists($row['country'], $string)) $row['country'] = '-';
 
-  $temp = $row['country'] ?? '-';
-  $countries[$string[$temp]] = $row['count'];
-}
+//   $temp = $row['country'] ?? '-';
+//   $countries[$string[$temp]] = $row['count'];
+// }
 
 
-// Make an estimation of the % of each country by removing unsetted country data elements.
-$unsetted = $countries['-'];
-// echo $unsetted;
-unset($countries['-']);
+// // Make an estimation of the % of each country by removing unsetted country data elements.
+// $unsetted = $countries['-'];
+// // echo $unsetted;
+// unset($countries['-']);
 
-// Reform coutries data by gathering all minor values in one element:
+// // Reform countries data by gathering all minor values in one element:
 
-arsort($countries); // Sorts the array descendingly by values
-$reformed_countries = array_slice($countries, 0, 7, true);
-if (count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(array_slice($countries, 7, count($countries), true));
+// arsort($countries); // Sorts the array descendingly by values
+// $reformed_countries = array_slice($countries, 0, 7, true);
+// if (count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(array_slice($countries, 7, count($countries), true));
 
-// echo array_sum($reformed_countries) + $unsetted; for en: 8023
+// // echo array_sum($reformed_countries) + $unsetted; for en: 8023
 
 
 ?>
@@ -91,10 +92,10 @@ if (count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(ar
       <div class="chartCard" id="chartCard4" style="width: 100%">
         <div class="chartCardHeader">
           <a href="#" onclick="toggleFullscreen('chartCard4')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
-          <div class="chartTitle"> دول الدارسين </div>
+          <!-- <div class="chartTitle"> دول الدارسين </div> -->
           <div style="visibility: hidden"></div>
         </div>
-        <div id="chartdiv4" style="width: 100%; height: 750px; margin-top: 5px;"></div>
+        <div id="chartdiv4" style="width: 100%; height: 750px; margin: auto;"></div>
       </div>
     </div>
 
@@ -105,9 +106,9 @@ if (count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(ar
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Responsive.js"></script>
 
     <!-- Sources For Maps -->
-    <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/geodata/lang/AR.js"></script>
+    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/map.js"></script>
+    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/moddaker_maps/worldLow.js"></script>
+    <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/moddaker_maps/AR.js"></script>
 
     <script type="text/javascript" src="countries_map.js"></script>
 
@@ -123,43 +124,8 @@ if (count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(ar
       }
 
       country_data.splice(country_data.indexOf('AQ'),1);
-      console.log(result)
-      console.log(country_data)
+      console.log(result);
+      console.log(country_data);
     </script>
-
-
-    <script>
-      $(document).ready(
-        $('.chartCard').each(function() {
-          // setFont(this);
-        }),
-
-        $('.am5-tooltip-container').each(
-          function() {
-            this.style.position = 'relative';
-            this.style.margin = 'auto';
-          }
-        )
-      )
-
-      function setFont(myelement) {
-        descendants = [...myelement.getElementsByTagName('*')];
-        // console.log(typeof descendants);
-
-        descendants.forEach(element => {
-          element.style.fontFamily = 'arabic typesetting'
-          element.style.fontSize = 'large'
-          // element.style.backgroundColor = 'red'
-          // element.style.overflow = 'auto'
-          // element.style.margin = 'auto'
-          if (element.hasChildNodes()) {
-            setFont(element)
-          }
-        });
-      }
-    </script>
-
-    <style>
-    </style>
   </div>
 </div>

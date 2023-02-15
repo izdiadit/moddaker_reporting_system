@@ -41,7 +41,7 @@ include 'db_connect.php';
 			];
 
 			// Check the selected langauage/s to get its data:
-			$Lang = $_POST['lang'] ?? 'ar';
+			$Lang = $_POST['lang'] ?? array_keys($langs)[0];
 			$token = $tokens[$Lang];
 			?>
 			<!-- Language Selection Form -->

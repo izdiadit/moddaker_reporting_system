@@ -56,10 +56,22 @@
 	}
 
 	.btn-primary{
-		background-color: #5d6c34;
+		background-color: #6f833a;
 	}
 	.btn-primary:hover{
 		background-color: #28a745;
+	}
+
+	.form-control, .select2, .select2-container--default, .select2-selection--multiple, .custom-select{
+		font-size: 25px !important;
+		height: auto !important;
+		border-radius: 17px !important;
+	}
+	.select2-container--default, .select2-selection--multiple{
+		padding: 1px;
+	}
+	.select2-selection{
+		font-family: 'Traditional Arabic';
 	}
 
 	.dropdown-menu {
@@ -122,6 +134,7 @@
 			margin: auto;
 		}
 	}
+
 
 	/********************* Datatables And TABLES ******************* */
 	table,

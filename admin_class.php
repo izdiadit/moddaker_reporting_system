@@ -52,7 +52,7 @@ Class Action {
 		extract($_POST);
 		$data = "";
 		foreach($_POST as $k => $v){
-			if(!in_array($k, array('id','cpass','password')) && !is_numeric($k)){
+			if(!in_array($k, array('id','cpass','password','languages')) && !is_numeric($k)){
 				if(empty($data)){
 					$data .= " $k='$v' ";
 				}else{
@@ -60,6 +60,11 @@ Class Action {
 				}
 			}
 		}
+		// Insert languages:
+		if(isset($languages)){
+			$data .= ", languages='".implode(',',$languages)."' ";
+		}
+		
 		if(!empty($password)){
 					$data .= ", password=md5('$password') ";
 

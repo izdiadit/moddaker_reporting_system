@@ -23,7 +23,7 @@ if (isset($_GET['id'])) {
 		</div>
 		<div class="form-group">
 			<label for="email">البريد الإلكتروني</label>
-			<input type="text" name="email" id="email" class="form-control" value="<?php echo isset($meta['email']) ? $meta['email'] : '' ?>" required autocomplete="off">
+			<input type="text" name="email" id="email" class="form-control" value="<?php echo isset($meta['email']) ? $meta['email'] : '' ?>" required autocomplete="off" <?php echo $_SESSION['login_type'] != 1? 'disabled' : '' ;?>>
 		</div>
 		<div class="form-group">
 			<label for="password">كلمة المرور</label>

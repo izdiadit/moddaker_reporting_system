@@ -7,5 +7,16 @@ $qry = $conn->query("SELECT * FROM users where id = ".$_GET['id'])->fetch_array(
 foreach($qry as $k => $v){
 	$$k = $v;
 }
+
+
+// Set the languages of the user: ////////////////////////////////////////////////
+// Donot put the include before the above if block. I don't know why!
+include 'langs.php';
+
+$user_langs = (empty($languages))? array_keys($langs) : explode(',',$languages);
+
+print_r($user_langs);
+//////////////////////////////////////////////////////////////////////////////////
+
 include 'new_user.php';
 ?>

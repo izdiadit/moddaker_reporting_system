@@ -61,7 +61,7 @@ Class Action {
 			}
 		}
 		// Insert languages:
-		if(isset($languages)){
+		if(isset($languages) && $type == 5){
 			$data .= ", languages='".implode(',',$languages)."' ";
 		}
 		

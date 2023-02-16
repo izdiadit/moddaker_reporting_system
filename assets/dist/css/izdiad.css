@@ -339,6 +339,12 @@
 		padding: 5px;
 		border: 0.2px solid #977c47;
 	}
+
+	select {
+		border-radius: 25px;
+		padding: 5px;
+		border: 0.2px solid #977c47;
+	}
 	/******************************** Slicing Links **********************************/
 	ul.data-slicing-btns {
 		list-style-type: none;

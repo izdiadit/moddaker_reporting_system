@@ -16,9 +16,9 @@ $tokens = [
 	'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a'
 ];
 
-if (isset($_SESSION['login_langs']) && !empty($_SESSION['login_langs'])) {
+if (isset($_SESSION['login_languages']) && !empty($_SESSION['login_languages'])) {
 	// If the sponsor is a partial sponsor, unset irrelated languages:
-	$sponsor_langs = explode(',', $_SESSION['login_langs']);
+	$sponsor_langs = explode(',', $_SESSION['login_languages']);
 
 	// Create a new langs array from sponsor_langs:
 	$new_langs = [];

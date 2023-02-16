@@ -1360,7 +1360,7 @@
   var CLASS_NAME_CLOSED = 'sidebar-closed';
   var Default$6 = {
     autoCollapseSize: 992,
-    enableRemember: false,
+    enableRemember: true,
     noTransitionAfterReload: true
   };
   /**

@@ -8,6 +8,10 @@
 		direction: rtl;
 	}
 
+	.main-footer{
+		font-family: 'traditional arabic';
+		font-size: 20px;
+	}
 	.modal{
 		text-align: justify;
 		font-family: 'Traditional arabic';
@@ -56,10 +60,10 @@
 	}
 
 	.btn-primary{
-		background-color: #6f833a;
+		background-color: #6f833a !important;
 	}
 	.btn-primary:hover{
-		background-color: #28a745;
+		background-color: #28a745 !important;
 	}
 
 	.form-control, .select2, .select2-container--default, .select2-selection--multiple, .custom-select{
@@ -70,8 +74,9 @@
 	.select2-container--default, .select2-selection--multiple{
 		padding: 1px;
 	}
-	.select2-selection{
+	.select2-dropdown{
 		font-family: 'Traditional Arabic';
+		text-align: justify;
 	}
 
 	.dropdown-menu {
@@ -102,8 +107,12 @@
 	.login-box {
 		display: flex;
 		flex-direction: column;
-		gap: 45px;
+		gap: 15px;
 		margin-right: 10%;
+	}
+	.login-card-body .input-group .form-control{
+		width: max-content!important;
+		font-size: 18px!important;
 	}
 
 	.moddakerImg{
@@ -325,11 +334,11 @@
 	}
 
 	#filters input,
-	select {
+	#filters select {
 		border-radius: 25px;
 		padding: 5px;
+		border: 0.2px solid #977c47;
 	}
-
 	/******************************** Slicing Links **********************************/
 	ul.data-slicing-btns {
 		list-style-type: none;

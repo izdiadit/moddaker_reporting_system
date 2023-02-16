@@ -2,6 +2,14 @@
 if ($_SESSION['login_type'] != 1) {
 	echo '<script> location.replace("./index.php?page=report_general_view"); </script>';
 }
+
+// Set the languages of the user: ////////////////////////////////////////////////
+include 'langs.php';
+
+$user_langs = (empty($languages))? array_keys($langs) : explode(',',$languages);
+
+print_r($user_langs);
+//////////////////////////////////////////////////////////////////////////////////
 ?>
 <div class="col-lg-12" dir="rtl">
 	<div class="card">

@@ -30,7 +30,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 				<label for="lang">اختر نسخة برنامج مدكر: </label>
 				<select name="lang" id="lang" onchange="this.form.submit()">
 					<?php foreach ($langs as $key => $lang) {
-						if ($key == $_POST['lang'] || $key == $_GET['lang']) { // To assure that the submitted option will be selected after submitting form:
+						if ($key == $_POST['lang']) { // To assure that the submitted option will be selected after submitting form:
 							echo "<option value='$key' selected='selected'>$lang</option>";
 						} else {
 							echo "<option value='$key'>$lang</option>";
@@ -123,7 +123,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 						$log_data = json_decode($result, true);
 						if (count($log_data) == 0) {
 						?>
-							<td colspan="5"><b style="margin: auto; text-justify: center;">لم يقم هذا المستخدم بأي نشاط في الفترة المحددة</b></td>
+							<td class="iz-message" colspan="5"><i class="fa fa-info-circle fa-6" aria-hidden="true"></i> <b style="margin: auto; text-justify: center;">لم يقم هذا المستخدم بأي نشاط في الفترة المحددة</b></td>
 							<?php
 						} else {
 							foreach ($log_data as $row) :
@@ -142,7 +142,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			<?php
 			else :
 			?>
-				<div style="margin: auto; font-size: larger; text-justify: center;" dir="rtl">
+				<div class="iz-message" dir="rtl">
 					<i class="fa fa-info-circle fa-6" aria-hidden="true"></i>
 					اختر اسم مستخدم لعرض تقرير عن نشاطه في الفترة المحددة
 				</div>

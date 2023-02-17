@@ -338,12 +338,25 @@
 		border-radius: 25px;
 		padding: 5px;
 		border: 0.2px solid #977c47;
+		outline: none;
 	}
 
 	select {
 		border-radius: 25px;
 		padding: 5px;
 		border: 0.2px solid #977c47;
+		outline: none;
+	}
+	input:hover, select:hover{
+		border: 0.8px solid #977c47;
+		background-color: #f3dfb4d7;
+	}
+	input:focus, select:focus{
+		border: 0.8px solid #977c47;
+		background-color: #f3dfb4d7;
+	}
+	select option{
+		background-color: #f7d98d;
 	}
 	/******************************** Slicing Links **********************************/
 	ul.data-slicing-btns {
@@ -396,4 +409,14 @@
 	ul.data-slicing-btns li a:active {
 		background-color: #5d6c34;
 		color: white;
+	}
+
+	/******************************* Texts and Messages *********************************/
+	.iz-message {
+		margin: auto;
+		font-size: larger;
+		text-justify: center;
+		background-color: rgba(175, 175, 221, 0.541);
+		padding: 10px 15px;
+		border-radius: 15px;
 	}

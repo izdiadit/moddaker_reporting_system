@@ -19,7 +19,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			include 'langs.php';
 
 			// Check the selected langauage/s to get its data:
-			$lang = $_POST['lang'] ?? 'ar';
+			$Lang = $_POST['lang'] ?? array_keys($langs)[0];
 
 			$templang = $_POST['lang'] ?? 'ar'; //will be deleted after adding all of the langs json files.
 			if (in_array($lang, ['!ar'])) {

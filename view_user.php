@@ -1,4 +1,4 @@
-<?php include 'db_connect.php' ?>
+<?php include 'db_connect.php';?>
 <?php
 if(isset($_GET['id'])){
 	$type_arr = array('',"مدير نظام","مدير برنامج","مالك","مانح","مانح جزئي","طرف ثالث");
@@ -7,6 +7,11 @@ foreach($qry as $k => $v){
 	$$k = $v;
 }
 }
+// Donot put the include before the above if. I don't know why!
+include 'langs.php';
+
+// Set the languages of the user:
+$user_langs = (empty($languages))? array_keys($langs) : explode(',',$languages);
 ?>
 <div class="container-fluid">
 	<div class="card card-widget widget-user shadow">
@@ -26,6 +31,10 @@ foreach($qry as $k => $v){
         	<dl>
         		<dt>نوع المستخدم</dt>
         		<dd><?php echo $type_arr[$type] ?></dd>
+        		<dt>اللغات</dt>
+        		<?php foreach($user_langs as $value) {
+					echo "<dd>$langs[$value]</dd>";
+				} ?>
         	</dl>
         </div>
     </div>

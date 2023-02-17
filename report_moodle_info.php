@@ -21,7 +21,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			include 'langs.php';
 
 			// Check the selected langauage/s to get its data:
-			$Lang = $_POST['lang'] ?? 'ar';
+			$Lang = $_POST['lang'] ?? array_keys($langs)[0];
 			$token = $tokens[$Lang];
 			?>
 			<!-- Language Selection Form -->
@@ -76,7 +76,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 				</tr>
 				<tr>
 					<th>رابط المنصة</th>
-					<td class="rounded"><b><?php echo "<a href='$site_info[siteurl]'>$site_info[siteurl]</a>" ?></b></td>
+					<td class="rounded"><b><?php echo "<a target = 'blank' href='$site_info[siteurl]'>$site_info[siteurl]</a>" ?></b></td>
 				</tr>
 				<tr>
 					<th>إصدار الموودل</th>

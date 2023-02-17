@@ -14,14 +14,14 @@ include 'db_connect.php';
     include 'langs.php';
 
     // Check the selected langauage/s to get its data:
-    $Lang = $_POST['lang'] ?? 'ar';
+    $Lang = $_POST['lang'] ?? array_keys($langs)[0];
     $token = $tokens[$Lang];
     ?>
     <!-- Language Selection Form -->
     <form id="langFilter" dir="rtl" action="./index.php?page=report_general_view" method="post">
       <!-- <input type="text" value="report_students" id="page" hidden> -->
       <label for="lang">اختر نسخة برنامج مدكر: </label>
-      <select name="lang" id="lang" onchange="this.form.submit()">
+      <select class="selectpicker" name="lang" id="lang" onchange="this.form.submit()">
         <?php foreach ($langs as $key => $lang) {
           if ($key == $_POST['lang'] || $key == $_GET['lang']) { // To assure that the submitted option will be selected after submitting form:
             echo "<option value='$key' selected='selected'>$lang</option>";
@@ -112,20 +112,20 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <div class="chartsPanel">
       <div class="chartCard" id="chartCard0">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard0')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <a href="#" onclick="toggleFullscreen('chartCard0')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
           <div class="chartTitle"> عدد دارسي مدكّر </div>
           <div style="visibility: hidden"></div>
         </div>
         <?php
         // Get the total number of users:
-        
+
         ?>
         <div style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo '180000+' ?></div>
       </div>
       <div class="chartCard" id="chartCard1">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard1')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
-          <div class="chartTitle"> عدد دارسي النسخة <?php echo $langs[$Lang]?> </div>
+          <a href="#" onclick="toggleFullscreen('chartCard1')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
+          <div class="chartTitle"> عدد دارسي النسخة <?php echo $langs[$Lang] ?> </div>
           <div style="visibility: hidden"></div>
         </div>
         <?php
@@ -139,7 +139,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     <div class="chartsPanel">
       <div class="chartCard" id="chartCard2">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard2')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <a href="#" onclick="toggleFullscreen('chartCard2')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
           <div class="chartTitle"> الدارسون والدارسات </div>
           <div style="visibility: hidden"></div>
         </div>
@@ -148,27 +148,36 @@ for ($i = 0; $i < count($moodle_users); $i++) {
 
       <div class="chartCard" id="chartCard3">
         <div class="chartCardHeader">
-          <a href="#" onclick="toggleFullscreen('chartCard3')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i></a>
+          <a href="#" onclick="toggleFullscreen('chartCard3')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
           <div class="chartTitle"> دول الدارسين </div>
           <div style="visibility: hidden"></div>
         </div>
-        <div id="chartdiv2" style="width: 100%;"></div>
+        <div id="chartdiv3" style="width: 100%;"></div>
       </div>
     </div>
 
-    <!-- <div class="chartsPanel">
-      <div class="chartCard" id="chartCard3">
-        <div class="chartTitle"> دول الدارسين </div>
-        <div id="chartdiv3"></div>
+    <div class="chartsPanel">
+      <div class="chartCard" id="chartCard4">
+        <div class="chartCardHeader">
+          <a href="#" onclick="toggleFullscreen('chartCard4')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
+          <div class="chartTitle"> دول الدارسين </div>
+          <div style="visibility: hidden"></div>
+        </div>
+        <div id="chartdiv4" style="width: 100%;"></div>
       </div>
-      <div class="chartCard" id="chartdiv4" style="width: 50%;"></div>
-    </div> -->
+    </div>
 
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/index.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/percent.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/xy.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Animated.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Responsive.js"></script>
+
+    <!-- Sources For Maps -->
+    <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
+
+    <script type="text/javascript" src="countries_map.js"></script>
 
     <script>
       // Reading country_data from php:
@@ -234,48 +243,6 @@ for ($i = 0; $i < count($moodle_users); $i++) {
     </script>
 
     <style>
-      #counter ::after {
-  /* font: 800 40px system-ui; */
-  content: counter(<?php echo $total_count?>);
-  animation: <?php echo $total_count?> 5s linear infinite alternate;
-  counter-reset: count 0;
-}
-
-@keyframes counter {
-  0% {
-    counter-increment: count 0;
-  }
-  10% {
-    counter-increment: count 1;
-  }
-  20% {
-    counter-increment: count 2;
-  }
-  30% {
-    counter-increment: count 3;
-  }
-  40% {
-    counter-increment: count 4;
-  }
-  50% {
-    counter-increment: count 5;
-  }
-  60% {
-    counter-increment: count 6;
-  }
-  70% {
-    counter-increment: count 7;
-  }
-  80% {
-    counter-increment: count 8;
-  }
-  90% {
-    counter-increment: count 9;
-  }
-  100% {
-    counter-increment: count 10;
-  }
-}
     </style>
   </div>
 </div>

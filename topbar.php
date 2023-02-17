@@ -55,8 +55,8 @@
         </span>
       </a>
       <div class="dropdown-menu" aria-labelledby="account_settings" style="left: -2.5em;">
-        <a class="dropdown-item" href="javascript:void(0)" id="manage_account"><i class="fa fa-cog"></i> Manage Account</a>
-        <a class="dropdown-item" href="ajax.php?action=logout"><i class="fa fa-power-off"></i> Logout</a>
+        <a class="dropdown-item" href="javascript:void(0)" id="manage_account"><i class="fa fa-cog"></i> إدارة الحساب</a>
+        <a class="dropdown-item" href="ajax.php?action=logout"><i class="fa fa-power-off"></i> خروج</a>
       </div>
     </li>
   </ul>
@@ -64,7 +64,7 @@
 <!-- /.navbar -->
 <script>
   $('#manage_account').click(function() {
-    uni_modal('Manage Account', 'manage_user.php?id=<?php echo $_SESSION['login_id'] ?>')
+    uni_modal('إدارة الحساب', 'manage_user.php?id=<?php echo $_SESSION['login_id'] ?>')
   })
   $('#notification').click(function() {
     uni_modal('Notifications', 'notifications.php?id=<?php echo $_SESSION['login_id'] ?>')

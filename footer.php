@@ -163,6 +163,7 @@
 <script src="assets/plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
 
 <script>
+	/////////// Full Screen:
 	function openFullscreen(id) {
 		var elem = document.getElementById(id);
 
@@ -175,6 +176,7 @@
 			/* For Safari */
 			elem.webkitRequestFullscreen();
 		}
+		
 	}
 
 	function closeFullscreen() {
@@ -189,16 +191,22 @@
 			document.webkitExitFullscreen();
 		}
 
-
+		
 	}
 
 	function toggleFullscreen(id) {
+		// To change the text and icon of the button:
+		let button = document.getElementById(id).firstElementChild.getElementsByTagName('a')[0];
+
 		if (document.fullscreenElement === null) {
 			openFullscreen(id);
+			button.innerHTML = '<i class="fas fa-compress-arrows-alt"></i>  تصغير';
 		} else {
-			closeFullscreen(id);
+			closeFullscreen();
+			button.innerHTML = '<i class="fas fa-expand-arrows-alt"></i>  ملء الشاشة';
 		}
 	}
+
 
 
 	/////////// Slicing buttons Styles:

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <?php session_start() ?>
 <?php 
 	if(!isset($_SESSION['login_id']))
@@ -26,11 +26,12 @@
   <?php 
     // Set Page Title In Arabic:
     $titles = [
-      'home' => 'نظام تقارير مدّكر',
+      'home' => 'نافذة تقارير مدّكر',
       'report_academic_status' => 'تقرير الحالة الأكاديمية',
       'report_students' => 'الطلاب',
       'report_st_affairs' => 'تقرير شؤون الدارسين',
       'report_general_view' => 'مدكر في أرقام',
+      'report_map' => 'خريطة مدكّر',
       'report_moodle_info' => 'معلومات المنصة',
       'user_list' => 'قائمة المستخدمين',
       'new_user' => 'مستخدم جديد',
@@ -136,7 +137,7 @@
 
   <!-- Main Footer -->
   <footer class="main-footer">
-    <strong>حقوق الطبع محفوظة &copy; <?php echo date('Y')?> <br> <a href="http://izdiad.net/">شركة ازدياد للحلول المتكاملة</a></strong>
+    <strong>حقوق الطبع محفوظة &copy; <?php echo date('Y')?> <br> <a target="_blank" href="http://izdiad.net/">شركة ازدياد للحلول المتكاملة</a></strong>
     
     <div class="float-right d-none d-sm-inline-block">
       <b><?php echo $_SESSION['system']['name'] ?></b>

@@ -16,41 +16,8 @@
             <a href="./" class="nav-link nav-home">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
-                Dashboard
+                الرئيسية
               </p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link nav-edit_project nav-view_project">
-              <i class="nav-icon fas fa-layer-group"></i>
-              <p>
-                Projects
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <?php //if($_SESSION['login_type'] != 3): 
-              ?>
-              <!-- <li class="nav-item">
-                <a href="./index.php?page=new_project" class="nav-link nav-new_project tree-item">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Add New</p>
-                </a>
-              </li> -->
-              <?php //endif; 
-              ?>
-              <li class="nav-item">
-                <a href="./index.php?page=project_list" class="nav-link nav-project_list tree-item">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>List</p>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="nav-item">
-            <a href="./index.php?page=task_list" class="nav-link nav-task_list">
-              <i class="fas fa-tasks nav-icon"></i>
-              <p>Task</p>
             </a>
           </li>
           <li class="nav-item">
@@ -64,6 +31,12 @@
                 <a href="./index.php?page=report_general_view" class="nav-link nav-report_general_view tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>مدكر في أرقام</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="./index.php?page=report_map" class="nav-link nav-report_map tree-item">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>خريطة مدكّر</p>
                 </a>
               </li>
               <li class="nav-item">

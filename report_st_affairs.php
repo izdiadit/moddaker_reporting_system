@@ -21,7 +21,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			include 'langs.php';
 
 			// Check the selected langauage/s to get its data:
-			$Lang = $_POST['lang'] ?? 'ar';
+			$Lang = $_POST['lang'] ?? array_keys($langs)[0];
 			$token = $tokens[$Lang];
 			?>
 			<!-- Language Selection Form -->
@@ -83,7 +83,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 					<input type="date" name="endtime" id="endtime" value="<?php echo $_POST['endtime'] ?? date('Y-m-d', time()) ?>" required>
 				</div>
 				<br>
-				<input type="submit" value="اعرض التقرير">
+				<input class=".btn .btn-primary" type="submit" value="اعرض التقرير">
 
 				 <!-- To assure the language is set even after submitting this form: -->
 				<input type="hidden" name="lang" id="lang" value="<?php echo $Lang ?>">
@@ -131,7 +131,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 								<tr>
 									<td class="text-center"><?php echo ++$i ?></td>
 									<td><?php echo $username ?></td>
-									<td><?php echo $row['eventname'] ?></td>
+									<td><?php echo array_slice(explode('\\',$row['eventname']),-1,1)[0] ?></td>
 									<td dir="ltr"><?php echo date('h:i:s', $row['timecreated']) . ' ' . date('a', $row['timecreated']) . ' ' .  date('Y-m-d', $row['timecreated']) ?></td>
 									<td><?php echo $row['relateduserid'] ?></td>
 								</tr>

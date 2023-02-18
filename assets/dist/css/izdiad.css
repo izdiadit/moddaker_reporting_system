@@ -356,7 +356,7 @@
 		background-color: #f3dfb4d7;
 	}
 	select option{
-		background-color: #f7d98d;
+		background-color: #f0bb37;
 	}
 	/******************************** Slicing Links **********************************/
 	ul.data-slicing-btns {
@@ -415,7 +415,7 @@
 	.iz-message {
 		margin: auto;
 		font-size: larger;
-		text-justify: center;
+		text-align: center;
 		background-color: rgba(175, 175, 221, 0.541);
 		padding: 10px 15px;
 		border-radius: 15px;

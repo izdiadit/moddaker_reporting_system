@@ -21,11 +21,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			// Check the selected langauage/s to get its data:
 			$Lang = $_POST['lang'] ?? array_keys($langs)[0];
 
-			$templang = $_POST['lang'] ?? 'ar'; //will be deleted after adding all of the langs json files.
-			if (in_array($lang, ['!ar'])) {
-				$templang = 'en';
-			}
-			$data = getData("fetcheddata/$templang-students.json");
+			$data = getData("fetcheddata/$Lang-students.json");
 			echo count($data['data']);
 			echo '<br>';
 			$moodle_users = $data['data'];
@@ -48,7 +44,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			</form>
 		</div>
 	</div>
-	<div class="card card-outline card-success">
+	<div class="card card-outline card-success" id="tableCard" style=" display: none;">
 		<div class="card-header">
 				<ul class="data-slicing-btns">
 					<?php
@@ -62,16 +58,16 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 							if ($sliceEnd > $length) {
 								$sliceEnd = $length;
 							}
-							echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$templang&sliceStr=$sliceStr&sliceEnd=$sliceEnd'>$sliceStr - $sliceEnd</a></li>";
+							echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$Lang&sliceStr=$sliceStr&sliceEnd=$sliceEnd'>$sliceStr - $sliceEnd</a></li>";
 						}
-						// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$templang&sliceStr=2000&sliceEnd=50000'>25000-50000</a></li>";
-						// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$templang&sliceStr=50000&sliceEnd=75000'>50000-75000</a></li>";
+						// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$Lang&sliceStr=2000&sliceEnd=50000'>25000-50000</a></li>";
+						// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$Lang&sliceStr=50000&sliceEnd=75000'>50000-75000</a></li>";
 					}
 					?>
 				</ul>
 		</div>
 		<div class="card-body" style="overflow:auto">
-			<table class="table tabe-hover table-bordered" id="list" style="display: none; left: 0">
+			<table class="table tabe-hover table-bordered" id="list" style="display: table;">
 				<thead>
 					<tr>
 						<th class="text-center">#</th>
@@ -135,13 +131,14 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 </div>
 <script>
 	$(document).ready(function() {
-
+		start_load();
 		setTimeout(() => {
-			table = document.getElementById('list');
-			table.style.display = 'table';
+			tableCard = document.getElementById('tableCard');
+			tableCard.style.display = 'block';
+			end_load();
 		}, 3500);
 
-		var lang = <?php echo json_encode($templang) ?>; // don't forget to replace with lang 
+		var lang = <?php echo json_encode($Lang) ?>; // don't forget to replace with Lang 
 		console.log(lang)
 		// $('#list').dataTable()
 		$('#list thead tr')

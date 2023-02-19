@@ -6,8 +6,7 @@
 <script src="assets/plugins/bootstrap4-toggle/js/bootstrap4-toggle.min.js"></script>
 <!-- Select2 -->
 <script src="assets/plugins/select2/js/select2.full.min.js"></script>
-<!-- Summernote -->
-<script src="assets/plugins/summernote/summernote-bs4.min.js"></script>
+
 <!-- dropzonejs -->
 <script src="assets/plugins/dropzone/min/dropzone.min.js"></script>
 <script src="assets/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
@@ -20,7 +19,7 @@
 <script>
 	$(document).ready(function() {
 		$('.select2').select2({
-			placeholder: "Please select here",
+			placeholder: " اختر من هنا ",
 			width: "100%"
 		});
 	})

@@ -86,16 +86,18 @@ $countries_data = json_decode($result, true);
 <div class="col-md-12">
   <div class="card card-outline card-success" dir="rtl">
     <div class="card-header">
-      <b>مدكر في أرقام</b>
+      <b></b>
     </div>
     <div class="chartsPanel">
       <div class="chartCard" id="chartCard4" style="width: 100%">
         <div class="chartCardHeader">
           <a href="#" onclick="toggleFullscreen('chartCard4')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
-          <!-- <div class="chartTitle"> دول الدارسين </div> -->
+          <div class="chartTitle"> دول دارسي النسخة <?php echo $langs[$Lang];?> </div>
           <div style="visibility: hidden"></div>
         </div>
+        <br>
         <div id="chartdiv4" style="width: 100%; height: 750px; margin: auto;"></div>
+        <br>
       </div>
     </div>
 

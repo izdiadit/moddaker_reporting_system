@@ -10,7 +10,7 @@ include 'db_connect.php';
   </div>
   <div class="card-body" style="overflow:auto; text-align: right;" dir="rtl">
     <?php
-    // The array of languages will be selected by the user, and elements will appear depending on the user type:
+    // The array of languages will be selected by the user, and elements will appear depending on the users type and languages stored in db:
     include 'langs.php';
 
     // Check the selected langauage/s to get its data:
@@ -44,41 +44,6 @@ $moodle_users = $data['data'];
 
 // print_r( $moodle_users[0] );
 
-// Preparing students countries statistics:
-$countries_url = "https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_countries&wstoken=$token";
-$curl = curl_init($countries_url);
-curl_setopt_array(
-  $curl,
-  [
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_RETURNTRANSFER => true
-  ]
-);
-
-$result = curl_exec($curl);
-$countries_data = json_decode($result, true);
-
-$countries = [];
-foreach ($countries_data as $row) {
-  if (!array_key_exists($row['country'], $string)) $row['country'] = '-';
-
-  $temp = $row['country'] ?? '-';
-  $countries[$string[$temp]] = $row['count'];
-}
-
-
-// Make an estimation of the % of each country by removing unsetted country data elements.
-$unsetted = $countries['-'];
-// echo $unsetted;
-unset($countries['-']);
-
-// Reform coutries data by gathering all minor values in one element:
-
-arsort($countries); // Sorts the array descendingly by values
-$reformed_countries = array_slice($countries, 0, 7, true);
-if (count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(array_slice($countries, 7, count($countries), true));
-
-// echo array_sum($reformed_countries) + $unsetted; for en: 8023
 
 // Preparing students type (male, femle) statistics:
 
@@ -118,7 +83,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         </div>
         <?php
         // Get the total number of users:
-
+        
         ?>
         <div style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo '180000+' ?></div>
       </div>
@@ -130,10 +95,12 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         </div>
         <?php
         // Get the total number of users:
-        $total_count = file_get_contents("https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_total_users&wstoken=$token");
-        $total_count = json_decode($total_count);
+        // $total_count = file_get_contents("https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_total_users&wstoken=$token");
+        // $total_count = json_decode($total_count);
+        $data = getData("./fetcheddata/$Lang-students.json");
+        $total_count = count($data['data']);
         ?>
-        <div id="counter" style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo $total_count ?></div>
+        <div id="counter" style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo $total_count; ?></div>
       </div>
     </div>
     <div class="chartsPanel">
@@ -156,7 +123,7 @@ for ($i = 0; $i < count($moodle_users); $i++) {
       </div>
     </div>
 
-    <div class="chartsPanel">
+    <!-- <div class="chartsPanel">
       <div class="chartCard" id="chartCard4">
         <div class="chartCardHeader">
           <a href="#" onclick="toggleFullscreen('chartCard4')" style="color: #c6c6c6"><i class="fas fa-expand-arrows-alt"></i> ملء الشاشة</a>
@@ -165,19 +132,54 @@ for ($i = 0; $i < count($moodle_users); $i++) {
         </div>
         <div id="chartdiv4" style="width: 100%;"></div>
       </div>
-    </div>
+    </div> -->
+    
+<!-- //////////////////////////////////////////// The Logic of fetching countries from url and reforming its data ////////////////////////////////////////////// -->
+    <?php
+      // Preparing students countries statistics:
+$countries_url = "https://$Lang.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_countries&wstoken=$token";
+$curl = curl_init($countries_url);
+curl_setopt_array(
+  $curl,
+  [
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_RETURNTRANSFER => true
+  ]
+);
+
+$result = curl_exec($curl);
+$countries_data = json_decode($result, true);
+
+$countries = [];
+foreach ($countries_data as $row) {
+  if (!array_key_exists($row['country'], $string)) $row['country'] = '-';
+
+  $temp = $row['country'] ?? '-';
+  $countries[$string[$temp]] = $row['count'];
+}
+
+
+// Make an estimation of the % of each country by removing unsetted country data elements.
+$unsetted = $countries['-'];
+// echo $unsetted;
+unset($countries['-']);
+
+// Reform coutries data by gathering all minor values in one element:
+
+arsort($countries); // Sorts the array descendingly by values
+$reformed_countries = array_slice($countries, 0, 7, true);
+if (count($countries) > 8) $reformed_countries['دول أخرى'] = array_sum(array_slice($countries, 7, count($countries), true));
+
+// echo array_sum($reformed_countries) + $unsetted; for en: 8023
+
+    ?>
+<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/index.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/percent.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/xy.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Animated.js"></script>
     <script type="text/javascript" src="/Moddaker_Reporting_System/amcharts5/themes/Responsive.js"></script>
-
-    <!-- Sources For Maps -->
-    <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
-
-    <script type="text/javascript" src="countries_map.js"></script>
 
     <script>
       // Reading country_data from php:

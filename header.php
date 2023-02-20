@@ -8,6 +8,7 @@
   $title = isset($_GET['page']) ? ucwords(str_replace("_", ' ', $_GET['page'])) : "Home";
   ?>
   <title><?php echo $title ?> | <?php echo $_SESSION['system']['name'] ?></title>
+  <link rel="shortcut icon" href="./assets/favmod.png" type="image/x-icon">
   <?php ob_end_flush() ?>
 
   <?php

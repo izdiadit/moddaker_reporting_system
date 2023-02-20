@@ -8,6 +8,15 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 
 	echo '<script> location.replace("./index.php?page=report_general_view"); </script>';
 } ?>
+<!-- ///////////////////////////////// The Preloader Script ///////////////////////////////////////////////// -->
+<script>
+	// Hide the content of the page:
+	wrapper = document.getElementsByClassName('content-wrapper')[0];
+	wrapper.style.display = "none";
+	// Start the loader:
+	window.onloadstart = start_load();
+</script>
+<!-- //////////////////////////////////////////////////////////////////////////////////////////////////////// -->
 <div class="col-lg-12  w-fit" dir="rtl">
 	<div class="card card-outline card-success">
 		<div class="card-header">
@@ -44,27 +53,27 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			</form>
 		</div>
 	</div>
-	<div class="card card-outline card-success" id="tableCard" style=" display: none;">
+	<div class="card card-outline card-success" id="tableCard">
 		<div class="card-header">
-				<ul class="data-slicing-btns">
-					<?php
-					if (count($moodle_users) > 25000) {
-						// prepare slices:
-						$length = count($moodle_users);
-						for ($i=0; $i < $length; $i += 25000) { 
-							$sliceStr = $i;
-							$sliceEnd = $i + 25000;
+			<ul class="data-slicing-btns">
+				<?php
+				if (count($moodle_users) > 25000) {
+					// prepare slices:
+					$length = count($moodle_users);
+					for ($i = 0; $i < $length; $i += 25000) {
+						$sliceStr = $i;
+						$sliceEnd = $i + 25000;
 
-							if ($sliceEnd > $length) {
-								$sliceEnd = $length;
-							}
-							echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$Lang&sliceStr=$sliceStr&sliceEnd=$sliceEnd'>$sliceStr - $sliceEnd</a></li>";
+						if ($sliceEnd > $length) {
+							$sliceEnd = $length;
 						}
-						// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$Lang&sliceStr=2000&sliceEnd=50000'>25000-50000</a></li>";
-						// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$Lang&sliceStr=50000&sliceEnd=75000'>50000-75000</a></li>";
+						echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$Lang&sliceStr=$sliceStr&sliceEnd=$sliceEnd'>$sliceStr - $sliceEnd</a></li>";
 					}
-					?>
-				</ul>
+					// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$Lang&sliceStr=2000&sliceEnd=50000'>25000-50000</a></li>";
+					// echo "<li><a href='http://localhost/moddaker_reporting_system/index.php?page=report_students&lang=$Lang&sliceStr=50000&sliceEnd=75000'>50000-75000</a></li>";
+				}
+				?>
+			</ul>
 		</div>
 		<div class="card-body" style="overflow:auto">
 			<table class="table tabe-hover table-bordered" id="list" style="display: table;">
@@ -95,7 +104,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 					// Determine the currently displayed portion of the array if it is too long:
 					$sliceStr = $_GET['sliceStr'] ?? 0;
 					$sliceEnd = $_GET['sliceEnd'] ?? 25000;
-					echo (count($moodle_users) > 25500)? "<br><p dir='rtl' style='margin: auto'>عرض النتائج من $sliceStr إلى $sliceEnd </p><br>" : "";
+					echo (count($moodle_users) > 25500) ? "<br><p dir='rtl' style='margin: auto'>عرض النتائج من $sliceStr إلى $sliceEnd </p><br>" : "";
 					$current_displayed = array_slice($moodle_users, $sliceStr, $sliceEnd);
 
 
@@ -129,12 +138,13 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 		</div>
 	</div>
 </div>
+
 <script>
 	$(document).ready(function() {
 		start_load();
 		setTimeout(() => {
-			tableCard = document.getElementById('tableCard');
-			tableCard.style.display = 'block';
+			wrapper = document.getElementsByClassName('content-wrapper')[0];
+			wrapper.style.display = 'block';
 			end_load();
 		}, 3500);
 
@@ -200,7 +210,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 					"sLast": "الأخير"
 				}
 			},
-			initComplete: function() {//(lang == 'ar')? null : function() {
+			initComplete: function() { //(lang == 'ar')? null : function() {
 				var api = this.api();
 
 				// For each column

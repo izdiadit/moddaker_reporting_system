@@ -40,7 +40,7 @@ header("location:index.php?page=home");
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" name="password" required placeholder="كلمة المرور">
+          <input type="password" class="form-control" id="password" name="password" required placeholder="كلمة المرور">
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -50,9 +50,9 @@ header("location:index.php?page=home");
         <div class="row">
           <div class="col-8">
             <div style="float: right;">
-              <input type="checkbox" id="remember">  
+              <input type="checkbox" id="remember" onclick="toggle()">  
               <label for="remember">
-                تذكّرني
+                <!-- تذكّرني --> أظهر
               </label>
             </div>
           </div>
@@ -88,18 +88,23 @@ header("location:index.php?page=home");
         if(resp == 1){
           location.href ='index.php?page=home';
         }else{
-          $('#login-form').prepend('<div class="alert alert-danger">Username or password is incorrect.</div>')
+          $('#login-form').prepend('<div class="alert alert-danger">ثمّت خطأ في البريد أو كلمة المرور</div>')
           end_load();
         }
       }
     })
   })
-  })
+  });
 
-  /////////// Login Responsiveness:
-  // if (window.innerWidth <= ) {
+  // js script to toggle between shown and obscured password on clicking a checkbox:
+  function toggle() {
+    let currentType = $('#password').attr('type');
+    $('#password').attr('type', (currentType == 'password') ? 'text' : 'password');
+
     
-  // }
+  }
+
+  
 </script>
 <?php include 'footer.php' ?>
 

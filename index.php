@@ -52,7 +52,7 @@ include 'header.php'
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-            <h1 class="m-0"><?php echo $titles[$page] ?></h1><!-- /.col -->
+            <h1 class="m-0"><?php echo $titles[$page]?? 'صفحة غير موجودة' ?></h1><!-- /.col -->
 
           </div><!-- /.row -->
           <hr class="border-primary">

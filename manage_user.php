@@ -76,12 +76,12 @@ if (isset($_GET['id'])) {
 			type: 'POST',
 			success: function(resp) {
 				if (resp == 1) {
-					alert_toast("Data successfully saved", 'success')
+					alert_toast("حُفظ التعديل", 'success')
 					setTimeout(function() {
 						location.reload()
 					}, 1500)
 				} else {
-					$('#msg').html('<div class="alert alert-danger">Username already exist</div>')
+					$('#msg').html('<div class="alert alert-danger">اسم مستخدم أو بريد محجوز</div>')
 					end_load()
 				}
 			}

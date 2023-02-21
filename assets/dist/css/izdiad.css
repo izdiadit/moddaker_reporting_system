@@ -204,7 +204,8 @@
 		margin: auto;
 	}
 
-	table.dataTable>thead>tr>th:not(.sorting_disabled), table.dataTable>thead>tr>td:not(.sorting_disabled) {
+	table.dataTable>thead>tr>th:not(.sorting_disabled),
+	table.dataTable>thead>tr>td:not(.sorting_disabled) {
 		padding-right: 12px;
 	}
 
@@ -463,13 +464,22 @@
 		border-radius: 15px;
 	}
 
-	.alert-danger{
+	.alert-danger {
 		direction: rtl;
 		text-align: center;
 		border-radius: 15px;
 	}
 
-	.iz-welcomemessage{
+	.alert>.alert-danger>.iz-small {
+		direction: rtl;
+		text-align: center;
+		border-style: none;
+		font-size: medium;
+		color: red;
+		background-color: white;
+	}
+
+	.iz-welcomemessage {
 		direction: rtl;
 		text-align: center;
 		color: #40833a;

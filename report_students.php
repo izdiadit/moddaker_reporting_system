@@ -280,16 +280,6 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 		})
 	})
 
-	/** Padding function:
-	 * n : the number to be padded.
-	 * width: the length of the result.
-	 * z: the char to pad with. defult: '0'*/
-	function pad(n, width, z) {
-		z = z || '0';
-		n = n + '';
-		return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
-	}
-
 	function delete_user($id) {
 		start_load()
 		$.ajax({
@@ -300,7 +290,7 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			},
 			success: function(resp) {
 				if (resp == 1) {
-					alert_toast("Data successfully deleted", 'success')
+					alert_toast("حُذفت البيانات بنجاح", 'success')
 					setTimeout(function() {
 						location.reload()
 					}, 1500)

@@ -78,7 +78,7 @@ print_r($user_langs);
 						<div class="form-group">
 							<label class="control-label">البريد الإلكتروني</label>
 							<input type="email" class="form-control form-control-sm" name="email" required value="<?php echo isset($email) ? $email : '' ?>">
-							<small id="#msg"></small>
+							<small id="msg"></small>
 						</div>
 
 						<div class="form-group">
@@ -196,7 +196,7 @@ print_r($user_langs);
 						location.replace('index.php?page=user_list')
 					}, 750)
 				} else if (resp == 2) {
-					$('#msg').html("<div class='alert alert-danger'>Email already exist.</div>");
+					$('#msg').html("<div class='alert alert-danger iz-small'>اسم المستخدم أو البريد محجوز</div>");
 					$('[name="email"]').addClass("border-danger")
 					end_load()
 				}

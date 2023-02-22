@@ -37,6 +37,7 @@ include 'header.php'
       'user_list' => 'قائمة المستخدمين',
       'new_user' => 'مستخدم جديد',
       'edit_user' => 'تعديل معلومات المستخدم',
+      'update_data' => 'تحديث البيانات'
     ];
     $page = isset($_GET['page']) ? $_GET['page'] : 'home';
     echo $page;
@@ -52,7 +53,8 @@ include 'header.php'
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-            <h1 class="m-0"><?php echo $titles[$page]?? 'صفحة غير موجودة' ?></h1><!-- /.col -->
+            
+            <h1 class="m-0"><?php if(!($page == 'update_data' && $_SESSION['login_type'] != 1) ) echo $titles[$page]?? 'صفحة غير متاحة' ?></h1><!-- /.col -->
 
           </div><!-- /.row -->
           <hr class="border-primary">
@@ -67,7 +69,9 @@ include 'header.php'
           $page = isset($_GET['page']) ? $_GET['page'] : 'home';
           if (!file_exists($page . ".php")) {
             include '404.html';
-          } else {
+          } elseif ($page == 'update_data' && $_SESSION['login_type'] != 1) {
+            include '404.html';
+          }else{
             include $page . '.php';
           }
           ?>

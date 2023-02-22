@@ -37,7 +37,7 @@ function updateData($url, $dataClass, $lang)
       // Replace the old file with the updated one:
       $fname = "fetcheddata/$lang-$dataClass.json";
       if(file_exists($fname)){
-          echo "File ($fname) exists and will be replaced with the updated one.<br>\n";
+          echo "File ($fname) exists and will be replaced with the updated one<br>\n";
           unlink($fname);
       }
       rename($newfname,$fname);
@@ -73,7 +73,7 @@ function updateData($url, $dataClass, $lang)
       $data = json_decode($json, true);
       $students_data = array_merge($students_data, $data);
       // echo $i.' / '.$start.' / '.$end.' / ';
-      print_r(count($students_data)." records have been fetched ---.<br>\n");
+      print_r(count($students_data)." records have been fetched ---<br>\n");
 
       $start = $end + 1;
       if ($end >= $total_count) {
@@ -98,11 +98,11 @@ function updateData($url, $dataClass, $lang)
     // Replace the old file with the updated one:
     $fname = "fetcheddata/ar-students.json";
     if (file_exists($fname)) {
-        echo "File ($fname) exists and will be replaced with the updated one.<br>\n";
+        echo "File ($fname) already exists and will be replaced with the updated one<br>\n";
         unlink($fname);
     }
     rename($newfname, $fname);
-    echo "File ($fname) is up to date ".date('d-m-Y H:i:s a', time())." .\n";
+    echo "File ($fname) is up to date ".date('d-m-Y H:i:s a', time())." <br>\n";
   }
 
 
@@ -156,11 +156,11 @@ function updateData($url, $dataClass, $lang)
     // Replace the old file with the updated one:
     $fname = "fetcheddata/$Lang-ac.json";
     if (file_exists($fname)) {
-        echo "File ($fname) exists and will be replaced with the updated one.<br>\n";
+        echo "File ($fname) already exists and will be replaced with the updated one<br>\n";
         unlink($fname);
     }
     rename("$Lang-ac-new.json", $fname);
-    echo "File ($fname) is up to date ".date('d-m-Y H:i:s a', time())." .\n";
+    echo "File ($fname) is up to date ".date('d-m-Y H:i:s a', time())." <br>\n";
   }
   
   // Id Students:
@@ -173,14 +173,14 @@ function updateData($url, $dataClass, $lang)
   // updateData('https://fr.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=f5a13ccf5b087df6ed67b12afce7dc3a','students','fr');
 
   // Ar Students:
-  // updateData('','students','ar');
+  updateData('','students','ar');
 
   // Ar academic status:
-  updateAcademicStatus('ar');
+  // updateAcademicStatus('ar');
   // Id academic status:
-  updateAcademicStatus('id');
+  // updateAcademicStatus('id');
   // En academic status:
-  updateAcademicStatus('en');
+  // updateAcademicStatus('en');
   // Fr academic status:
-  updateAcademicStatus('fr');
+  // updateAcademicStatus('fr');
 ?>

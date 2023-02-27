@@ -41,7 +41,7 @@ function updateData($url, $dataClass, $lang)
           unlink($fname);
       }
       rename($newfname,$fname);
-      echo "File ($fname) is up to date ".date('d-m-Y H:i:s a', time())." .\n";
+      echo "File ($fname) is up to date ".date('d-m-Y H:i:s a', time())." <br>.\n";
     }
   }
 
@@ -163,6 +163,9 @@ function updateData($url, $dataClass, $lang)
     echo "File ($fname) is up to date ".date('d-m-Y H:i:s a', time())." <br>\n";
   }
   
+  // ur Students:
+  updateData('https://ur.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=00889dad04ab6ff568b5946bb81ec0ef','students','ur');
+  
   // Id Students:
   // updateData('https://id.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=e550100be5197a3e25596068c83ab9d2','students','id');
   
@@ -173,10 +176,12 @@ function updateData($url, $dataClass, $lang)
   // updateData('https://fr.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=f5a13ccf5b087df6ed67b12afce7dc3a','students','fr');
 
   // Ar Students:
-  updateData('','students','ar');
+  // updateData('','students','ar');
 
   // Ar academic status:
   // updateAcademicStatus('ar');
+  // Ur academic status:
+  updateAcademicStatus('ur');
   // Id academic status:
   // updateAcademicStatus('id');
   // En academic status:

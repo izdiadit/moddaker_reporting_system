@@ -39,8 +39,8 @@ include 'db_connect.php';
 <?php
 include 'countries.php';
 
-$data = getData("fetcheddata/$Lang-students.json");
-$moodle_users = $data['data'];
+// $data = getData("fetcheddata/$Lang-students.json");
+// $moodle_users = $data['data'];
 // echo $data['lastupdate'] . '<br>';
 
 // print_r( $moodle_users[0] );
@@ -125,7 +125,7 @@ $countries_data = json_decode($result, true);
         }
       }
 
-      country_data.splice(country_data.indexOf('AQ'),1);
+      if(country_data.includes('AQ')) country_data.splice(country_data.indexOf('AQ'),1);
       console.log(result);
       console.log(country_data);
     </script>

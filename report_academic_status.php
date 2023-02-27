@@ -23,21 +23,24 @@ include 'db_connect.php';
       // '!ar' => '',
       'id' => 'Level Persiapan',
       'en' => 'Batch',
-      'fr' => 'Miscellaneous'
+      'fr' => 'Miscellaneous',
+      'ur' => '***'
     ];
     $first_levels = [
       'ar' => 'المستوى الأول',
       // '!ar' => '',
       'id' => 'Hizb Al A\'laa',
       'en' => 'The First Level',
-      'fr' => '***'
+      'fr' => '***',
+      'ur' => '***'
     ];
     $fourth_levels = [
       'ar' => 'المستوى الرابع',
       // '!ar' => '',
       'id' => '***',
       'en' => 'The Fourth Level',
-      'fr' => '***'
+      'fr' => '***',
+      'ur' => '***'
     ];
 
     // Check the selected langauage/s to get its data:

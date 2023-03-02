@@ -82,10 +82,19 @@ for ($i = 0; $i < count($moodle_users); $i++) {
           <div style="visibility: hidden"></div>
         </div>
         <?php
-        // Get the total number of users:
-        
+        function printTotal($num){
+          $num = (string)$num;
+          $num = substr_replace($num, '000', -3, 3);
+          return $num;
+        }
+        $total_of_moddaker = 0;
+        // Get the total number of users for each language and add it to the total_of_moddaker:
+        foreach ($complete_langs as $lang => $value) {
+          $lang_data = getData("fetcheddata/$lang-students.json");
+          $total_of_moddaker += count($lang_data['data']);
+        }
         ?>
-        <div style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo '180000+' ?></div>
+        <div style="margin: 5% auto; font-size: 55px; color: #977c47"><?php echo 'أكثر من '.printTotal($total_of_moddaker)?></div>
       </div>
       <div class="chartCard" id="chartCard1">
         <div class="chartCardHeader">

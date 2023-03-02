@@ -32,59 +32,37 @@ if ($_SESSION['login_type'] == 2) {
 ?>
 
 <div class="row">
-  <div class="col-md-8">
-    <div class="card card-outline card-success">
-      <div class="card-header">
-        <b>Project Progress</b>
-      </div>
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table m-0 table-hover">
-            <colgroup>
-              <col width="5%">
-              <col width="30%">
-              <col width="35%">
-              <col width="15%">
-              <col width="15%">
-            </colgroup>
-            <thead>
-              <th>#</th>
-              <th>Project</th>
-              <th>Progress</th>
-              <th>Status</th>
-              <th></th>
-            </thead>
-            <tbody>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="row">
-      <div class="col-12 col-sm-6 col-md-12">
-        <div class="small-box bg-light shadow-sm border">
-          <div class="inner">
-            <h3><?php echo 100 ?></h3>
-            <p>Total Projects</p>
+  <div class="col-md-12">
+    <div class="card card-outline">
+      <div class="card-body p-0" id="home-cards-group">
+        <div class="home-cards-group-row">
+          <div class="homeCard" onclick='location.replace("./index.php?page=report_general_view");'>
+            <div class="card-img"><i class="fa fa-chart-bar"></i></div>
+            <div class="card-title">مُدّكر في أرقام</div>
           </div>
-          <div class="icon">
-            <i class="fa fa-layer-group"></i>
+          <div class="homeCard" onclick='location.replace("./index.php?page=report_map");'>
+            <div class="card-img"><img src="assets/uploads/moddaker_map.png" alt="صورة الخريطة" width="150px" height="75px"></div>
+            <div class="card-title">خريطة مُدّكر</div>
           </div>
         </div>
-      </div>
-      <div class="col-12 col-sm-6 col-md-12">
-        <div class="small-box bg-light shadow-sm border">
-          <div class="inner">
-            <h3><?php echo 700 ?></h3>
-            <p>Total Tasks</p>
-          </div>
-          <div class="icon">
-            <i class="fa fa-tasks"></i>
+        <div class="home-cards-group-row">
+          <div class="homeCard" onclick='location.replace("./index.php?page=report_academic_status");'>
+            <div class="card-img"><i class="fa fa-solid fa-clipboard"></i></div>
+            <div class="card-title">الحالة الأكاديمية</div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<script>
+  setInterval(myFunc, 1000);
+
+  function myFunc() {
+    let d = new Date();
+    document.getElementById("demo").innerHTML =
+      d.getHours() + ":" +
+      d.getMinutes() + ":" +
+      d.getSeconds();
+  }
+</script>

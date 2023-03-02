@@ -1,3 +1,8 @@
+	
+	body{
+		font-family: 'Traditional Arabic';
+	}
+	
 	.main-header,
 	.sidebar,
 	a.brand-link {
@@ -10,18 +15,18 @@
 	}
 
 	.main-footer {
-		font-family: 'traditional arabic';
+		font-family: 'Traditional Arabic';
 		font-size: 20px;
 	}
 
 	.modal {
 		text-align: justify;
-		font-family: 'Traditional arabic';
+		font-family: 'Traditional Arabic';
 		font-size: 30px;
 	}
 
 	h1.m-0 {
-		font-family: 'Traditional arabic';
+		font-family: 'Traditional Arabic';
 		font-size: 50px;
 		color: #5d6c34;
 		text-align: center;
@@ -33,7 +38,7 @@
 	}
 
 	.card {
-		font-family: 'traditional arabic';
+		font-family: 'Traditional Arabic';
 		font-size: 25px;
 		overflow: auto;
 		direction: rtl;
@@ -54,7 +59,7 @@
 
 	.os-content {
 		padding-top: 9% !important;
-		font-size: 17px;
+		font-size: 24px;
 	}
 
 	.btn {
@@ -166,6 +171,68 @@
 	}
 
 
+	/********************* Home Page ******************* */
+	#home-cards-group {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-evenly;
+		gap: 15%;
+
+		padding: 15px !important;
+	}
+	.home-cards-group-row{
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		gap: 7.5%;
+	}
+	@media (max-width: 766px) {
+		.home-cards-group-row{
+			flex-direction: column;
+		}
+		.homeCard{
+			margin: 10px auto!important;
+			width: 65%;
+		}
+	}
+
+	.homeCard {
+		font-family: 'Traditional Arabic';
+		width: 40%;
+		background-color: whitesmoke;
+		box-shadow: -8px 8px 16px 0 rgba(0, 0, 0, 0.2);
+		/* h-offset v-offset blur spread color */
+		transition: 0.3s;
+		border-radius: 50px;
+		margin: 1%;
+		padding-top: 20px;
+		/* padding-bottom: 20px; */
+		padding-right: 2%;
+		padding-left: 2%;
+		overflow: auto;
+
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: space-evenly;
+	}
+
+	.homeCard:hover {
+		box-shadow: 0px 10px 10px 8px rgba(0, 0, 0, 0.2);
+		background-color: #ebe7e7 !important;
+		cursor: pointer;
+	}
+	.card-img{
+		font-size: 60px;
+		color: #40833a;
+		text-align: center;
+		border: 1px solid #40833a;
+		border-radius: 45px;
+	}
+	.card-title{
+        font-size: 50px;
+		color:#BC9035;
+    }
 	/********************* Datatables And TABLES ******************* */
 	table,
 	table.table-bordered,
@@ -255,10 +322,9 @@
 	/************************************   CHARTS   **********************************************/
 
 	/* Chart canvas and div styles */
-	@import url('https://fonts.googleapis.com/css?family=Tajawal');
 
 	.chartCard {
-		font-family: 'Tajawal', 'Traditional Arabic';
+		font-family: 'Traditional Arabic';
 		width: 50%;
 		background-color: whitesmoke;
 		box-shadow: -8px 8px 16px 0 rgba(0, 0, 0, 0.2);
@@ -324,7 +390,7 @@
 
 		width: 100%;
 		height: 600px;
-		/* font-family: 'traditional arabic'!important; */
+		/* font-family: 'Traditional Arabic'!important; */
 		font-size: 1.5rem;
 
 	}

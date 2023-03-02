@@ -31,10 +31,10 @@ if (!($_SESSION['login_type'] == 1 || $_SESSION['login_type'] == 2)) {
 			$Lang = $_POST['lang'] ?? array_keys($langs)[0];
 
 			$data = getData("fetcheddata/$Lang-students.json");
-			echo count($data['data']);
-			echo '<br>';
+			// echo count($data['data']);
+			// echo '<br>';
 			$moodle_users = $data['data'];
-			echo date('Y/m/d h:i:s', $data['lastupdate']);
+			// echo date('Y/m/d h:i:s', $data['lastupdate']);
 			// print_r($moodle_users);
 			// exit;
 			?>

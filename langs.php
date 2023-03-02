@@ -9,6 +9,7 @@ $langs = [
 	'fr' => 'الفرنسية',
 	'ur' => 'الأوردية'
 ];
+$complete_langs = $langs;
 $tokens = [
 	'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
 	// '!ar' => '',

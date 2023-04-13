@@ -13,9 +13,9 @@ $complete_langs = $langs;
 $tokens = [
 	'ar' => '26abc81f3a71f2c17ceec76c5d45b465',
 	// '!ar' => '',
-	'id' => 'e550100be5197a3e25596068c83ab9d2',
+	'id' => '555ef088682e26135019f52c2c5ff148',
 	'en' => '5d67dc5eec6b25617c0e55c00c8a9fd6',
-	'fr' => 'f5a13ccf5b087df6ed67b12afce7dc3a',
+	'fr' => '555ef088682e26135019f52c2c5ff148',
 	'ur' => '00889dad04ab6ff568b5946bb81ec0ef'
 ];
 

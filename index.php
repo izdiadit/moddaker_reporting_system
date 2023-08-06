@@ -53,8 +53,8 @@ include 'header.php'
       <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
-            
-            <h1 class="m-0"><?php if(!($page == 'update_data' && $_SESSION['login_type'] != 1) ) echo $titles[$page]?? 'صفحة غير متاحة' ?></h1><!-- /.col -->
+
+            <h1 class="m-0"><?php if (!($page == 'update_data' && $_SESSION['login_type'] != 1)) echo $titles[$page] ?? 'صفحة غير متاحة' ?></h1><!-- /.col -->
 
           </div><!-- /.row -->
           <hr class="border-primary">
@@ -71,7 +71,7 @@ include 'header.php'
             include '404.html';
           } elseif ($page == 'update_data' && $_SESSION['login_type'] != 1) {
             include '404.html';
-          }else{
+          } else {
             include $page . '.php';
           }
           ?>
@@ -141,8 +141,13 @@ include 'header.php'
     <!-- /.control-sidebar -->
 
     <!-- Main Footer -->
-    <footer class="main-footer">
-      <strong>حقوق الطبع محفوظة &copy; <?php echo date('Y') ?> <br> <a target="_blank" href="http://izdiad.net/">شركة ازدياد للحلول المتكاملة</a></strong>
+    <footer class="main-footer my-0 py-0 d-flex flex-row justify-content-between align-items-center">
+      <strong class="d-flex flex-row justify-content-center align-items-center p-0 m-0">
+        <a class="m-o p-o" target="_blank" href="http://izdiad.net/"><!--شركة ازدياد للحلول المتكاملة-->
+          <img src="assets/uploads/no-image-available.png" alt="izdiad-logo" height="110" width="110">
+        </a>
+        <small class="">حقوق الطبع محفوظة &copy; <?php echo date('Y') ?></small>
+      </strong>
 
       <div class="float-right d-none d-sm-inline-block">
         <b><?php echo $_SESSION['system']['name'] ?></b>

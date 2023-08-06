@@ -176,7 +176,7 @@ function updateData($url, $dataClass, $lang)
   // updateData('https://fr.moddaker.com/webservice/rest/server.php?moodlewsrestformat=json&wsfunction=local_reports_service_get_users&wstoken=f5a13ccf5b087df6ed67b12afce7dc3a','students','fr');
 
   // Ar Students:
-  updateData('','students','ar');
+  // updateData('','students','ar');
 
   // Ar academic status:
   // updateAcademicStatus('ar');

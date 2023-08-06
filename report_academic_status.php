@@ -314,7 +314,7 @@ $cats_grads_for_js = swap_data_from_dictionary($decoded_categories, $cats_with_g
   }));
   xAxis.get("renderer").labels.template.setAll({
     oversizedBehavior: "wrap",
-    maxWidth: 120,
+    maxWidth: 75,
     textAlign: "center",
   });
 
